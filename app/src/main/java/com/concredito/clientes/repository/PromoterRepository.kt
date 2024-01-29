@@ -1,6 +1,5 @@
 package com.concredito.clientes.repository
 
-import android.util.Log
 import com.concredito.clientes.data.Resource
 import com.concredito.clientes.model.Promoter
 import com.concredito.clientes.model.Prospect

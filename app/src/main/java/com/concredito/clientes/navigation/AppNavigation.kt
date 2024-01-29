@@ -1,7 +1,6 @@
 package com.concredito.clientes.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -11,23 +10,19 @@ import com.concredito.clientes.screens.SplashScreen
 import com.concredito.clientes.screens.login.LoginScreen
 import com.concredito.clientes.screens.main.MainScreen
 import com.concredito.clientes.screens.prospect.NewProspectScreen
-import com.concredito.clientes.screens.prospect.PromoterViewModel
 import com.concredito.clientes.screens.prospect.ProspectDetailScreen
 import com.concredito.clientes.screens.prospect.ProspectEvaluationScreen
-import com.concredito.clientes.screens.prospect.ProspectViewModel
 import com.concredito.clientes.screens.prospect.ProspectsScreen
 
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
-    val prospectViewModel = hiltViewModel<ProspectViewModel>()
-    val promoterViewModel = hiltViewModel<PromoterViewModel>()
     NavHost(navController = navController, startDestination = AppScreens.SplashScreen.name) {
         composable(route = AppScreens.SplashScreen.name) {
             SplashScreen(navController = navController)
         }
         composable(route = AppScreens.LoginScreen.name) {
-            LoginScreen(navController = navController, promoterViewModel)
+            LoginScreen(navController = navController)
         }
         composable(route = AppScreens.MainScreen.name) {
             MainScreen(navController = navController)
@@ -36,7 +31,7 @@ fun AppNavigation() {
             NewProspectScreen(navController = navController)
         }
         composable(route = AppScreens.ProspectsScreen.name) {
-            ProspectsScreen(navController = navController, prospectViewModel)
+            ProspectsScreen(navController = navController)
         }
         composable(route = AppScreens.ProspectDetailScreen.name) {
             ProspectDetailScreen(navController = navController)

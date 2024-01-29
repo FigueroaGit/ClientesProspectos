@@ -2,7 +2,6 @@ package com.concredito.clientes.network
 
 import com.concredito.clientes.model.Promoter
 import com.concredito.clientes.model.Prospect
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.Field
@@ -11,8 +10,6 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
-import retrofit2.http.Query
-import java.util.UUID
 import javax.inject.Singleton
 
 @Singleton
