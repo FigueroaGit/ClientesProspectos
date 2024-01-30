@@ -6,7 +6,6 @@ enum class AppScreens {
     MainScreen,
     NewProspectScreen,
     ProspectsScreen,
-    ProspectDetailScreen,
     ProspectEvaluationScreen,
     ;
     companion object {
@@ -16,7 +15,6 @@ enum class AppScreens {
             MainScreen.name -> MainScreen
             NewProspectScreen.name -> NewProspectScreen
             ProspectsScreen.name -> ProspectsScreen
-            ProspectDetailScreen.name -> ProspectDetailScreen
             ProspectEvaluationScreen.name -> ProspectEvaluationScreen
             null -> LoginScreen
             else -> throw IllegalArgumentException("Route $route is not recognized")

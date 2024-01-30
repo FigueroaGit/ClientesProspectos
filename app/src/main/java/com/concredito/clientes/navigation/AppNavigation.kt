@@ -10,7 +10,6 @@ import com.concredito.clientes.screens.SplashScreen
 import com.concredito.clientes.screens.login.LoginScreen
 import com.concredito.clientes.screens.main.MainScreen
 import com.concredito.clientes.screens.prospect.NewProspectScreen
-import com.concredito.clientes.screens.prospect.ProspectDetailScreen
 import com.concredito.clientes.screens.prospect.ProspectEvaluationScreen
 import com.concredito.clientes.screens.prospect.ProspectsScreen
 
@@ -32,9 +31,6 @@ fun AppNavigation() {
         }
         composable(route = AppScreens.ProspectsScreen.name) {
             ProspectsScreen(navController = navController)
-        }
-        composable(route = AppScreens.ProspectDetailScreen.name) {
-            ProspectDetailScreen(navController = navController)
         }
         composable(
             route = AppScreens.ProspectEvaluationScreen.name + "/{prospectId}",
