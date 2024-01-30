@@ -35,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,6 +47,7 @@ import com.concredito.clientes.data.PreferencesManager
 import com.concredito.clientes.model.Prospect
 import com.concredito.clientes.model.ProspectStatus
 import com.concredito.clientes.navigation.AppScreens
+import com.concredito.clientes.ui.theme.assistantFamily
 import com.concredito.clientes.util.Constants.MAX_CHARACTERS_BY_ADDRESS
 import com.concredito.clientes.util.Constants.MAX_CHARACTERS_BY_NAME
 import com.concredito.clientes.util.Constants.MAX_CHARACTERS_BY_NUMBER_ADDRESS
@@ -103,12 +105,12 @@ fun NewProspectScreen(
 
     var documentUri by remember { mutableStateOf<Uri?>(null) }
 
-   /* val pickDocument =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
-            // Handle the selected document URI here
-            // You might want to store the URI in your ViewModel or perform additional operations
-            documentUri = uri
-        }*/
+    /* val pickDocument =
+         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
+             // Handle the selected document URI here
+             // You might want to store the URI in your ViewModel or perform additional operations
+             documentUri = uri
+         }*/
 
     var showExitDialog by remember { mutableStateOf(false) }
     /*var showDocumentSection by remember { mutableStateOf(false) }*/
@@ -173,7 +175,15 @@ fun NewProspectScreen(
                             prospectNameSupportingText = null
                             showProspectNameError = false
                         },
-                        supportingText = { prospectNameSupportingText?.let { Text(text = (it)) } },
+                        supportingText = {
+                            prospectNameSupportingText?.let {
+                                Text(
+                                    text = (it),
+                                    fontWeight = FontWeight.Normal,
+                                    fontFamily = assistantFamily,
+                                )
+                            }
+                        },
                         isError = showProspectNameError,
                         keyboardType = KeyboardType.Text,
                         keyboardCapitalization = KeyboardCapitalization.Words,
@@ -192,7 +202,15 @@ fun NewProspectScreen(
                             prospectSurnameSupportingText = null
                             showProspectSurnameError = false
                         },
-                        supportingText = { prospectSurnameSupportingText?.let { Text(text = it) } },
+                        supportingText = {
+                            prospectSurnameSupportingText?.let {
+                                Text(
+                                    text = it,
+                                    fontWeight = FontWeight.Normal,
+                                    fontFamily = assistantFamily,
+                                )
+                            }
+                        },
                         isError = showProspectSurnameError,
                         keyboardType = KeyboardType.Text,
                         keyboardCapitalization = KeyboardCapitalization.Words,
@@ -227,7 +245,15 @@ fun NewProspectScreen(
                             prospectStreetAddressSupportingText = null
                             showProspectStreetAddressError = false
                         },
-                        supportingText = { prospectStreetAddressSupportingText?.let { Text(text = it) } },
+                        supportingText = {
+                            prospectStreetAddressSupportingText?.let {
+                                Text(
+                                    text = it,
+                                    fontWeight = FontWeight.Normal,
+                                    fontFamily = assistantFamily,
+                                )
+                            }
+                        },
                         isError = showProspectStreetAddressError,
                         keyboardType = KeyboardType.Text,
                         keyboardCapitalization = KeyboardCapitalization.Words,
@@ -247,7 +273,15 @@ fun NewProspectScreen(
                             prospectNumberAddressSupportingText = null
                             showProspectNumberAddressError = false
                         },
-                        supportingText = { prospectNumberAddressSupportingText?.let { Text(text = it) } },
+                        supportingText = {
+                            prospectNumberAddressSupportingText?.let {
+                                Text(
+                                    text = it,
+                                    fontWeight = FontWeight.Normal,
+                                    fontFamily = assistantFamily,
+                                )
+                            }
+                        },
                         isError = showProspectNumberAddressError,
                         keyboardType = KeyboardType.Text,
                         keyboardCapitalization = KeyboardCapitalization.Characters,
@@ -271,6 +305,8 @@ fun NewProspectScreen(
                             prospectNeighborhoodAddressSupportingText?.let {
                                 Text(
                                     text = it,
+                                    fontWeight = FontWeight.Normal,
+                                    fontFamily = assistantFamily,
                                 )
                             }
                         },
@@ -293,7 +329,15 @@ fun NewProspectScreen(
                             prospectZipCodeSupportingText = null
                             showProspectZipCodeError = false
                         },
-                        supportingText = { prospectZipCodeSupportingText?.let { Text(text = it) } },
+                        supportingText = {
+                            prospectZipCodeSupportingText?.let {
+                                Text(
+                                    text = it,
+                                    fontWeight = FontWeight.Normal,
+                                    fontFamily = assistantFamily,
+                                )
+                            }
+                        },
                         isError = showProspectZipCodeError,
                         keyboardType = KeyboardType.Number,
                         keyboardCapitalization = KeyboardCapitalization.None,
@@ -313,7 +357,15 @@ fun NewProspectScreen(
                             prospectPhoneNumberSupportingText = null
                             showProspectPhoneNumberError = false
                         },
-                        supportingText = { prospectPhoneNumberSupportingText?.let { Text(text = it) } },
+                        supportingText = {
+                            prospectPhoneNumberSupportingText?.let {
+                                Text(
+                                    text = it,
+                                    fontWeight = FontWeight.Normal,
+                                    fontFamily = assistantFamily,
+                                )
+                            }
+                        },
                         isError = showProspectPhoneNumberError,
                         keyboardType = KeyboardType.Phone,
                         keyboardCapitalization = KeyboardCapitalization.None,
@@ -332,7 +384,15 @@ fun NewProspectScreen(
                             prospectRFCSupportingText = null
                             showProspectRFCError = false
                         },
-                        supportingText = { prospectRFCSupportingText?.let { Text(text = it) } },
+                        supportingText = {
+                            prospectRFCSupportingText?.let {
+                                Text(
+                                    text = it,
+                                    fontWeight = FontWeight.Normal,
+                                    fontFamily = assistantFamily,
+                                )
+                            }
+                        },
                         isError = showProspectRFCError,
                         keyboardType = KeyboardType.Text,
                         keyboardCapitalization = KeyboardCapitalization.Characters,
@@ -387,17 +447,20 @@ fun NewProspectScreen(
                                 allValidationsPassed = false
                             }
                             if (prospectStreetAddress.isEmpty()) {
-                                prospectStreetAddressSupportingText = "Prospect street address is required"
+                                prospectStreetAddressSupportingText =
+                                    "Prospect street address is required"
                                 showProspectStreetAddressError = true
                                 allValidationsPassed = false
                             }
                             if (prospectNumberAddress.isEmpty()) {
-                                prospectNumberAddressSupportingText = "Prospect number address is required"
+                                prospectNumberAddressSupportingText =
+                                    "Prospect number address is required"
                                 showProspectNumberAddressError = true
                                 allValidationsPassed = false
                             }
                             if (prospectNeighborhoodAddress.isEmpty()) {
-                                prospectNeighborhoodAddressSupportingText = "Prospect neighborhood address is required"
+                                prospectNeighborhoodAddressSupportingText =
+                                    "Prospect neighborhood address is required"
                                 showProspectNeighborhoodAddressError = true
                                 allValidationsPassed = false
                             }
@@ -407,7 +470,8 @@ fun NewProspectScreen(
                                 allValidationsPassed = false
                             }
                             if (prospectPhoneNumber.isEmpty()) {
-                                prospectPhoneNumberSupportingText = "Prospect phone number is required"
+                                prospectPhoneNumberSupportingText =
+                                    "Prospect phone number is required"
                                 showProspectPhoneNumberError = true
                                 allValidationsPassed = false
                             }
@@ -452,7 +516,8 @@ fun NewProspectScreen(
                                 )
                                 prospectViewModel.createProspect(newProspect)
 
-                                Toast.makeText(context, "Prospecto Creado", Toast.LENGTH_LONG).show()
+                                Toast.makeText(context, "Prospecto Creado", Toast.LENGTH_LONG)
+                                    .show()
                                 // Toast.makeText(context, "Documento Guardado", Toast.LENGTH_LONG).show()
                                 navController.navigate(AppScreens.ProspectsScreen.name)
                             }
@@ -460,7 +525,11 @@ fun NewProspectScreen(
                         modifier = Modifier.fillMaxWidth().height(48.dp),
                         shape = RoundedCornerShape(8.dp),
                     ) {
-                        Text(text = "Send")
+                        Text(
+                            text = "Send",
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = assistantFamily,
+                        )
                     }
                 }
             }

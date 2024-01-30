@@ -31,6 +31,7 @@ import com.concredito.clientes.navigation.AppScreens
 import com.concredito.clientes.screens.prospect.PromoterViewModel
 import com.concredito.clientes.screens.prospect.ProspectList
 import com.concredito.clientes.screens.prospect.ProspectViewModel
+import com.concredito.clientes.ui.theme.assistantFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -95,18 +96,25 @@ fun MainScreen(
                         text = "It seems there's no prospects here!!",
                         textAlign = TextAlign.Center,
                         fontWeight = FontWeight.Bold,
+                        fontFamily = assistantFamily,
                     )
 
                     Text(
                         text = "If you want to add prospects and see how many prospects you've added start to adding prospects with the button below",
                         textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Normal,
+                        fontFamily = assistantFamily,
                     )
 
                     Button(
                         modifier = Modifier.padding(16.dp),
                         onClick = { navController.navigate(AppScreens.NewProspectScreen.name) },
                     ) {
-                        Text(text = "Add prospect")
+                        Text(
+                            text = "Add prospect",
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = assistantFamily,
+                        )
                     }
                 }
             } else {
@@ -116,7 +124,11 @@ fun MainScreen(
                     verticalArrangement = Arrangement.Top,
                 ) {
                     Row(modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)) {
-                        Text(text = "Last prospect added by you", fontWeight = FontWeight.Medium)
+                        Text(
+                            text = "Last prospect added by you",
+                            fontWeight = FontWeight.Medium,
+                            fontFamily = assistantFamily,
+                        )
                     }
 
                     ProspectList(navController = navController, listOfProspects = lastProspect)
@@ -127,8 +139,16 @@ fun MainScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
-                        Text(text = "Total prospects added by you ", fontWeight = FontWeight.Medium)
-                        Text(text = "${listProspect.size}", fontWeight = FontWeight.Bold)
+                        Text(
+                            text = "Total prospects added by you ",
+                            fontWeight = FontWeight.Medium,
+                            fontFamily = assistantFamily,
+                        )
+                        Text(
+                            text = "${listProspect.size}",
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = assistantFamily,
+                        )
                     }
 
                     Box(
@@ -141,7 +161,11 @@ fun MainScreen(
                             modifier = Modifier.padding(16.dp),
                             onClick = { navController.navigate(AppScreens.NewProspectScreen.name) },
                         ) {
-                            Text(text = "Add prospect")
+                            Text(
+                                text = "Add prospect",
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = assistantFamily,
+                            )
                         }
                     }
                 }

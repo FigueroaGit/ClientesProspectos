@@ -48,6 +48,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.concredito.clientes.ui.theme.assistantFamily
 import com.concredito.clientes.util.getRandomColor
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -124,7 +125,13 @@ fun FormInputText(
         value = text,
         onValueChange = onTextChange,
         modifier = modifier,
-        label = { Text(text = label) },
+        label = {
+            Text(
+                text = label,
+                fontWeight = FontWeight.Normal,
+                fontFamily = assistantFamily,
+            )
+        },
         leadingIcon = { Icon(imageVector = leadingIcon, contentDescription = null) },
         supportingText = supportingText,
         isError = isError,
@@ -164,8 +171,8 @@ fun TitleSection(
                 text = label,
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 19.sp,
-                fontStyle = FontStyle.Normal,
                 fontWeight = FontWeight.Bold,
+                fontFamily = assistantFamily,
                 textAlign = TextAlign.Left,
                 modifier = Modifier.weight(1F),
             )
@@ -272,12 +279,19 @@ fun ProspectsLargeTopAppBar(
                     fontSize = fontSize,
                 )
                 Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                    Text(text = title)
+                    Text(
+                        text = title,
+                        fontFamily = assistantFamily,
+                    )
                     Button(
                         modifier = Modifier.fillMaxWidth(),
                         onClick = { onShowProspectsClicked.invoke() },
                     ) {
-                        Text(text = "Show all prospects")
+                        Text(
+                            text = "Show all prospects",
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = assistantFamily,
+                        )
                     }
                 }
             }
@@ -295,6 +309,7 @@ fun ProspectsLargeTopAppBar(
                     Text(
                         text = additionalText,
                         fontWeight = FontWeight.Medium,
+                        fontFamily = assistantFamily,
                         color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 20.sp,
                     )

@@ -42,6 +42,7 @@ import androidx.navigation.NavHostController
 import com.concredito.clientes.model.Prospect
 import com.concredito.clientes.model.ProspectStatus
 import com.concredito.clientes.navigation.AppScreens
+import com.concredito.clientes.ui.theme.assistantFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -251,7 +252,7 @@ fun ProspectItem(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     LetterTile(
-                        text = "${prospect.nombre.take(1)}${prospect.primerApellido.take(1)}",
+                        text = "${prospect.nombre.take(1)}",
                         size = 48,
                         fontSize = 22,
                     )
@@ -259,6 +260,7 @@ fun ProspectItem(
                         Text(
                             text = "${prospect.nombre} ${prospect.primerApellido} ${prospect.segundoApellido}",
                             fontWeight = FontWeight.Bold,
+                            fontFamily = assistantFamily,
                             fontSize = 20.sp,
                             overflow = TextOverflow.Ellipsis,
                             maxLines = 1,
@@ -267,8 +269,8 @@ fun ProspectItem(
                             modifier = Modifier.fillMaxWidth(),
                             text = prospect.estatus.name,
                             fontWeight = FontWeight.Medium,
+                            fontFamily = assistantFamily,
                             fontSize = 16.sp,
-                            overflow = TextOverflow.Ellipsis,
                             maxLines = 1,
                             color = when (prospect.estatus) {
                                 ProspectStatus.ENVIADO -> Color.Gray

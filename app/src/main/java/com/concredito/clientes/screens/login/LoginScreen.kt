@@ -20,6 +20,10 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.rounded.Lock
+import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.rounded.Visibility
+import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -55,6 +59,7 @@ import com.concredito.clientes.data.PreferencesManager
 import com.concredito.clientes.data.Resource
 import com.concredito.clientes.navigation.AppScreens
 import com.concredito.clientes.screens.prospect.PromoterViewModel
+import com.concredito.clientes.ui.theme.assistantFamily
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -113,6 +118,7 @@ fun LoginScreen(
                 text = "Welcome back",
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
+                fontFamily = assistantFamily,
                 textAlign = TextAlign.Center,
             )
 
@@ -124,9 +130,28 @@ fun LoginScreen(
                     showUsernameError = false
                     showError = false
                 },
-                label = { Text("Username") },
-                leadingIcon = { Icon(imageVector = Icons.Default.Person, contentDescription = null) },
-                supportingText = { usernameSupportingText?.let { Text(it) } },
+                label = {
+                    Text(
+                        text = "Username",
+                        fontWeight = FontWeight.Normal,
+                        fontFamily = assistantFamily,
+                    )
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Rounded.Person,
+                        contentDescription = null,
+                    )
+                },
+                supportingText = {
+                    usernameSupportingText?.let {
+                        Text(
+                            text = it,
+                            fontWeight = FontWeight.Normal,
+                            fontFamily = assistantFamily,
+                        )
+                    }
+                },
                 isError = showUsernameError,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -148,19 +173,33 @@ fun LoginScreen(
                     showPasswordError = false
                     showError = false
                 },
-                label = { Text("Password") },
-                leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = null) },
+                label = {
+                    Text(
+                        "Password",
+                        fontWeight = FontWeight.Normal,
+                        fontFamily = assistantFamily,
+                    )
+                },
+                leadingIcon = { Icon(imageVector = Icons.Rounded.Lock, contentDescription = null) },
                 trailingIcon = {
                     IconButton(onClick = {
                         isPasswordVisible = !isPasswordVisible
                     }) {
                         Icon(
-                            imageVector = if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                            imageVector = if (isPasswordVisible) Icons.Rounded.Visibility else Icons.Rounded.VisibilityOff,
                             contentDescription = if (isPasswordVisible) "Hide Password" else "Show Password",
                         )
                     }
                 },
-                supportingText = { passwordSupportingText?.let { Text(it) } },
+                supportingText = {
+                    passwordSupportingText?.let {
+                        Text(
+                            text = it,
+                            fontWeight = FontWeight.Normal,
+                            fontFamily = assistantFamily,
+                        )
+                    }
+                },
                 isError = showPasswordError,
                 visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 modifier = Modifier
@@ -179,6 +218,8 @@ fun LoginScreen(
 
             Text(
                 text = "Forgot password",
+                fontWeight = FontWeight.Medium,
+                fontFamily = assistantFamily,
                 modifier = Modifier.padding(bottom = 24.dp).clickable {},
                 color = MaterialTheme.colorScheme.primary,
             )
@@ -215,7 +256,10 @@ fun LoginScreen(
                             // Guarda el ID del promotor y el nombre de usuario utilizando PreferencesManager
                             if (promoterId != null) {
                                 if (loggedInUsername != null) {
-                                    PreferencesManager(context).savePromoterInfo(promoterId, loggedInUsername)
+                                    PreferencesManager(context).savePromoterInfo(
+                                        promoterId,
+                                        loggedInUsername,
+                                    )
                                 }
                             }
 
@@ -229,15 +273,20 @@ fun LoginScreen(
                     keyboardController?.hide()
                 },
                 modifier = Modifier
-                    .fillMaxWidth().height(50.dp),
-                shape = RoundedCornerShape(8.dp),
+                    .fillMaxWidth(),
             ) {
-                Text("Login")
+                Text(
+                    text = "Sign In",
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = assistantFamily,
+                )
             }
 
             if (showError) {
                 Text(
                     text = "Username and password are incorrect",
+                    fontWeight = FontWeight.Normal,
+                    fontFamily = assistantFamily,
                     color = MaterialTheme.colorScheme.error,
                     modifier = Modifier.padding(8.dp),
                 )

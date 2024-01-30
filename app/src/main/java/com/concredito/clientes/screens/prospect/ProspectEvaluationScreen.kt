@@ -43,13 +43,13 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -81,6 +81,7 @@ import com.concredito.clientes.model.Prospect
 import com.concredito.clientes.model.ProspectStatus
 import com.concredito.clientes.model.RejectObservation
 import com.concredito.clientes.navigation.AppScreens
+import com.concredito.clientes.ui.theme.assistantFamily
 import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -223,6 +224,7 @@ fun ProspectHeader(
             Text(
                 text = "${prospect.data?.nombre} ${prospect.data?.primerApellido}",
                 fontWeight = FontWeight.Black,
+                fontFamily = assistantFamily,
                 fontSize = 24.sp,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
@@ -230,6 +232,7 @@ fun ProspectHeader(
             Text(
                 text = "${prospect.data?.segundoApellido}",
                 fontWeight = FontWeight.Black,
+                fontFamily = assistantFamily,
                 fontSize = 24.sp,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
@@ -237,6 +240,7 @@ fun ProspectHeader(
             Text(
                 text = "RFC: ${prospect.data?.rfc}",
                 fontWeight = FontWeight.Medium,
+                fontFamily = assistantFamily,
                 fontSize = 20.sp,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
@@ -279,6 +283,7 @@ fun ProspectHeader(
                         Text(
                             text = it.name,
                             fontWeight = FontWeight.Medium,
+                            fontFamily = assistantFamily,
                             fontSize = 16.sp,
                             overflow = TextOverflow.Ellipsis,
                             maxLines = 1,
@@ -307,6 +312,7 @@ fun ProspectPersonalInformation(
             Text(
                 text = "Contact Info",
                 fontWeight = FontWeight.Bold,
+                fontFamily = assistantFamily,
                 fontSize = 18.sp,
                 maxLines = 1,
             )
@@ -340,6 +346,7 @@ fun ProspectPersonalInformation(
                     },
                     text = "${prospect.data?.telefono}",
                     fontWeight = FontWeight.Normal,
+                    fontFamily = assistantFamily,
                     fontSize = 16.sp,
                     maxLines = 1,
                 )
@@ -364,6 +371,7 @@ fun ProspectAddressInformation(
             Text(
                 text = "Address Info",
                 fontWeight = FontWeight.Bold,
+                fontFamily = assistantFamily,
                 fontSize = 18.sp,
                 maxLines = 1,
             )
@@ -387,6 +395,7 @@ fun ProspectAddressInformation(
                 Text(
                     text = "${prospect.data?.calle}, ${prospect.data?.numero}, ${prospect.data?.colonia}, ${prospect.data?.codigoPostal}",
                     fontWeight = FontWeight.Normal,
+                    fontFamily = assistantFamily,
                     fontSize = 16.sp,
                     maxLines = 1,
                 )
@@ -409,6 +418,7 @@ fun ProspectDocuments() {
             Text(
                 text = "Documents Added",
                 fontWeight = FontWeight.Bold,
+                fontFamily = assistantFamily,
                 fontSize = 18.sp,
                 maxLines = 1,
             )
@@ -461,6 +471,8 @@ fun DocumentItem(
 
                 Text(
                     text = truncatedText,
+                    fontWeight = FontWeight.Normal,
+                    fontFamily = assistantFamily,
                     overflow = TextOverflow.Ellipsis,
                 )
             }
@@ -489,6 +501,7 @@ fun RejectionNotes(rejectObservations: Resource<List<RejectObservation>>) {
                 Text(
                     text = "Rejection notes",
                     fontWeight = FontWeight.Bold,
+                    fontFamily = assistantFamily,
                     fontSize = 18.sp,
                     maxLines = 1,
                 )
@@ -501,7 +514,13 @@ fun RejectionNotes(rejectObservations: Resource<List<RejectObservation>>) {
             }
             AnimatedVisibility(visible = expanded) {
                 Box(modifier = Modifier.padding(bottom = 16.dp)) {
-                    rejectObservations.data?.last()?.let { Text(text = it.observaciones) }
+                    rejectObservations.data?.last()?.let {
+                        Text(
+                            text = it.observaciones,
+                            fontWeight = FontWeight.Normal,
+                            fontFamily = assistantFamily,
+                        )
+                    }
                 }
             }
         }
@@ -516,8 +535,8 @@ fun AuthorizeRejectButtons(onClickAuthorizeButton: () -> Unit, onClickRejectButt
             .fillMaxWidth()
             .padding(8.dp),
     ) {
-        FilledTonalButton(
-            modifier = Modifier.weight(1F),
+        TextButton(
+            modifier = Modifier.weight(1F).height(50.dp),
             onClick = { onClickAuthorizeButton.invoke() },
         ) {
             Row(
@@ -526,12 +545,16 @@ fun AuthorizeRejectButtons(onClickAuthorizeButton: () -> Unit, onClickRejectButt
             ) {
                 Icon(imageVector = Icons.Rounded.CheckCircle, contentDescription = null)
                 Spacer(modifier = Modifier.padding(horizontal = 4.dp))
-                Text(text = "Authorize")
+                Text(
+                    text = "Authorize",
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = assistantFamily,
+                )
             }
         }
         Spacer(modifier = Modifier.padding(horizontal = 4.dp))
-        FilledTonalButton(
-            modifier = Modifier.weight(1F),
+        TextButton(
+            modifier = Modifier.weight(1F).height(50.dp),
             onClick = { onClickRejectButton.invoke() },
         ) {
             Row(
@@ -540,7 +563,11 @@ fun AuthorizeRejectButtons(onClickAuthorizeButton: () -> Unit, onClickRejectButt
             ) {
                 Icon(imageVector = Icons.Rounded.Cancel, contentDescription = null)
                 Spacer(modifier = Modifier.padding(horizontal = 4.dp))
-                Text(text = "Reject")
+                Text(
+                    text = "Reject",
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = assistantFamily,
+                )
             }
         }
     }
