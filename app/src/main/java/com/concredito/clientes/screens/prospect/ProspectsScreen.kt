@@ -236,7 +236,6 @@ fun ProspectItem(
     }*/
     Surface(
         modifier = Modifier
-            .padding(vertical = 8.dp)
             .fillMaxWidth(),
     ) {
         Box(

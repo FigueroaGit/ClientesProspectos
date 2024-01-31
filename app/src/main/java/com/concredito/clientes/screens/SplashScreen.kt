@@ -43,9 +43,9 @@ fun SplashScreen(
     })
 
     Image(
-        painter = painterResource(id = R.drawable.concredito_logo),
-        contentDescription = "Rick And Morty Logo",
+        painter = painterResource(id = R.drawable.finacredito_logo),
+        contentDescription = "FinaCredito logo",
         contentScale = ContentScale.Fit,
-        modifier = Modifier.size(300.dp).scale(scale.value),
+        modifier = Modifier.size(256.dp).scale(scale.value),
     )
 }

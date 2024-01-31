@@ -29,7 +29,7 @@ import com.concredito.clientes.R
 import com.concredito.clientes.data.PreferencesManager
 import com.concredito.clientes.navigation.AppScreens
 import com.concredito.clientes.screens.prospect.PromoterViewModel
-import com.concredito.clientes.screens.prospect.ProspectList
+import com.concredito.clientes.screens.prospect.ProspectItem
 import com.concredito.clientes.screens.prospect.ProspectViewModel
 import com.concredito.clientes.ui.theme.assistantFamily
 
@@ -46,20 +46,9 @@ fun MainScreen(
 
     Scaffold(
         topBar = {
-            /*ProspectiveCustomerAppBar(
-                title = "Welcome, $username",
-                navController = navController,
-                onLogoutPressed = {
-                    PreferencesManager(context).clearCredentials()
-                    navController.navigate(AppScreens.LoginScreen.name) {
-                        popUpTo(navController.graph.startDestinationId)
-                        launchSingleTop = true
-                    }
-                },
-            )*/
             ProspectsLargeTopAppBar(
-                title = "Welcome, $username",
-                additionalText = "Dashboard",
+                title = "Bienvenido, $username",
+                additionalText = "Mi panel",
                 navController = navController,
                 onLogoutClicked = {
                     PreferencesManager(context).clearCredentials()
@@ -125,13 +114,13 @@ fun MainScreen(
                 ) {
                     Row(modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)) {
                         Text(
-                            text = "Last prospect added by you",
+                            text = "Ultimo prospecto agregado",
                             fontWeight = FontWeight.Medium,
                             fontFamily = assistantFamily,
                         )
                     }
 
-                    ProspectList(navController = navController, listOfProspects = lastProspect)
+                    ProspectItem(lastProspect[0], navController)
 
                     Row(
                         modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
@@ -140,7 +129,7 @@ fun MainScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(
-                            text = "Total prospects added by you ",
+                            text = "Total de prospectos agregados",
                             fontWeight = FontWeight.Medium,
                             fontFamily = assistantFamily,
                         )
@@ -162,7 +151,7 @@ fun MainScreen(
                             onClick = { navController.navigate(AppScreens.NewProspectScreen.name) },
                         ) {
                             Text(
-                                text = "Add prospect",
+                                text = "Agregar prospectos",
                                 fontWeight = FontWeight.Bold,
                                 fontFamily = assistantFamily,
                             )

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -101,17 +102,17 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Image(
-                painter = painterResource(id = R.drawable.concredito_logo),
+                painter = painterResource(id = R.drawable.finacredito_logo),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(150.dp)
+                    .width(256.dp)
                     .align(Alignment.CenterHorizontally)
-                    .padding(bottom = 16.dp),
+                    .padding(vertical = 16.dp),
             )
 
             Text(
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                text = "Welcome back",
+                text = "Bienvenido de nuevo",
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = assistantFamily,
@@ -128,7 +129,7 @@ fun LoginScreen(
                 },
                 label = {
                     Text(
-                        text = "Username",
+                        text = "Usuario",
                         fontWeight = FontWeight.Normal,
                         fontFamily = assistantFamily,
                     )
@@ -171,7 +172,7 @@ fun LoginScreen(
                 },
                 label = {
                     Text(
-                        "Password",
+                        "contraseña",
                         fontWeight = FontWeight.Normal,
                         fontFamily = assistantFamily,
                     )
@@ -183,7 +184,7 @@ fun LoginScreen(
                     }) {
                         Icon(
                             imageVector = if (isPasswordVisible) Icons.Rounded.Visibility else Icons.Rounded.VisibilityOff,
-                            contentDescription = if (isPasswordVisible) "Hide Password" else "Show Password",
+                            contentDescription = if (isPasswordVisible) "Ocultar contraseña" else "Mostrar contraseña",
                         )
                     }
                 },
@@ -213,7 +214,7 @@ fun LoginScreen(
             )
 
             Text(
-                text = "Forgot password",
+                text = "Olvide la contraseña",
                 fontWeight = FontWeight.Medium,
                 fontFamily = assistantFamily,
                 modifier = Modifier.padding(bottom = 24.dp).clickable {},
@@ -227,12 +228,12 @@ fun LoginScreen(
                     }
 
                     if (username.isEmpty()) {
-                        usernameSupportingText = "Username is required"
+                        usernameSupportingText = "El nombre de usuario es requerido"
                         showUsernameError = true
                         return@Button
                     }
                     if (password.isEmpty()) {
-                        passwordSupportingText = "Password is required"
+                        passwordSupportingText = "la contraseña es requerida"
                         showPasswordError = true
                         return@Button
                     }
@@ -272,7 +273,7 @@ fun LoginScreen(
                     .fillMaxWidth(),
             ) {
                 Text(
-                    text = "Sign In",
+                    text = "Iniciar sesión",
                     fontWeight = FontWeight.Bold,
                     fontFamily = assistantFamily,
                 )
@@ -280,7 +281,7 @@ fun LoginScreen(
 
             if (showError) {
                 Text(
-                    text = "Username and password are incorrect",
+                    text = "El nombre de usuario y/o la contraseña son incorrectos",
                     fontWeight = FontWeight.Normal,
                     fontFamily = assistantFamily,
                     color = MaterialTheme.colorScheme.error,

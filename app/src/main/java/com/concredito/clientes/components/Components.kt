@@ -26,6 +26,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -73,10 +74,22 @@ fun ProspectiveCustomerAppBar(
 
                     // Agregar LetterTile con la primera letra como imagen
                     LetterTile(text = usernameLetter.take(1).uppercase())
-                    Text(text = title)
+                    Text(
+                        text = title,
+                        fontWeight = FontWeight.Medium,
+                        fontFamily = assistantFamily,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontSize = 20.sp,
+                    )
                 }
             } else {
-                Text(text = title)
+                Text(
+                    text = title,
+                    fontWeight = FontWeight.Medium,
+                    fontFamily = assistantFamily,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontSize = 20.sp,
+                )
             }
         },
         navigationIcon = {
@@ -158,7 +171,7 @@ fun TitleSection(
     onClickArrow: () -> Unit = {},
     isSectionVisible: Boolean = true,
 ) {
-    Column {
+    Surface(color = MaterialTheme.colorScheme.background) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -287,7 +300,7 @@ fun ProspectsLargeTopAppBar(
                         onClick = { onShowProspectsClicked.invoke() },
                     ) {
                         Text(
-                            text = "Show all prospects",
+                            text = "Mostrar todos los prospectos",
                             fontWeight = FontWeight.Bold,
                             fontFamily = assistantFamily,
                         )
@@ -324,11 +337,11 @@ fun ProspectsLargeTopAppBar(
 }
 
 @Composable
-fun LetterTile(text: String, size: Int, fontSize: Int) {
+fun LetterTile(text: String, size: Int, fontSize: Int, modifier: Modifier = Modifier) {
     val randomColor = getRandomColor()
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .size(size.dp)
             .background(
                 color = randomColor,

@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -69,17 +70,17 @@ fun NewProspectScreen(
 ) {
     val context = LocalContext.current
 
-    val prospectId = remember { UUID.randomUUID().toString() }
+    val prospectId = rememberSaveable { UUID.randomUUID().toString() }
     val promoterId = PreferencesManager(context).getPromoterId()
-    var prospectName by remember { mutableStateOf("") }
-    var prospectSurname by remember { mutableStateOf("") }
-    var prospectSecondSurname by remember { mutableStateOf("") }
-    var prospectStreetAddress by remember { mutableStateOf("") }
-    var prospectNumberAddress by remember { mutableStateOf("") }
-    var prospectNeighborhoodAddress by remember { mutableStateOf("") }
-    var prospectZipCode by remember { mutableStateOf("") }
-    var prospectPhoneNumber by remember { mutableStateOf("") }
-    var prospectRFC by remember { mutableStateOf("") }
+    var prospectName by rememberSaveable { mutableStateOf("") }
+    var prospectSurname by rememberSaveable { mutableStateOf("") }
+    var prospectSecondSurname by rememberSaveable { mutableStateOf("") }
+    var prospectStreetAddress by rememberSaveable { mutableStateOf("") }
+    var prospectNumberAddress by rememberSaveable { mutableStateOf("") }
+    var prospectNeighborhoodAddress by rememberSaveable { mutableStateOf("") }
+    var prospectZipCode by rememberSaveable { mutableStateOf("") }
+    var prospectPhoneNumber by rememberSaveable { mutableStateOf("") }
+    var prospectRFC by rememberSaveable { mutableStateOf("") }
 
     var prospectNameSupportingText by remember { mutableStateOf<String?>(null) }
     var prospectSurnameSupportingText by remember { mutableStateOf<String?>(null) }
