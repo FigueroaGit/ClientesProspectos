@@ -24,8 +24,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.Send
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.outlined.Send
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Cancel
 import androidx.compose.material.icons.rounded.CheckCircle
@@ -46,6 +46,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -106,9 +107,9 @@ fun ProspectEvaluationScreen(
                         ?: ProspectStatus.ENVIADO
                     ) == ProspectStatus.ENVIADO
             ) {
-                "Evaluacion del prospecto"
+                "Evaluación del prospecto"
             } else {
-                "Informacion del prospecto"
+                "Información del prospecto"
             },
             isHome = false,
             icon = Icons.Rounded.ArrowBack,
@@ -130,7 +131,7 @@ fun ProspectEvaluationScreen(
                     verticalArrangement = Arrangement.Center,
                 ) {
                     CircularProgressIndicator()
-                    Text(text = "Loading...")
+                    Text(text = "Cargando...")
                 }
             } else {
                 Surface(modifier = Modifier.fillMaxSize()) {
@@ -140,7 +141,9 @@ fun ProspectEvaluationScreen(
                             .verticalScroll(rememberScrollState()),
                     ) {
                         Surface(
-                            modifier = Modifier.align(Alignment.CenterHorizontally).padding(16.dp),
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .padding(16.dp),
                             shape = CircleShape,
                             color = MaterialTheme.colorScheme.primary,
                             tonalElevation = 8.dp,
@@ -150,9 +153,11 @@ fun ProspectEvaluationScreen(
                                 text = prospect.data.nombre.take(1),
                                 size = 160,
                                 fontSize = 64,
-                                modifier = Modifier.align(
-                                    Alignment.CenterHorizontally,
-                                ).padding(4.dp),
+                                modifier = Modifier
+                                    .align(
+                                        Alignment.CenterHorizontally,
+                                    )
+                                    .padding(4.dp),
                             )
                         }
 
@@ -188,14 +193,15 @@ fun ProspectEvaluationScreen(
                         )
 
                         Surface(
-                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
                                 .padding(vertical = 16.dp),
                             shape = RoundedCornerShape(4.dp),
                             color =
                             when (prospect.data.estatus) {
-                                ProspectStatus.ENVIADO -> Color.LightGray
-                                ProspectStatus.AUTORIZADO -> Color.Green
-                                ProspectStatus.RECHAZADO -> Color.Red
+                                ProspectStatus.ENVIADO -> MaterialTheme.colorScheme.surfaceVariant
+                                ProspectStatus.AUTORIZADO -> MaterialTheme.colorScheme.primaryContainer
+                                ProspectStatus.RECHAZADO -> MaterialTheme.colorScheme.errorContainer
                             },
                         ) {
                             Row(
@@ -297,7 +303,7 @@ fun ProspectEvaluationScreen(
 
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
-                                text = "Direccion:",
+                                text = "Dirección:",
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
                                 fontFamily = assistantFamily,
@@ -329,7 +335,7 @@ fun ProspectEvaluationScreen(
                                     }
                                     Row {
                                         Text(
-                                            text = "Numero: ",
+                                            text = "Número: ",
                                             fontSize = 16.sp,
                                             fontWeight = FontWeight.Bold,
                                             fontFamily = assistantFamily,
@@ -357,7 +363,7 @@ fun ProspectEvaluationScreen(
                                     }
                                     Row {
                                         Text(
-                                            text = "Codigo postal: ",
+                                            text = "Código postal: ",
                                             fontSize = 16.sp,
                                             fontWeight = FontWeight.Bold,
                                             fontFamily = assistantFamily,
@@ -374,7 +380,7 @@ fun ProspectEvaluationScreen(
                         }
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
-                                text = "Telefono:",
+                                text = "Teléfono:",
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
                                 fontFamily = assistantFamily,
@@ -411,7 +417,7 @@ fun ProspectEvaluationScreen(
                                         } catch (s: SecurityException) {
                                             Toast.makeText(
                                                 context,
-                                                "No se puede realizar esa accion",
+                                                "No se puede realizar esta accion",
                                                 Toast.LENGTH_LONG,
                                             )
                                                 .show()
@@ -435,7 +441,7 @@ fun ProspectEvaluationScreen(
                                         } catch (s: SecurityException) {
                                             Toast.makeText(
                                                 context,
-                                                "No se puede realizar esa accion",
+                                                "No se puede realizar esta accion",
                                                 Toast.LENGTH_LONG,
                                             )
                                                 .show()
@@ -632,8 +638,9 @@ fun ObservationsDialog(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .padding(vertical = 16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     IconButton(
                         onClick = {
@@ -659,7 +666,7 @@ fun ObservationsDialog(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(min = 100.dp),
+                        .heightIn(min = 154.dp),
                     label = { Text("Observaciones (Máx. $maxCharacters caracteres)") },
                     supportingText = {
                         Text(
@@ -684,14 +691,16 @@ fun ObservationsDialog(
                             onDismiss.invoke()
                         },
                     ),
+                    shape = RoundedCornerShape(8.dp),
+                    colors = TextFieldDefaults.colors(
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                    ),
                 )
 
                 // Botón de enviar
                 Button(
                     onClick = {
-                        // Manejar la acción de enviar, por ejemplo, puedes imprimir las observaciones
-                        println("Observations: $observations")
-
                         val rejectObservation = RejectObservation(
                             id = rejectObservationId,
                             observaciones = observations,
@@ -699,8 +708,6 @@ fun ObservationsDialog(
                         )
 
                         rejectObservationViewModel.addRejectObservations(rejectObservation)
-
-                        // Cerrar el diálogo
                         onClickSend.invoke()
                         onDismiss.invoke()
                     },
@@ -708,9 +715,12 @@ fun ObservationsDialog(
                         .fillMaxWidth()
                         .padding(top = 16.dp),
                 ) {
-                    Icon(imageVector = Icons.Outlined.Send, contentDescription = "Enviar")
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Rounded.Send,
+                        contentDescription = "Enviar",
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Enviar")
+                    Text("Enviar observaciones de rechazo")
                 }
             }
         }

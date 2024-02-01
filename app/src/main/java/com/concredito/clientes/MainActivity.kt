@@ -21,17 +21,16 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ClientesProspectosTheme {
-                ConCreditoApp()
+                FinaCreditoApp()
             }
         }
     }
 }
 
 @Composable
-fun ConCreditoApp() {
+fun FinaCreditoApp() {
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background,
     ) {
         AppNavigation()
     }

@@ -151,7 +151,7 @@ fun MainScreen(
                             onClick = { navController.navigate(AppScreens.NewProspectScreen.name) },
                         ) {
                             Text(
-                                text = "Agregar prospectos",
+                                text = "Capturar prospecto",
                                 fontWeight = FontWeight.Bold,
                                 fontFamily = assistantFamily,
                             )

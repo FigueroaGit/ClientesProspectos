@@ -63,6 +63,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3-android:1.2.0-rc01")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.23.0")
 
     /* ---Project Libraries Added--- */
     // Hilt

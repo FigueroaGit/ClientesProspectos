@@ -8,12 +8,15 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.Send
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocalPostOffice
 import androidx.compose.material.icons.filled.Numbers
@@ -131,7 +134,7 @@ fun NewProspectScreen(
 
     Scaffold(topBar = {
         ProspectiveCustomerAppBar(
-            title = "New Customer",
+            title = "Captura de prospecto",
             isHome = false,
             icon = Icons.Rounded.ArrowBack,
             navController = navController,
@@ -168,7 +171,7 @@ fun NewProspectScreen(
                             .fillMaxWidth()
                             .padding(vertical = 8.dp),
                         text = prospectName,
-                        label = "Customer Name",
+                        label = "Nombre",
                         onTextChange = {
                             if (it.length <= MAX_CHARACTERS_BY_NAME) {
                                 prospectName = filterNameInput(it)
@@ -195,7 +198,7 @@ fun NewProspectScreen(
                             .fillMaxWidth()
                             .padding(vertical = 4.dp),
                         text = prospectSurname,
-                        label = "Customer Surname",
+                        label = "Primer apellido",
                         onTextChange = {
                             if (it.length <= MAX_CHARACTERS_BY_NAME) {
                                 prospectSurname = filterNameInput(it)
@@ -222,7 +225,7 @@ fun NewProspectScreen(
                             .fillMaxWidth()
                             .padding(vertical = 4.dp),
                         text = prospectSecondSurname,
-                        label = "Customer Second Surname",
+                        label = "Segundo apellido",
                         onTextChange = {
                             if (it.length <= MAX_CHARACTERS_BY_NAME) {
                                 prospectSecondSurname = filterNameInput(it)
@@ -237,7 +240,7 @@ fun NewProspectScreen(
                             .fillMaxWidth()
                             .padding(vertical = 4.dp),
                         text = prospectStreetAddress,
-                        label = "Street Address",
+                        label = "Calle",
                         leadingIcon = Icons.Default.Home,
                         onTextChange = {
                             if (it.length <= MAX_CHARACTERS_BY_ADDRESS) {
@@ -265,7 +268,7 @@ fun NewProspectScreen(
                             .fillMaxWidth()
                             .padding(vertical = 4.dp),
                         text = prospectNumberAddress,
-                        label = "Number Address",
+                        label = "Número",
                         leadingIcon = Icons.Default.Numbers,
                         onTextChange = {
                             if (it.length <= MAX_CHARACTERS_BY_NUMBER_ADDRESS) {
@@ -293,7 +296,7 @@ fun NewProspectScreen(
                             .fillMaxWidth()
                             .padding(vertical = 4.dp),
                         text = prospectNeighborhoodAddress,
-                        label = "Neighborhood Address",
+                        label = "Colonia",
                         leadingIcon = Icons.Default.Home,
                         onTextChange = {
                             if (it.length <= MAX_CHARACTERS_BY_ADDRESS) {
@@ -321,7 +324,7 @@ fun NewProspectScreen(
                             .fillMaxWidth()
                             .padding(vertical = 4.dp),
                         text = prospectZipCode,
-                        label = "Zip Code",
+                        label = "Código postal",
                         leadingIcon = Icons.Default.LocalPostOffice,
                         onTextChange = {
                             if (it.length <= MAX_CHARACTERS_BY_ZIP_CODE) {
@@ -349,7 +352,7 @@ fun NewProspectScreen(
                             .fillMaxWidth()
                             .padding(vertical = 4.dp),
                         text = prospectPhoneNumber,
-                        label = "Phone Number",
+                        label = "Numero de teléfono",
                         leadingIcon = Icons.Default.Phone,
                         onTextChange = {
                             if (it.length <= MAX_CHARACTERS_BY_PHONE_NUMBER) {
@@ -438,46 +441,46 @@ fun NewProspectScreen(
                             var allValidationsPassed = true
 
                             if (prospectName.isEmpty()) {
-                                prospectNameSupportingText = "Prospect name is required"
+                                prospectNameSupportingText = "El nombre es necesario"
                                 showProspectNameError = true
                                 allValidationsPassed = false
                             }
                             if (prospectSurname.isEmpty()) {
-                                prospectSurnameSupportingText = "Prospect surname is required"
+                                prospectSurnameSupportingText = "El primer apellido es necesario"
                                 showProspectSurnameError = true
                                 allValidationsPassed = false
                             }
                             if (prospectStreetAddress.isEmpty()) {
                                 prospectStreetAddressSupportingText =
-                                    "Prospect street address is required"
+                                    "La calle es necesaria"
                                 showProspectStreetAddressError = true
                                 allValidationsPassed = false
                             }
                             if (prospectNumberAddress.isEmpty()) {
                                 prospectNumberAddressSupportingText =
-                                    "Prospect number address is required"
+                                    "El numero de calle es necesario"
                                 showProspectNumberAddressError = true
                                 allValidationsPassed = false
                             }
                             if (prospectNeighborhoodAddress.isEmpty()) {
                                 prospectNeighborhoodAddressSupportingText =
-                                    "Prospect neighborhood address is required"
+                                    "La colonia es necesaria"
                                 showProspectNeighborhoodAddressError = true
                                 allValidationsPassed = false
                             }
                             if (prospectZipCode.isEmpty()) {
-                                prospectZipCodeSupportingText = "Prospect zip code is required"
+                                prospectZipCodeSupportingText = "El código postal es necesario"
                                 showProspectZipCodeError = true
                                 allValidationsPassed = false
                             }
                             if (prospectPhoneNumber.isEmpty()) {
                                 prospectPhoneNumberSupportingText =
-                                    "Prospect phone number is required"
+                                    "El numero de telefono es necesario"
                                 showProspectPhoneNumberError = true
                                 allValidationsPassed = false
                             }
                             if (prospectRFC.isEmpty()) {
-                                prospectRFCSupportingText = "Prospect RFC is required"
+                                prospectRFCSupportingText = "El RFC es necesario"
                                 showProspectRFCError = true
                                 allValidationsPassed = false
                             }
@@ -517,7 +520,7 @@ fun NewProspectScreen(
                                 )
                                 prospectViewModel.createProspect(newProspect)
 
-                                Toast.makeText(context, "Prospecto Creado", Toast.LENGTH_LONG)
+                                Toast.makeText(context, "Los datos del prospecto se han enviado", Toast.LENGTH_LONG)
                                     .show()
                                 // Toast.makeText(context, "Documento Guardado", Toast.LENGTH_LONG).show()
                                 navController.navigate(AppScreens.ProspectsScreen.name)
@@ -526,8 +529,10 @@ fun NewProspectScreen(
                         modifier = Modifier.fillMaxWidth().height(48.dp),
                         shape = RoundedCornerShape(8.dp),
                     ) {
+                        Icon(imageVector = Icons.AutoMirrored.Rounded.Send, contentDescription = "Enviar")
+                        Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "Send",
+                            text = "Enviar al área de evaluación",
                             fontWeight = FontWeight.Bold,
                             fontFamily = assistantFamily,
                         )

@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -30,7 +31,6 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -53,7 +53,7 @@ fun ProspectsScreen(
 ) {
     Scaffold(topBar = {
         ProspectiveCustomerAppBar(
-            title = "Prospects List",
+            title = "Listado de prospectos",
             isHome = false,
             icon = Icons.Rounded.ArrowBack,
             navController = navController,
@@ -153,11 +153,9 @@ fun ProspectList(
                 stickyHeader {
                     TitleSection(
                         label = when (estatus) {
-                            ProspectStatus.ENVIADO -> "Sent"
-                            ProspectStatus.AUTORIZADO -> "Authorized"
-                            ProspectStatus.RECHAZADO -> "Rejected"
-                            // Agrega más casos según tus estados
-                            else -> "Other"
+                            ProspectStatus.ENVIADO -> "ENVIADOS"
+                            ProspectStatus.AUTORIZADO -> "AUTORIZADOS"
+                            ProspectStatus.RECHAZADO -> "RECHAZADOS"
                         },
                         onClickArrow = {
                             sectionVisibility[estatus.name] =
@@ -272,9 +270,9 @@ fun ProspectItem(
                             fontSize = 16.sp,
                             maxLines = 1,
                             color = when (prospect.estatus) {
-                                ProspectStatus.ENVIADO -> Color.Gray
-                                ProspectStatus.AUTORIZADO -> Color.Green
-                                ProspectStatus.RECHAZADO -> Color.Red
+                                ProspectStatus.ENVIADO -> MaterialTheme.colorScheme.onSurfaceVariant
+                                ProspectStatus.AUTORIZADO -> MaterialTheme.colorScheme.primary
+                                ProspectStatus.RECHAZADO -> MaterialTheme.colorScheme.error
                             },
                         )
                     }

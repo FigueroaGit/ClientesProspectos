@@ -3,6 +3,7 @@ package com.concredito.clientes.screens.login
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -102,7 +103,13 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Image(
-                painter = painterResource(id = R.drawable.finacredito_logo),
+                painter = painterResource(
+                    id = if (!isSystemInDarkTheme()) {
+                        R.drawable.finacredito_logo_light_theme
+                    } else {
+                        R.drawable.finacredito_logo_dark_theme
+                    },
+                ),
                 contentDescription = null,
                 modifier = Modifier
                     .width(256.dp)
