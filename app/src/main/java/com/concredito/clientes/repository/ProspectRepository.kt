@@ -2,6 +2,7 @@ package com.concredito.clientes.repository
 
 import com.concredito.clientes.data.Resource
 import com.concredito.clientes.model.Prospect
+import com.concredito.clientes.model.ProspectStatus
 import com.concredito.clientes.network.ProspectAPI
 import javax.inject.Inject
 
@@ -11,6 +12,19 @@ class ProspectRepository @Inject constructor(private val API: ProspectAPI) {
         return try {
             Resource.Loading(data = true)
             val itemList = API.getAllProspects()
+            if (itemList.isNotEmpty()) {
+                Resource.Loading(data = false)
+            }
+            Resource.Success(data = itemList)
+        } catch (exception: Exception) {
+            Resource.Error(message = exception.message.toString())
+        }
+    }
+
+    suspend fun getProspectsByPromoterId(promoterId: String): Resource<List<Prospect>> {
+        return try {
+            Resource.Loading(data = true)
+            val itemList = API.getProspectsByPromoterId(promoterId)
             if (itemList.isNotEmpty()) {
                 Resource.Loading(data = false)
             }

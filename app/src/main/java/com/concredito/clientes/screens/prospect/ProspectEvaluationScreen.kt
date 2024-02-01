@@ -52,7 +52,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -63,7 +62,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -80,13 +78,14 @@ import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview
 fun ProspectEvaluationScreen(
     navController: NavHostController = NavHostController(LocalContext.current),
     prospectId: String,
     prospectViewModel: ProspectViewModel = hiltViewModel(),
     rejectObservationViewModel: RejectObservationViewModel = hiltViewModel(),
 ) {
+    val promoterId = prospectViewModel.getPromoterId()
+
     val prospect = produceState<Resource<Prospect>>(initialValue = Resource.Loading()) {
         value = prospectViewModel.getProspectById(prospectId)
     }.value
@@ -115,7 +114,7 @@ fun ProspectEvaluationScreen(
             icon = Icons.Rounded.ArrowBack,
             navController = navController,
             onBackPressed = {
-                navController.navigate(AppScreens.ProspectsScreen.name) {
+                navController.navigate(AppScreens.ProspectsScreen.name + "/$promoterId") {
                     launchSingleTop = true
                 }
             },
@@ -254,7 +253,7 @@ fun ProspectEvaluationScreen(
                                             ),
                                         )
 
-                                        navController.navigate(AppScreens.ProspectsScreen.name)
+                                        navController.navigate(AppScreens.ProspectsScreen.name + "/$promoterId")
                                     },
                                 ) {
                                     Row(
@@ -618,8 +617,6 @@ fun ObservationsDialog(
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    val scope = rememberCoroutineScope()
-
     Dialog(
         onDismissRequest = {
             onDismiss.invoke()
@@ -708,6 +705,7 @@ fun ObservationsDialog(
                         )
 
                         rejectObservationViewModel.addRejectObservations(rejectObservation)
+
                         onClickSend.invoke()
                         onDismiss.invoke()
                     },

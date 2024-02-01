@@ -6,7 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.concredito.clientes.screens.SplashScreen
+import com.concredito.clientes.screens.splashscreen.SplashScreen
 import com.concredito.clientes.screens.login.LoginScreen
 import com.concredito.clientes.screens.main.MainScreen
 import com.concredito.clientes.screens.prospect.NewProspectScreen
@@ -29,8 +29,17 @@ fun AppNavigation() {
         composable(route = AppScreens.NewProspectScreen.name) {
             NewProspectScreen(navController = navController)
         }
-        composable(route = AppScreens.ProspectsScreen.name) {
-            ProspectsScreen(navController = navController)
+        composable(
+            route = AppScreens.ProspectsScreen.name + "/{promoterId}",
+            arguments = listOf(
+                navArgument("promoterId") {
+                    type = NavType.StringType
+                },
+            ),
+        ) { backStackEntry ->
+            backStackEntry.arguments?.getString("promoterId").let {
+                ProspectsScreen(navController = navController, promoterId = it.toString())
+            }
         }
         composable(
             route = AppScreens.ProspectEvaluationScreen.name + "/{prospectId}",

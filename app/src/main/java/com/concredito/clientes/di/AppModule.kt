@@ -1,5 +1,7 @@
 package com.concredito.clientes.di
 
+import android.content.Context
+import com.concredito.clientes.data.PreferencesManager
 import com.concredito.clientes.network.DocumentAPI
 import com.concredito.clientes.network.PromoterAPI
 import com.concredito.clientes.network.ProspectAPI
@@ -12,6 +14,7 @@ import com.concredito.clientes.util.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -20,6 +23,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Provides
+    @Singleton
+    fun providePreferencesManager(@ApplicationContext context: Context): PreferencesManager {
+        return PreferencesManager(context)
+    }
 
     @Singleton
     @Provides

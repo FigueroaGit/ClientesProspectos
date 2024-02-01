@@ -15,6 +15,9 @@ interface ProspectAPI {
     @GET("prospectos")
     suspend fun getAllProspects(): List<Prospect>
 
+    @GET("prospectos/byPromotor/{idPromotor}")
+    suspend fun getProspectsByPromoterId(@Path("idPromotor") idPromotor: String): List<Prospect>
+
     @GET("prospectos/{id}")
     suspend fun getProspectById(@Path("id") id: String): Prospect
 

@@ -47,7 +47,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.concredito.clientes.data.PreferencesManager
 import com.concredito.clientes.model.Prospect
 import com.concredito.clientes.model.ProspectStatus
 import com.concredito.clientes.navigation.AppScreens
@@ -65,16 +64,15 @@ import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview
 fun NewProspectScreen(
-    navController: NavHostController = NavHostController(LocalContext.current),
+    navController: NavHostController,
     prospectViewModel: ProspectViewModel = hiltViewModel(),
     documentViewModel: DocumentViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
 
     val prospectId = rememberSaveable { UUID.randomUUID().toString() }
-    val promoterId = PreferencesManager(context).getPromoterId()
+    val promoterId = prospectViewModel.getPromoterId()
     var prospectName by rememberSaveable { mutableStateOf("") }
     var prospectSurname by rememberSaveable { mutableStateOf("") }
     var prospectSecondSurname by rememberSaveable { mutableStateOf("") }
@@ -523,7 +521,7 @@ fun NewProspectScreen(
                                 Toast.makeText(context, "Los datos del prospecto se han enviado", Toast.LENGTH_LONG)
                                     .show()
                                 // Toast.makeText(context, "Documento Guardado", Toast.LENGTH_LONG).show()
-                                navController.navigate(AppScreens.ProspectsScreen.name)
+                                navController.navigate(AppScreens.ProspectsScreen.name + "/$promoterId")
                             }
                         },
                         modifier = Modifier.fillMaxWidth().height(48.dp),

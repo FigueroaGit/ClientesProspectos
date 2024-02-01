@@ -19,7 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -27,18 +27,21 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.concredito.clientes.data.Resource
 import com.concredito.clientes.model.Prospect
 import com.concredito.clientes.model.ProspectStatus
 import com.concredito.clientes.navigation.AppScreens
@@ -46,22 +49,22 @@ import com.concredito.clientes.ui.theme.assistantFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview
 fun ProspectsScreen(
     navController: NavHostController,
+    promoterId: String,
     prospectViewModel: ProspectViewModel = hiltViewModel(),
 ) {
     Scaffold(topBar = {
         ProspectiveCustomerAppBar(
             title = "Listado de prospectos",
             isHome = false,
-            icon = Icons.Rounded.ArrowBack,
+            icon = Icons.AutoMirrored.Rounded.ArrowBack,
             navController = navController,
             onBackPressed = { navController.navigate(AppScreens.MainScreen.name) },
         )
     }) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
-            ProspectsContent(navController = navController, prospectViewModel)
+            ProspectsContent(navController = navController, promoterId, prospectViewModel)
         }
     }
 }
@@ -69,44 +72,22 @@ fun ProspectsScreen(
 @Composable
 fun ProspectsContent(
     navController: NavHostController,
+    promoterId: String,
     prospectViewModel: ProspectViewModel = hiltViewModel(),
 ) {
-    val listOfProspects = prospectViewModel.list
+    var listOfPromoterId by remember { mutableStateOf<Resource<List<Prospect>>>(Resource.Loading()) }
+
+    LaunchedEffect(promoterId) {
+        listOfPromoterId = promoterId.let { prospectViewModel.getProspectsByPromoterId(it) }
+    }
+
     Column {
-        ProspectList(navController = navController, listOfProspects = listOfProspects)
-        /*TitleSection(label = "Sent", onClickArrow = { })
-        ProspectsSentArea(navController = navController, listOfProspects)
-        TitleSection(label = "Authorized", onClickArrow = { })
-        ProspectsAuthorizedArea(navController = navController, listOfProspects = listOfProspects)
-        TitleSection(label = "Rejected", onClickArrow = { })
-        ProspectsRejectedArea(navController = navController, listOfProspects = listOfProspects)*/
+        listOfPromoterId.data?.let { ProspectList(navController = navController, listOfProspects = it) }
     }
 }
 
-/*@Composable
-fun ProspectsSentArea(navController: NavHostController, listOfProspects: List<Prospect>) {
-    val prospectSend =
-        listOfProspects.filter { prospect -> prospect.estatus == ProspectStatus.ENVIADO }
-    ProspectList(navController = navController, listOfProspects = prospectSend)
-}
-
-@Composable
-fun ProspectsAuthorizedArea(navController: NavHostController, listOfProspects: List<Prospect>) {
-    val prospectAuthorized =
-        listOfProspects.filter { prospect -> prospect.estatus == ProspectStatus.AUTORIZADO }
-    ProspectList(navController = navController, listOfProspects = prospectAuthorized)
-}
-
-@Composable
-fun ProspectsRejectedArea(navController: NavHostController, listOfProspects: List<Prospect>) {
-    val prospectRejected =
-        listOfProspects.filter { prospect -> prospect.estatus == ProspectStatus.RECHAZADO }
-    ProspectList(navController = navController, listOfProspects = prospectRejected)
-}*/
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-@Preview
 fun ProspectList(
     navController: NavHostController,
     listOfProspects: List<Prospect>,
@@ -122,11 +103,6 @@ fun ProspectList(
             LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
         }
     } else {
-        /*LazyColumn {
-            items(items = listOfProspects) { prospect ->
-                ProspectItem(prospect, navController)
-            }
-        }*/
         LazyColumn {
             val groupedProspects = listOfProspects.groupBy { it.estatus }
 
@@ -180,58 +156,10 @@ fun ProspectList(
 }
 
 @Composable
-@Preview
 fun ProspectItem(
-    prospect: Prospect = Prospect(
-        id = "1",
-        idPromotor = "1",
-        nombre = "Nombre",
-        primerApellido = "Primer Apellido",
-        segundoApellido = null,
-        calle = "x",
-        numero = "1",
-        colonia = "x",
-        codigoPostal = "00000",
-        telefono = "5555555555",
-        rfc = "XXXXXXXXXXXXXX",
-        estatus = ProspectStatus.ENVIADO,
-    ),
-    navController: NavHostController = NavHostController(LocalContext.current),
+    prospect: Prospect,
+    navController: NavHostController,
 ) {
-    /*Card(
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth(),
-        shape = RoundedCornerShape(8.dp),
-        border = BorderStroke(1.dp, Color.LightGray),
-    ) {
-        Box(modifier = Modifier.clickable { navController.navigate(AppScreens.ProspectEvaluationScreen.name + "/${prospect.id}") }) {
-            Column(modifier = Modifier.padding(8.dp)) {
-                Text(
-                    text = "${prospect.nombre} ${prospect.primerApellido} ${prospect.segundoApellido}",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
-                )
-                Divider(modifier = Modifier.padding(vertical = 8.dp))
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = prospect.estatus.name,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 16.sp,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
-                    textAlign = TextAlign.End,
-                    color = when (prospect.estatus) {
-                        ProspectStatus.ENVIADO -> Color.Gray
-                        ProspectStatus.AUTORIZADO -> Color.Green
-                        ProspectStatus.RECHAZADO -> Color.Red
-                    },
-                )
-            }
-        }
-    }*/
     Surface(
         modifier = Modifier
             .fillMaxWidth(),
@@ -243,40 +171,45 @@ fun ProspectItem(
                 }
             },
         ) {
-            Column(modifier = Modifier.padding(horizontal = 8.dp)) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    LetterTile(
-                        text = "${prospect.nombre.take(1)}",
-                        size = 48,
-                        fontSize = 22,
-                    )
-                    Column(modifier = Modifier.padding(8.dp)) {
-                        Text(
-                            text = "${prospect.nombre} ${prospect.primerApellido} ${prospect.segundoApellido}",
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = assistantFamily,
-                            fontSize = 20.sp,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 1,
-                        )
-                        Text(
-                            modifier = Modifier.fillMaxWidth(),
-                            text = prospect.estatus.name,
-                            fontWeight = FontWeight.Medium,
-                            fontFamily = assistantFamily,
-                            fontSize = 16.sp,
-                            maxLines = 1,
-                            color = when (prospect.estatus) {
-                                ProspectStatus.ENVIADO -> MaterialTheme.colorScheme.onSurfaceVariant
-                                ProspectStatus.AUTORIZADO -> MaterialTheme.colorScheme.primary
-                                ProspectStatus.RECHAZADO -> MaterialTheme.colorScheme.error
-                            },
-                        )
-                    }
-                }
+            ProspectInfo(prospect = prospect)
+        }
+    }
+}
+
+@Composable
+fun ProspectInfo(prospect: Prospect) {
+    Column(modifier = Modifier.padding(horizontal = 8.dp)) {
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            LetterTile(
+                text = prospect.nombre.take(1),
+                size = 48,
+                fontSize = 22,
+            )
+            Column(modifier = Modifier.padding(8.dp)) {
+                Text(
+                    text = "${prospect.nombre} ${prospect.primerApellido} ${prospect.segundoApellido}",
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = assistantFamily,
+                    fontSize = 20.sp,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
+                )
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = prospect.estatus.name,
+                    fontWeight = FontWeight.Medium,
+                    fontFamily = assistantFamily,
+                    fontSize = 16.sp,
+                    maxLines = 1,
+                    color = when (prospect.estatus) {
+                        ProspectStatus.ENVIADO -> MaterialTheme.colorScheme.onSurfaceVariant
+                        ProspectStatus.AUTORIZADO -> MaterialTheme.colorScheme.primary
+                        ProspectStatus.RECHAZADO -> MaterialTheme.colorScheme.error
+                    },
+                )
             }
         }
     }
