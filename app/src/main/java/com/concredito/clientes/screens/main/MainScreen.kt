@@ -37,22 +37,22 @@ import com.concredito.clientes.data.Resource
 import com.concredito.clientes.model.Prospect
 import com.concredito.clientes.navigation.AppScreens
 import com.concredito.clientes.screens.prospect.ProspectItem
-import com.concredito.clientes.screens.prospect.ProspectViewModel
+import com.concredito.clientes.screens.prospect.ProspectsViewModel
 import com.concredito.clientes.ui.theme.assistantFamily
 
 @Composable
 fun MainScreen(
     navController: NavHostController,
-    prospectViewModel: ProspectViewModel = hiltViewModel(),
+    prospectsViewModel: ProspectsViewModel = hiltViewModel(),
 ) {
-    val promoterId = prospectViewModel.getPromoterId()
-    val username = prospectViewModel.getUsername()
+    val promoterId = prospectsViewModel.getPromoterId()
+    val username = prospectsViewModel.getUsername()
     val context = LocalContext.current
 
     var listOfPromoterId by remember { mutableStateOf<Resource<List<Prospect>>>(Resource.Loading()) }
 
     LaunchedEffect(promoterId) {
-        listOfPromoterId = promoterId?.let { prospectViewModel.getProspectsByPromoterId(it) }
+        listOfPromoterId = promoterId?.let { prospectsViewModel.getProspectsByPromoterId(it) }
             ?: Resource.Error("PromoterId is null")
     }
 

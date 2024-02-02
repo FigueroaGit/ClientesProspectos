@@ -11,12 +11,11 @@ import com.concredito.clientes.data.Resource
 import com.concredito.clientes.model.Prospect
 import com.concredito.clientes.repository.ProspectRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProspectViewModel @Inject constructor(private val repository: ProspectRepository, private val preferencesManager: PreferencesManager) : ViewModel() {
+class ProspectsViewModel @Inject constructor(private val repository: ProspectRepository, private val preferencesManager: PreferencesManager) : ViewModel() {
 
     var list: List<Prospect> by mutableStateOf(listOf())
     var listOfPromoterId: List<Prospect> by mutableStateOf(listOf())

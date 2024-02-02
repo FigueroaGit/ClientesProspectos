@@ -66,13 +66,13 @@ import java.util.UUID
 @Composable
 fun NewProspectScreen(
     navController: NavHostController,
-    prospectViewModel: ProspectViewModel = hiltViewModel(),
+    prospectsViewModel: ProspectsViewModel = hiltViewModel(),
     documentViewModel: DocumentViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
 
     val prospectId = rememberSaveable { UUID.randomUUID().toString() }
-    val promoterId = prospectViewModel.getPromoterId()
+    val promoterId = prospectsViewModel.getPromoterId()
     var prospectName by rememberSaveable { mutableStateOf("") }
     var prospectSurname by rememberSaveable { mutableStateOf("") }
     var prospectSecondSurname by rememberSaveable { mutableStateOf("") }
@@ -516,7 +516,7 @@ fun NewProspectScreen(
                                     rfc = prospectRFC,
                                     estatus = ProspectStatus.ENVIADO,
                                 )
-                                prospectViewModel.createProspect(newProspect)
+                                prospectsViewModel.createProspect(newProspect)
 
                                 Toast.makeText(context, "Los datos del prospecto se han enviado", Toast.LENGTH_LONG)
                                     .show()

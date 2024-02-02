@@ -52,7 +52,7 @@ import com.concredito.clientes.ui.theme.assistantFamily
 fun ProspectsScreen(
     navController: NavHostController,
     promoterId: String,
-    prospectViewModel: ProspectViewModel = hiltViewModel(),
+    prospectsViewModel: ProspectsViewModel = hiltViewModel(),
 ) {
     Scaffold(topBar = {
         ProspectiveCustomerAppBar(
@@ -64,7 +64,7 @@ fun ProspectsScreen(
         )
     }) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
-            ProspectsContent(navController = navController, promoterId, prospectViewModel)
+            ProspectsContent(navController = navController, promoterId, prospectsViewModel)
         }
     }
 }
@@ -73,13 +73,13 @@ fun ProspectsScreen(
 fun ProspectsContent(
     navController: NavHostController,
     promoterId: String,
-    prospectViewModel: ProspectViewModel = hiltViewModel(),
+    prospectsViewModel: ProspectsViewModel = hiltViewModel(),
 ) {
     var listOfPromoterId by remember { mutableStateOf<Resource<List<Prospect>>>(Resource.Loading()) }
 
     LaunchedEffect(promoterId) {
         listOfPromoterId = promoterId.let { promoterId ->
-            prospectViewModel.getProspectsByPromoterId(promoterId)
+            prospectsViewModel.getProspectsByPromoterId(promoterId)
         }
     }
 

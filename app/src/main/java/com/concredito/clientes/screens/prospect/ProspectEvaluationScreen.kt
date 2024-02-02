@@ -81,13 +81,13 @@ import java.util.UUID
 fun ProspectEvaluationScreen(
     navController: NavHostController = NavHostController(LocalContext.current),
     prospectId: String,
-    prospectViewModel: ProspectViewModel = hiltViewModel(),
+    prospectsViewModel: ProspectsViewModel = hiltViewModel(),
     rejectObservationViewModel: RejectObservationViewModel = hiltViewModel(),
 ) {
-    val promoterId = prospectViewModel.getPromoterId()
+    val promoterId = prospectsViewModel.getPromoterId()
 
     val prospect = produceState<Resource<Prospect>>(initialValue = Resource.Loading()) {
-        value = prospectViewModel.getProspectById(prospectId)
+        value = prospectsViewModel.getProspectById(prospectId)
     }.value
 
     val observation =
@@ -235,7 +235,7 @@ fun ProspectEvaluationScreen(
                                 Button(
                                     modifier = Modifier.weight(1F),
                                     onClick = {
-                                        prospectViewModel.updateProspect(
+                                        prospectsViewModel.updateProspect(
                                             prospectId,
                                             Prospect(
                                                 id = prospectId,
@@ -496,7 +496,7 @@ fun ProspectEvaluationScreen(
                                     showDialog = false
                                 },
                                 onClickSend = {
-                                    prospectViewModel.updateProspect(
+                                    prospectsViewModel.updateProspect(
                                         prospectId,
                                         Prospect(
                                             id = prospectId,
