@@ -1,4 +1,4 @@
-package com.concredito.clientes.screens.splashscreen
+package com.concredito.clientes.screens.splash
 
 import android.view.animation.OvershootInterpolator
 import androidx.compose.animation.core.Animatable

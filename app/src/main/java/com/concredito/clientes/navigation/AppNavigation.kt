@@ -6,7 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.concredito.clientes.screens.splashscreen.SplashScreen
+import com.concredito.clientes.screens.splash.SplashScreen
 import com.concredito.clientes.screens.login.LoginScreen
 import com.concredito.clientes.screens.main.MainScreen
 import com.concredito.clientes.screens.prospect.NewProspectScreen
