@@ -14,13 +14,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -35,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -47,7 +48,6 @@ import com.concredito.clientes.model.ProspectStatus
 import com.concredito.clientes.navigation.AppScreens
 import com.concredito.clientes.ui.theme.assistantFamily
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProspectsScreen(
     navController: NavHostController,
@@ -78,11 +78,13 @@ fun ProspectsContent(
     var listOfPromoterId by remember { mutableStateOf<Resource<List<Prospect>>>(Resource.Loading()) }
 
     LaunchedEffect(promoterId) {
-        listOfPromoterId = promoterId.let { prospectViewModel.getProspectsByPromoterId(it) }
+        listOfPromoterId = promoterId.let { promoterId ->
+            prospectViewModel.getProspectsByPromoterId(promoterId)
+        }
     }
 
     Column {
-        listOfPromoterId.data?.let { ProspectList(navController = navController, listOfProspects = it) }
+        ProspectList(navController = navController, listOfProspects = listOfPromoterId)
     }
 }
 
@@ -90,67 +92,79 @@ fun ProspectsContent(
 @Composable
 fun ProspectList(
     navController: NavHostController,
-    listOfProspects: List<Prospect>,
-    prospectViewModel: ProspectViewModel = hiltViewModel(),
+    listOfProspects: Resource<List<Prospect>>,
 ) {
     val sectionVisibility = remember { mutableStateMapOf<String, Boolean>() }
-    if (prospectViewModel.isLoading) {
-        Row(
-            modifier = Modifier.padding(end = 2.dp),
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-        }
-    } else {
-        LazyColumn {
-            val groupedProspects = listOfProspects.groupBy { it.estatus }
 
-            if (sectionVisibility.isEmpty()) {
-                groupedProspects.keys.forEach { estatus ->
-                    sectionVisibility[estatus.name] = true
-                }
-            }
+    when (listOfProspects) {
+        is Resource.Success -> {
+            LazyColumn {
+                val groupedProspects = listOfProspects.data?.groupBy { it.estatus }
 
-            // Ordenar los grupos según tu preferencia
-            val sortedGroups = groupedProspects.entries.sortedBy { entry ->
-                when (entry.key) {
-                    ProspectStatus.ENVIADO -> 0
-                    ProspectStatus.AUTORIZADO -> 1
-                    ProspectStatus.RECHAZADO -> 2
-                    // Agrega más casos según tus estados
-                    else -> 3
-                }
-            }
-
-            sortedGroups.forEach { (estatus, prospects) ->
-                val visible = sectionVisibility[estatus.name] == true
-
-                stickyHeader {
-                    TitleSection(
-                        label = when (estatus) {
-                            ProspectStatus.ENVIADO -> "ENVIADOS"
-                            ProspectStatus.AUTORIZADO -> "AUTORIZADOS"
-                            ProspectStatus.RECHAZADO -> "RECHAZADOS"
-                        },
-                        onClickArrow = {
-                            sectionVisibility[estatus.name] =
-                                sectionVisibility[estatus.name]?.not() ?: true
-                        },
-                        isSectionVisible = visible,
-                    )
+                if (sectionVisibility.isEmpty()) {
+                    groupedProspects?.keys?.forEach { estatus ->
+                        sectionVisibility[estatus.name] = true
+                    }
                 }
 
-                items(items = prospects) { prospect ->
-                    AnimatedVisibility(
-                        visible = visible,
-                        enter = fadeIn() + slideInVertically(),
-                        exit = fadeOut() + slideOutVertically(),
-                    ) {
-                        ProspectItem(prospect, navController)
+                // Ordenar los grupos según tu preferencia
+                val sortedGroups = groupedProspects?.entries?.sortedBy { entry ->
+                    when (entry.key) {
+                        ProspectStatus.ENVIADO -> 0
+                        ProspectStatus.AUTORIZADO -> 1
+                        ProspectStatus.RECHAZADO -> 2
+                    }
+                }
+
+                sortedGroups?.forEach { (estatus, prospects) ->
+                    val visible = sectionVisibility[estatus.name] == true
+
+                    stickyHeader {
+                        TitleSection(
+                            label = when (estatus) {
+                                ProspectStatus.ENVIADO -> "ENVIADOS"
+                                ProspectStatus.AUTORIZADO -> "AUTORIZADOS"
+                                ProspectStatus.RECHAZADO -> "RECHAZADOS"
+                            },
+                            onClickArrow = {
+                                sectionVisibility[estatus.name] =
+                                    sectionVisibility[estatus.name]?.not() ?: true
+                            },
+                            isSectionVisible = visible,
+                        )
+                    }
+
+                    items(items = prospects) { prospect ->
+                        AnimatedVisibility(
+                            visible = visible,
+                            enter = fadeIn() + slideInVertically(),
+                            exit = fadeOut() + slideOutVertically(),
+                        ) {
+                            ProspectItem(prospect, navController)
+                        }
                     }
                 }
             }
+        }
+
+        is Resource.Loading -> {
+            Row(
+                modifier = Modifier.padding(end = 2.dp),
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
+        }
+
+        is Resource.Error -> {
+            Text(
+                text = "Error: ${listOfProspects.message}",
+                color = Color.Red,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+            )
         }
     }
 }
