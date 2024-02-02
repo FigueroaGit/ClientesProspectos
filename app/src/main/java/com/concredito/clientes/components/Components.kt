@@ -236,10 +236,10 @@ fun ExitDialog(
             onDismiss()
         },
         title = {
-            Text("Exit Confirmation")
+            Text("Confirmación de salida")
         },
         text = {
-            Text("Are you sure you want to exit? Your data will not be saved.")
+            Text("¿Estás seguro de que quieres salir? Los datos no se guardarán.")
         },
         confirmButton = {
             TextButton(
@@ -248,7 +248,7 @@ fun ExitDialog(
                     onDismiss()
                 },
             ) {
-                Text("Yes")
+                Text("Si")
             }
         },
         dismissButton = {
