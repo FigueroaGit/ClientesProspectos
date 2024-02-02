@@ -513,6 +513,8 @@ fun ProspectEvaluationScreen(
                                             estatus = ProspectStatus.RECHAZADO,
                                         ),
                                     )
+
+                                    navController.navigate(AppScreens.ProspectsScreen.name + "/$promoterId")
                                 },
                                 prospectId,
                                 rejectObservationViewModel,

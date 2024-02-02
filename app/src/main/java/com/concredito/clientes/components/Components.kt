@@ -73,7 +73,7 @@ fun ProspectiveCustomerAppBar(
                     val usernameLetter = titleWithGreetings[1]
 
                     // Agregar LetterTile con la primera letra como imagen
-                    LetterTile(text = usernameLetter.take(1).uppercase())
+                    LetterTile(text = usernameLetter.take(1).uppercase(), size = 40, fontSize = 20)
                     Text(
                         text = title,
                         fontWeight = FontWeight.Medium,
@@ -116,9 +116,7 @@ fun ProspectiveCustomerAppBar(
     )
 }
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-@Preview
 fun FormInputText(
     modifier: Modifier = Modifier,
     text: String = "",
@@ -196,32 +194,6 @@ fun TitleSection(
                 )
             }
         }
-    }
-}
-
-@Composable
-fun LetterTile(text: String) {
-    val randomColor = getRandomColor()
-
-    Box(
-        modifier = Modifier
-            .size(40.dp)
-            .background(
-                color = randomColor,
-                shape = CircleShape,
-            )
-            .clip(CircleShape),
-    ) {
-        Text(
-            text = text,
-            color = Color.White,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
-            textAlign = TextAlign.Center,
-            fontSize = 20.sp,
-        )
     }
 }
 

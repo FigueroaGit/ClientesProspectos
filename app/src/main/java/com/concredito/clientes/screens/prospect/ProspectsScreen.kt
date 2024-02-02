@@ -98,49 +98,53 @@ fun ProspectList(
 
     when (listOfProspects) {
         is Resource.Success -> {
-            LazyColumn {
-                val groupedProspects = listOfProspects.data?.groupBy { it.estatus }
+            if (listOfProspects.data?.isEmpty() == true) {
+                Resource.Loading(data = listOfProspects)
+            } else {
+                LazyColumn {
+                    val groupedProspects = listOfProspects.data?.groupBy { it.estatus }
 
-                if (sectionVisibility.isEmpty()) {
-                    groupedProspects?.keys?.forEach { estatus ->
-                        sectionVisibility[estatus.name] = true
-                    }
-                }
-
-                // Ordenar los grupos según tu preferencia
-                val sortedGroups = groupedProspects?.entries?.sortedBy { entry ->
-                    when (entry.key) {
-                        ProspectStatus.ENVIADO -> 0
-                        ProspectStatus.AUTORIZADO -> 1
-                        ProspectStatus.RECHAZADO -> 2
-                    }
-                }
-
-                sortedGroups?.forEach { (estatus, prospects) ->
-                    val visible = sectionVisibility[estatus.name] == true
-
-                    stickyHeader {
-                        TitleSection(
-                            label = when (estatus) {
-                                ProspectStatus.ENVIADO -> "ENVIADOS"
-                                ProspectStatus.AUTORIZADO -> "AUTORIZADOS"
-                                ProspectStatus.RECHAZADO -> "RECHAZADOS"
-                            },
-                            onClickArrow = {
-                                sectionVisibility[estatus.name] =
-                                    sectionVisibility[estatus.name]?.not() ?: true
-                            },
-                            isSectionVisible = visible,
-                        )
+                    if (sectionVisibility.isEmpty()) {
+                        groupedProspects?.keys?.forEach { estatus ->
+                            sectionVisibility[estatus.name] = true
+                        }
                     }
 
-                    items(items = prospects) { prospect ->
-                        AnimatedVisibility(
-                            visible = visible,
-                            enter = fadeIn() + slideInVertically(),
-                            exit = fadeOut() + slideOutVertically(),
-                        ) {
-                            ProspectItem(prospect, navController)
+                    // Ordenar los grupos según tu preferencia
+                    val sortedGroups = groupedProspects?.entries?.sortedBy { entry ->
+                        when (entry.key) {
+                            ProspectStatus.ENVIADO -> 0
+                            ProspectStatus.AUTORIZADO -> 1
+                            ProspectStatus.RECHAZADO -> 2
+                        }
+                    }
+
+                    sortedGroups?.forEach { (estatus, prospects) ->
+                        val visible = sectionVisibility[estatus.name] == true
+
+                        stickyHeader {
+                            TitleSection(
+                                label = when (estatus) {
+                                    ProspectStatus.ENVIADO -> "ENVIADOS"
+                                    ProspectStatus.AUTORIZADO -> "AUTORIZADOS"
+                                    ProspectStatus.RECHAZADO -> "RECHAZADOS"
+                                },
+                                onClickArrow = {
+                                    sectionVisibility[estatus.name] =
+                                        sectionVisibility[estatus.name]?.not() ?: true
+                                },
+                                isSectionVisible = visible,
+                            )
+                        }
+
+                        items(items = prospects) { prospect ->
+                            AnimatedVisibility(
+                                visible = visible,
+                                enter = fadeIn() + slideInVertically(),
+                                exit = fadeOut() + slideOutVertically(),
+                            ) {
+                                ProspectItem(prospect, navController)
+                            }
                         }
                     }
                 }
