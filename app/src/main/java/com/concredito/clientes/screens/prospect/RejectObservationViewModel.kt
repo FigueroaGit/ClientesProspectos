@@ -45,8 +45,8 @@ class RejectObservationViewModel @Inject constructor(private val repository: Rej
                 }
             } catch (exception: Exception) {
                 isLoading = false
-                Log.d("Network", "searchBooks: ${exception.message}")
-                Log.d("RES", "searchBooks: ${exception.message}")
+                Log.d("Network", "searchProspects: ${exception.message}")
+                Log.d("RES", "searchProspects: ${exception.message}")
             }
         }
     }
@@ -65,7 +65,10 @@ class RejectObservationViewModel @Inject constructor(private val repository: Rej
         }
     }
 
-    suspend fun updateRejectObservations(id: String, rejectObservation: RejectObservation): Resource<RejectObservation> {
+    suspend fun updateRejectObservations(
+        id: String,
+        rejectObservation: RejectObservation,
+    ): Resource<RejectObservation> {
         return repository.updateRejectObservations(id, rejectObservation)
     }
 

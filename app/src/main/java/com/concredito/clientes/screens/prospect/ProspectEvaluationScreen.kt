@@ -91,7 +91,6 @@ import com.concredito.clientes.util.Constants.ONE_LINE
 import com.concredito.clientes.util.Constants.PHONE_URI
 import java.util.UUID
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProspectEvaluationScreen(
     navController: NavHostController = NavHostController(LocalContext.current),
@@ -633,7 +632,6 @@ fun DocumentItem(
 }
 */
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ObservationsDialog(
     onDismiss: () -> Unit,

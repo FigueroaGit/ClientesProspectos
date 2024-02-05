@@ -29,7 +29,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.concredito.clientes.R
@@ -90,7 +89,6 @@ fun MainScreen(
                 }
 
                 is Resource.Loading -> {
-                    // Muestra un indicador de carga, si es necesario
                     CircularProgressIndicator(
                         modifier = Modifier
                             .size(circularIndicator)
@@ -99,7 +97,6 @@ fun MainScreen(
                 }
 
                 is Resource.Error -> {
-                    // Muestra un mensaje de error, puedes personalizarlo según tus necesidades
                     Text(
                         text = "Error: ${result.message}",
                         color = Color.Red,

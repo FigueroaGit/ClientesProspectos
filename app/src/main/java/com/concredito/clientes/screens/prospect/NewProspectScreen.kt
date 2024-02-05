@@ -18,12 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.InsertDriveFile
 import androidx.compose.material.icons.automirrored.rounded.Send
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.LocalPostOffice
-import androidx.compose.material.icons.filled.Numbers
-import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.rounded.AddCircle
-import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.LocalPostOffice
 import androidx.compose.material.icons.rounded.Numbers
@@ -557,7 +552,6 @@ fun NewProspectScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 fun DocumentSection(
@@ -574,7 +568,6 @@ fun DocumentSection(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        // Document Name Input
         OutlinedTextField(
             value = documentName,
             onValueChange = { onDocumentNameChange(it) },

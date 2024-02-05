@@ -1,9 +1,5 @@
 package com.concredito.clientes.screens.prospect
 
-import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.concredito.clientes.data.PreferencesManager
@@ -15,7 +11,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProspectsViewModel @Inject constructor(private val repository: ProspectRepository, private val preferencesManager: PreferencesManager) : ViewModel() {
+class ProspectsViewModel @Inject constructor(
+    private val repository: ProspectRepository,
+    private val preferencesManager: PreferencesManager,
+) : ViewModel() {
 
     suspend fun getProspectsByPromoterId(promoterId: String): Resource<List<Prospect>> {
         return repository.getProspectsByPromoterId(promoterId)

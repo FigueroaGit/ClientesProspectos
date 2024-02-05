@@ -2,7 +2,6 @@ package com.concredito.clientes.repository
 
 import com.concredito.clientes.data.Resource
 import com.concredito.clientes.model.Prospect
-import com.concredito.clientes.model.ProspectStatus
 import com.concredito.clientes.network.ProspectAPI
 import javax.inject.Inject
 

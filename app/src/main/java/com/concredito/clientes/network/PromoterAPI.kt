@@ -36,5 +36,4 @@ interface PromoterAPI {
 
     @GET("promotores/{id}/prospectos")
     suspend fun getProspectsByPromoter(@Path("id") id: String): List<Prospect>
-
 }

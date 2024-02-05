@@ -1,7 +1,5 @@
 package com.concredito.clientes.screens.prospect
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.concredito.clientes.data.Resource
