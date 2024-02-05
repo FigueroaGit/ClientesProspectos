@@ -14,7 +14,7 @@ android {
         minSdk = 24
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = "2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -95,7 +95,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:1.6.0")
 
     // Image from URL
-    implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation("io.coil-kt:coil-compose:2.5.0")
 
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.7.6")

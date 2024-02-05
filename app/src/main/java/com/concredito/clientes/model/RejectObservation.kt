@@ -1,7 +1,12 @@
 package com.concredito.clientes.model
 
+import com.google.gson.annotations.SerializedName
+
 data class RejectObservation(
+    @SerializedName("id")
     val id: String,
-    val observaciones: String,
-    val prospectoId: String,
+    @SerializedName("observaciones")
+    val observations: String,
+    @SerializedName("prospectoId")
+    val prospectId: String,
 )

@@ -1,3 +1,92 @@
 <resources>
     <string name="app_name">Clientes Prospectos</string>
+    <string name="back_content_description">Volver atras</string>
+    <string name="logout_content_description">Cerrar sesión</string>
+    <string name="leading_icon_content_description">Icono del campo de texto</string>
+    <string name="menu_icon_content_description">Menu</string>
+    <string name="section_visible_content_description">Sección visible</string>
+    <string name="exit_confirmation">Confirmación de salida</string>
+    <string name="exit_confirmation_text">¿Estás seguro de que quieres salir? Los datos no se guardarán.</string>
+    <string name="exit_confirmation_button_yes">Si</string>
+    <string name="exit_confirmation_button_no">No</string>
+    <string name="button_show_all_prospects">Mostrar todos los prospectos</string>
+    <string name="logo_image_content_description">FinaCredito logo</string>
+    <string name="welcome_login_text">Bienvenido de nuevo</string>
+    <string name="label_username_field">Usuario</string>
+    <string name="label_password_field">Contraseña</string>
+    <string name="password_visible_content_description">Mostrar contraseña</string>
+    <string name="password_invisible_content_description">Ocultar contraseña</string>
+    <string name="forgot_password">Olvide la contraseña</string>
+    <string name="advice_username_text">El nombre de usuario es requerido</string>
+    <string name="advice_password_text">La contraseña es requerida</string>
+    <string name="login_button_text">Iniciar sesión</string>
+    <string name="login_error_text">El nombre de usuario y/o la contraseña son incorrectos</string>
+    <string name="welcome_user_text">Bienvenido, %1s</string>
+    <string name="main_screen_app_bar_text">Mi panel</string>
+    <string name="empty_list_content_description">Imagen de lista vacia</string>
+    <string name="empty_list_title">¡Parece que no hay prospectos aquí!</string>
+    <string name="empty_list_paragraph">Si deseas agregar prospectos y ver cuántos prospectos has agregado, comience a agregar prospectos con el botón a continuación</string>
+    <string name="label_last_prospect_added">Último prospecto agregado</string>
+    <string name="label_total_of_prospects_added">Total de prospectos agregados</string>
+    <string name="button_add_prospect">Capturar prospecto</string>
+    <string name="new_prospect_screen_app_bar_text">Captura de prospecto</string>
+    <string name="label_name_field">Nombre</string>
+    <string name="label_surname_field">Primer apellido</string>
+    <string name="label_second_surname_field">Segundo apellido</string>
+    <string name="label_street_field">Calle</string>
+    <string name="label_number_field">Número</string>
+    <string name="label_neighborhood_field">Colonia</string>
+    <string name="label_zip_code_field">Código postal</string>
+    <string name="label_phone_number_field">Número de teléfono</string>
+    <string name="label_rfc_field">RFC</string>
+    <string name="name_error_text">El nombre es necesario</string>
+    <string name="surname_error_text">El primer apellido es necesario</string>
+    <string name="address_error_text">La calle es necesaria</string>
+    <string name="number_error_text">El número de calle es necesario</string>
+    <string name="neighborhood_error_text">La colonia es necesaria</string>
+    <string name="zip_code_error_text">El código postal es necesario</string>
+    <string name="phone_number_error_text">El número de teléfono es necesario</string>
+    <string name="rfc_error_text">El RFC es necesario</string>
+    <string name="message_send_prospect_data">Los datos del prospecto se han enviado</string>
+    <string name="send_icon_content_description">Enviar</string>
+    <string name="button_send_to_evaluation_area">Enviar al área de evaluación</string>
+    <string name="label_document_name_field">Nombre del documento</string>
+    <string name="document_icon_content_description">Icono documento</string>
+    <string name="add_document_icon_content_description">Agregar documento</string>
+    <string-array name="prospect_evaluation_screen_app_bar_text">
+        <item>Evaluación del prospecto</item>
+        <item>Información del prospecto</item>
+    </string-array>
+    <string name="label_circular_progress_indicator_text">Cargando…</string>
+    <string name="label_rfc_text">RFC: %1s</string>
+    <string name="icon_status_content_description">Estatus</string>
+    <string name="authorize_icon_content_description">Autorizar prospecto</string>
+    <string name="reject_icon_content_description">Rechazar prospecto</string>
+    <string name="button_authorize_prospect">Autorizar</string>
+    <string name="button_reject_prospect">Rechazar</string>
+    <string-array name="labels_address_text">
+        <item>Dirección:</item>
+        <item>Calle: </item>
+        <item>Número: </item>
+        <item>Colonia: </item>
+        <item>Código postal: </item>
+        <item>Teléfono:</item>
+        <item>Principal: </item>
+    </string-array>
+    <string name="location_icon_content_description">Ubicación</string>
+    <string name="phone_icon_content_description">Teléfono</string>
+    <string name="message_icon_content_description">Mensaje</string>
+    <string name="message_launch_intent_error">No se puede realizar esta acción</string>
+    <string name="label_reject_observations_text">Observaciones:</string>
+    <string name="observations_icon_content_description">Observacion</string>
+    <string name="close_icon_content_description">Cerrar</string>
+    <string name="label_enter_reject_observations">Ingrese las observaciones de rechazo</string>
+    <string name="label_reject_observations_characters_max_field">Observaciones (Máx. %1s caracteres)</string>
+    <string name="label_reject_observations_characters_left_field">Caracteres restantes: %1s</string>
+    <string name="button_send_observations">Enviar observaciones de rechazo</string>
+    <string name="prospects_screen_app_bar_text">Listado de prospectos</string>
+    <string name="label_prospects_sent_text">ENVIADOS</string>
+    <string name="label_prospects_authorized_text">AUTORIZADOS</string>
+    <string name="label_prospects_rejected_text">RECHAZADOS</string>
+    <string name="app_creator_name">Por FigueroaGit</string>
 </resources>

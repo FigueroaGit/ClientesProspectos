@@ -32,7 +32,7 @@ interface PromoterAPI {
 
     @POST("promotores/login")
     @FormUrlEncoded
-    suspend fun login(@Field("usuario") usuario: String, @Field("contrasena") contrasena: String): Promoter
+    suspend fun login(@Field("usuario") username: String, @Field("contrasena") password: String): Promoter
 
     @GET("promotores/{id}/prospectos")
     suspend fun getProspectsByPromoter(@Path("id") id: String): List<Prospect>

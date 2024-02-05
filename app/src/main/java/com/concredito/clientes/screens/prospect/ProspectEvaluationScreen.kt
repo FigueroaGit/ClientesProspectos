@@ -1,7 +1,7 @@
 package com.concredito.clientes.screens.prospect
 
 import LetterTile
-import ProspectiveCustomerAppBar
+import ProspectsAppBar
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
@@ -24,15 +24,14 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.Message
 import androidx.compose.material.icons.automirrored.rounded.Send
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Cancel
 import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.LocationOn
-import androidx.compose.material.icons.rounded.Message
 import androidx.compose.material.icons.rounded.Phone
-import androidx.compose.material.icons.rounded.Send
 import androidx.compose.material.icons.rounded.Visibility
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -59,21 +58,37 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.content.ContextCompat.getString
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.concredito.clientes.R
 import com.concredito.clientes.data.Resource
 import com.concredito.clientes.model.Prospect
 import com.concredito.clientes.model.ProspectStatus
 import com.concredito.clientes.model.RejectObservation
 import com.concredito.clientes.navigation.AppScreens
+import com.concredito.clientes.ui.theme.Dimens.dimenExtraSmall
+import com.concredito.clientes.ui.theme.Dimens.dimenNormal
+import com.concredito.clientes.ui.theme.Dimens.dimenSmall
+import com.concredito.clientes.ui.theme.Dimens.letterTileSize4x
+import com.concredito.clientes.ui.theme.Fonts.fontSizeLarge
+import com.concredito.clientes.ui.theme.Fonts.fontSizeMedium
+import com.concredito.clientes.ui.theme.Fonts.fontSizeNormal
 import com.concredito.clientes.ui.theme.assistantFamily
+import com.concredito.clientes.util.Constants.LETTER_TILE_FONT_SIZE_4X
+import com.concredito.clientes.util.Constants.MAX_CHARACTERS_BY_OBSERVATIONS
+import com.concredito.clientes.util.Constants.MESSAGE_URI
+import com.concredito.clientes.util.Constants.MULTILINE
+import com.concredito.clientes.util.Constants.ONE_LINE
+import com.concredito.clientes.util.Constants.PHONE_URI
 import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -100,18 +115,15 @@ fun ProspectEvaluationScreen(
     val context = LocalContext.current
 
     Scaffold(topBar = {
-        ProspectiveCustomerAppBar(
-            title = if ((
-                    prospect.data?.estatus
-                        ?: ProspectStatus.ENVIADO
-                    ) == ProspectStatus.ENVIADO
-            ) {
-                "Evaluación del prospecto"
+        ProspectsAppBar(
+            title =
+            if ((prospect.data?.status ?: ProspectStatus.ENVIADO) == ProspectStatus.ENVIADO) {
+                stringArrayResource(id = R.array.prospect_evaluation_screen_app_bar_text)[0]
             } else {
-                "Información del prospecto"
+                stringArrayResource(id = R.array.prospect_evaluation_screen_app_bar_text)[1]
             },
             isHome = false,
-            icon = Icons.Rounded.ArrowBack,
+            icon = Icons.AutoMirrored.Rounded.ArrowBack,
             navController = navController,
             onBackPressed = {
                 navController.navigate(AppScreens.ProspectsScreen.name + "/$promoterId") {
@@ -130,7 +142,7 @@ fun ProspectEvaluationScreen(
                     verticalArrangement = Arrangement.Center,
                 ) {
                     CircularProgressIndicator()
-                    Text(text = "Cargando...")
+                    Text(text = stringResource(id = R.string.label_circular_progress_indicator_text))
                 }
             } else {
                 Surface(modifier = Modifier.fillMaxSize()) {
@@ -142,96 +154,98 @@ fun ProspectEvaluationScreen(
                         Surface(
                             modifier = Modifier
                                 .align(Alignment.CenterHorizontally)
-                                .padding(16.dp),
+                                .padding(dimenNormal),
                             shape = CircleShape,
                             color = MaterialTheme.colorScheme.primary,
-                            tonalElevation = 8.dp,
-                            shadowElevation = 8.dp,
+                            tonalElevation = dimenSmall,
+                            shadowElevation = dimenSmall,
                         ) {
                             LetterTile(
-                                text = prospect.data.nombre.take(1),
-                                size = 160,
-                                fontSize = 64,
+                                text = prospect.data.name.take(1),
+                                size = letterTileSize4x,
+                                fontSize = LETTER_TILE_FONT_SIZE_4X,
                                 modifier = Modifier
                                     .align(
                                         Alignment.CenterHorizontally,
                                     )
-                                    .padding(4.dp),
+                                    .padding(dimenExtraSmall),
                             )
                         }
 
                         Text(
                             modifier = Modifier.align(Alignment.CenterHorizontally),
-                            text = "${prospect.data.nombre} ${prospect.data.primerApellido}",
+                            text = "${prospect.data.name} ${prospect.data.surname}",
                             fontWeight = FontWeight.Black,
                             fontFamily = assistantFamily,
-                            fontSize = 24.sp,
+                            fontSize = fontSizeLarge,
                             overflow = TextOverflow.Ellipsis,
-                            maxLines = 1,
+                            maxLines = ONE_LINE,
                         )
 
-                        if (prospect.data.segundoApellido != null) {
+                        if (prospect.data.secondSurname?.isNotEmpty() == true) {
                             Text(
                                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                                text = prospect.data.segundoApellido,
+                                text = prospect.data.secondSurname,
                                 fontWeight = FontWeight.Black,
                                 fontFamily = assistantFamily,
-                                fontSize = 24.sp,
+                                fontSize = fontSizeLarge,
                                 overflow = TextOverflow.Ellipsis,
-                                maxLines = 1,
+                                maxLines = ONE_LINE,
                             )
+                        } else {
+                            Box {}
                         }
 
                         Text(
                             modifier = Modifier.align(Alignment.CenterHorizontally),
-                            text = "RFC: ${prospect.data.rfc}",
+                            text = stringResource(id = R.string.label_rfc_text, prospect.data.rfc),
                             fontWeight = FontWeight.Medium,
                             fontFamily = assistantFamily,
-                            fontSize = 20.sp,
-                            maxLines = 1,
+                            fontSize = fontSizeMedium,
+                            maxLines = ONE_LINE,
                         )
 
                         Surface(
                             modifier = Modifier
                                 .align(Alignment.CenterHorizontally)
-                                .padding(vertical = 16.dp),
-                            shape = RoundedCornerShape(4.dp),
+                                .padding(vertical = dimenNormal),
+                            shape = RoundedCornerShape(dimenExtraSmall),
                             color =
-                            when (prospect.data.estatus) {
+                            when (prospect.data.status) {
                                 ProspectStatus.ENVIADO -> MaterialTheme.colorScheme.surfaceVariant
                                 ProspectStatus.AUTORIZADO -> MaterialTheme.colorScheme.primaryContainer
                                 ProspectStatus.RECHAZADO -> MaterialTheme.colorScheme.errorContainer
                             },
                         ) {
                             Row(
-                                modifier = Modifier.padding(8.dp),
+                                modifier = Modifier.padding(dimenSmall),
                                 horizontalArrangement = Arrangement.Center,
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Icon(
-                                    imageVector = when (prospect.data.estatus) {
-                                        ProspectStatus.ENVIADO -> Icons.Rounded.Send
+                                    imageVector = when (prospect.data.status) {
+                                        ProspectStatus.ENVIADO -> Icons.AutoMirrored.Rounded.Send
                                         ProspectStatus.AUTORIZADO -> Icons.Rounded.CheckCircle
                                         ProspectStatus.RECHAZADO -> Icons.Rounded.Cancel
                                     },
-                                    contentDescription = null,
+                                    contentDescription = stringResource(id = R.string.icon_status_content_description),
                                 )
-                                Spacer(modifier = Modifier.padding(horizontal = 4.dp))
-                                prospect.data.estatus.let {
+                                Spacer(modifier = Modifier.padding(horizontal = dimenExtraSmall))
+                                prospect.data.status.let {
                                     Text(
                                         text = it.name,
                                         fontWeight = FontWeight.Medium,
                                         fontFamily = assistantFamily,
-                                        fontSize = 16.sp,
+                                        fontSize = fontSizeNormal,
                                         overflow = TextOverflow.Ellipsis,
-                                        maxLines = 1,
+                                        maxLines = ONE_LINE,
                                     )
                                 }
                             }
                         }
 
-                        if (prospect.data.estatus == ProspectStatus.ENVIADO) {
-                            Row(modifier = Modifier.padding(horizontal = 16.dp)) {
+                        if (prospect.data.status == ProspectStatus.ENVIADO) {
+                            Row(modifier = Modifier.padding(horizontal = dimenNormal)) {
                                 Button(
                                     modifier = Modifier.weight(1F),
                                     onClick = {
@@ -239,17 +253,17 @@ fun ProspectEvaluationScreen(
                                             prospectId,
                                             Prospect(
                                                 id = prospectId,
-                                                idPromotor = prospect.data.idPromotor,
-                                                nombre = prospect.data.nombre,
-                                                primerApellido = prospect.data.primerApellido,
-                                                segundoApellido = prospect.data.segundoApellido,
-                                                calle = prospect.data.calle,
-                                                numero = prospect.data.numero,
-                                                colonia = prospect.data.colonia,
-                                                codigoPostal = prospect.data.codigoPostal,
-                                                telefono = prospect.data.telefono,
+                                                promoterId = prospect.data.promoterId,
+                                                name = prospect.data.name,
+                                                surname = prospect.data.surname,
+                                                secondSurname = prospect.data.secondSurname,
+                                                streetAddress = prospect.data.streetAddress,
+                                                numberAddress = prospect.data.numberAddress,
+                                                neighborhood = prospect.data.neighborhood,
+                                                zipCode = prospect.data.zipCode,
+                                                phoneNumber = prospect.data.phoneNumber,
                                                 rfc = prospect.data.rfc,
-                                                estatus = ProspectStatus.AUTORIZADO,
+                                                status = ProspectStatus.AUTORIZADO,
                                             ),
                                         )
 
@@ -262,17 +276,18 @@ fun ProspectEvaluationScreen(
                                     ) {
                                         Icon(
                                             imageVector = Icons.Rounded.CheckCircle,
-                                            contentDescription = null,
+                                            contentDescription =
+                                            stringResource(id = R.string.authorize_icon_content_description),
                                         )
-                                        Spacer(modifier = Modifier.padding(horizontal = 4.dp))
+                                        Spacer(modifier = Modifier.padding(horizontal = dimenExtraSmall))
                                         Text(
-                                            text = "Autorizar",
+                                            text = stringResource(id = R.string.button_authorize_prospect),
                                             fontWeight = FontWeight.Bold,
                                             fontFamily = assistantFamily,
                                         )
                                     }
                                 }
-                                Spacer(modifier = Modifier.padding(horizontal = 4.dp))
+                                Spacer(modifier = Modifier.padding(horizontal = dimenExtraSmall))
                                 OutlinedButton(
                                     modifier = Modifier.weight(1F),
                                     onClick = {
@@ -285,11 +300,12 @@ fun ProspectEvaluationScreen(
                                     ) {
                                         Icon(
                                             imageVector = Icons.Rounded.Cancel,
-                                            contentDescription = null,
+                                            contentDescription =
+                                            stringResource(id = R.string.reject_icon_content_description),
                                         )
-                                        Spacer(modifier = Modifier.padding(horizontal = 4.dp))
+                                        Spacer(modifier = Modifier.padding(horizontal = dimenExtraSmall))
                                         Text(
-                                            text = "Rechazar",
+                                            text = stringResource(id = R.string.button_reject_prospect),
                                             fontWeight = FontWeight.Bold,
                                             fontFamily = assistantFamily,
                                         )
@@ -300,76 +316,77 @@ fun ProspectEvaluationScreen(
                             Box {}
                         }
 
-                        Column(modifier = Modifier.padding(16.dp)) {
+                        Column(modifier = Modifier.padding(dimenNormal)) {
                             Text(
-                                text = "Dirección:",
-                                fontSize = 20.sp,
+                                text = stringArrayResource(id = R.array.labels_address_text)[0],
+                                fontSize = fontSizeMedium,
                                 fontWeight = FontWeight.Bold,
                                 fontFamily = assistantFamily,
                             )
                             Row(
-                                modifier = Modifier.padding(vertical = 8.dp),
+                                modifier = Modifier.padding(vertical = dimenSmall),
                             ) {
                                 Icon(
                                     imageVector = Icons.Rounded.LocationOn,
-                                    contentDescription = null,
+                                    contentDescription =
+                                    stringResource(id = R.string.location_icon_content_description),
                                     tint = MaterialTheme.colorScheme.primary,
                                 )
 
-                                Spacer(modifier = Modifier.padding(horizontal = 4.dp))
+                                Spacer(modifier = Modifier.padding(horizontal = dimenExtraSmall))
                                 Column {
                                     Row {
                                         Text(
-                                            text = "Calle: ",
-                                            fontSize = 16.sp,
+                                            text = stringArrayResource(id = R.array.labels_address_text)[1],
+                                            fontSize = fontSizeNormal,
                                             fontWeight = FontWeight.Bold,
                                             fontFamily = assistantFamily,
                                         )
                                         Text(
-                                            text = prospect.data.calle,
-                                            fontSize = 16.sp,
+                                            text = prospect.data.streetAddress,
+                                            fontSize = fontSizeNormal,
                                             fontWeight = FontWeight.Normal,
                                             fontFamily = assistantFamily,
                                         )
                                     }
                                     Row {
                                         Text(
-                                            text = "Número: ",
-                                            fontSize = 16.sp,
+                                            text = stringArrayResource(id = R.array.labels_address_text)[2],
+                                            fontSize = fontSizeNormal,
                                             fontWeight = FontWeight.Bold,
                                             fontFamily = assistantFamily,
                                         )
                                         Text(
-                                            text = prospect.data.numero,
-                                            fontSize = 16.sp,
+                                            text = prospect.data.numberAddress,
+                                            fontSize = fontSizeNormal,
                                             fontWeight = FontWeight.Normal,
                                             fontFamily = assistantFamily,
                                         )
                                     }
                                     Row {
                                         Text(
-                                            text = "Colonia: ",
-                                            fontSize = 16.sp,
+                                            text = stringArrayResource(id = R.array.labels_address_text)[3],
+                                            fontSize = fontSizeNormal,
                                             fontWeight = FontWeight.Bold,
                                             fontFamily = assistantFamily,
                                         )
                                         Text(
-                                            text = prospect.data.colonia,
-                                            fontSize = 16.sp,
+                                            text = prospect.data.neighborhood,
+                                            fontSize = fontSizeNormal,
                                             fontWeight = FontWeight.Normal,
                                             fontFamily = assistantFamily,
                                         )
                                     }
                                     Row {
                                         Text(
-                                            text = "Código postal: ",
-                                            fontSize = 16.sp,
+                                            text = stringArrayResource(id = R.array.labels_address_text)[4],
+                                            fontSize = fontSizeNormal,
                                             fontWeight = FontWeight.Bold,
                                             fontFamily = assistantFamily,
                                         )
                                         Text(
-                                            text = prospect.data.codigoPostal,
-                                            fontSize = 16.sp,
+                                            text = prospect.data.zipCode,
+                                            fontSize = fontSizeNormal,
                                             fontWeight = FontWeight.Normal,
                                             fontFamily = assistantFamily,
                                         )
@@ -377,10 +394,10 @@ fun ProspectEvaluationScreen(
                                 }
                             }
                         }
-                        Column(modifier = Modifier.padding(16.dp)) {
+                        Column(modifier = Modifier.padding(dimenNormal)) {
                             Text(
-                                text = "Teléfono:",
-                                fontSize = 20.sp,
+                                text = stringArrayResource(id = R.array.labels_address_text)[5],
+                                fontSize = fontSizeMedium,
                                 fontWeight = FontWeight.Bold,
                                 fontFamily = assistantFamily,
                             )
@@ -389,34 +406,38 @@ fun ProspectEvaluationScreen(
                             ) {
                                 Icon(
                                     imageVector = Icons.Rounded.Phone,
-                                    contentDescription = null,
+                                    contentDescription = stringResource(id = R.string.phone_icon_content_description),
                                     tint = MaterialTheme.colorScheme.primary,
                                 )
 
-                                Spacer(modifier = Modifier.padding(horizontal = 4.dp))
+                                Spacer(modifier = Modifier.padding(horizontal = dimenExtraSmall))
                                 Text(
-                                    text = "Principal: ",
-                                    fontSize = 16.sp,
+                                    text = stringArrayResource(id = R.array.labels_address_text)[6],
+                                    fontSize = fontSizeNormal,
                                     fontWeight = FontWeight.Bold,
                                     fontFamily = assistantFamily,
                                 )
                                 Text(
-                                    text = prospect.data.telefono,
-                                    fontSize = 16.sp,
+                                    text = prospect.data.phoneNumber,
+                                    fontSize = fontSizeNormal,
                                     fontWeight = FontWeight.Normal,
                                     fontFamily = assistantFamily,
                                 )
                                 Spacer(modifier = Modifier.weight(1f))
                                 IconButton(
                                     onClick = {
-                                        val u = Uri.parse("tel:" + (prospect.data.telefono))
-                                        val i = Intent(Intent.ACTION_DIAL, u)
+                                        val phoneURI =
+                                            Uri.parse(PHONE_URI + (prospect.data.phoneNumber))
+                                        val intentCall = Intent(Intent.ACTION_DIAL, phoneURI)
                                         try {
-                                            context.startActivity(i)
+                                            context.startActivity(intentCall)
                                         } catch (s: SecurityException) {
                                             Toast.makeText(
                                                 context,
-                                                "No se puede realizar esta accion",
+                                                getString(
+                                                    context,
+                                                    R.string.message_launch_intent_error,
+                                                ),
                                                 Toast.LENGTH_LONG,
                                             )
                                                 .show()
@@ -428,19 +449,24 @@ fun ProspectEvaluationScreen(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Rounded.Phone,
-                                        contentDescription = "Call",
+                                        contentDescription =
+                                        stringResource(id = R.string.phone_icon_content_description),
                                     )
                                 }
                                 IconButton(
                                     onClick = {
-                                        val u = Uri.parse("sms:" + (prospect.data.telefono))
-                                        val i = Intent(Intent.ACTION_VIEW, u)
+                                        val messageURI =
+                                            Uri.parse(MESSAGE_URI + (prospect.data.phoneNumber))
+                                        val intentMessage = Intent(Intent.ACTION_VIEW, messageURI)
                                         try {
-                                            context.startActivity(i)
+                                            context.startActivity(intentMessage)
                                         } catch (s: SecurityException) {
                                             Toast.makeText(
                                                 context,
-                                                "No se puede realizar esta accion",
+                                                getString(
+                                                    context,
+                                                    R.string.message_launch_intent_error,
+                                                ),
                                                 Toast.LENGTH_LONG,
                                             )
                                                 .show()
@@ -451,18 +477,19 @@ fun ProspectEvaluationScreen(
                                     ),
                                 ) {
                                     Icon(
-                                        imageVector = Icons.Rounded.Message,
-                                        contentDescription = "Message",
+                                        imageVector = Icons.AutoMirrored.Rounded.Message,
+                                        contentDescription =
+                                        stringResource(id = R.string.message_icon_content_description),
                                     )
                                 }
                             }
                         }
 
-                        if (prospect.data.estatus == ProspectStatus.RECHAZADO) {
-                            Column(modifier = Modifier.padding(16.dp)) {
+                        if (prospect.data.status == ProspectStatus.RECHAZADO) {
+                            Column(modifier = Modifier.padding(dimenNormal)) {
                                 Text(
-                                    text = "Observaciones:",
-                                    fontSize = 20.sp,
+                                    text = stringResource(id = R.string.label_reject_observations_text),
+                                    fontSize = fontSizeMedium,
                                     fontWeight = FontWeight.Bold,
                                     fontFamily = assistantFamily,
                                 )
@@ -471,15 +498,16 @@ fun ProspectEvaluationScreen(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Rounded.Visibility,
-                                        contentDescription = null,
+                                        contentDescription =
+                                        stringResource(id = R.string.observations_icon_content_description),
                                         tint = MaterialTheme.colorScheme.primary,
                                     )
 
-                                    Spacer(modifier = Modifier.padding(horizontal = 4.dp))
+                                    Spacer(modifier = Modifier.padding(horizontal = dimenExtraSmall))
                                     observation.data?.last()?.let {
                                         Text(
-                                            text = it.observaciones,
-                                            fontSize = 16.sp,
+                                            text = it.observations,
+                                            fontSize = fontSizeNormal,
                                             fontWeight = FontWeight.Normal,
                                             fontFamily = assistantFamily,
                                         )
@@ -500,17 +528,17 @@ fun ProspectEvaluationScreen(
                                         prospectId,
                                         Prospect(
                                             id = prospectId,
-                                            idPromotor = prospect.data.idPromotor,
-                                            nombre = prospect.data.nombre,
-                                            primerApellido = prospect.data.primerApellido,
-                                            segundoApellido = prospect.data.segundoApellido,
-                                            calle = prospect.data.calle,
-                                            numero = prospect.data.numero,
-                                            colonia = prospect.data.colonia,
-                                            codigoPostal = prospect.data.codigoPostal,
-                                            telefono = prospect.data.telefono,
+                                            promoterId = prospect.data.promoterId,
+                                            name = prospect.data.name,
+                                            surname = prospect.data.surname,
+                                            secondSurname = prospect.data.secondSurname,
+                                            streetAddress = prospect.data.streetAddress,
+                                            numberAddress = prospect.data.numberAddress,
+                                            neighborhood = prospect.data.neighborhood,
+                                            zipCode = prospect.data.zipCode,
+                                            phoneNumber = prospect.data.phoneNumber,
                                             rfc = prospect.data.rfc,
-                                            estatus = ProspectStatus.RECHAZADO,
+                                            status = ProspectStatus.RECHAZADO,
                                         ),
                                     )
 
@@ -615,7 +643,6 @@ fun ObservationsDialog(
 ) {
     val rejectObservationId = remember { UUID.randomUUID().toString() }
     var observations by remember { mutableStateOf("") }
-    val maxCharacters = 150
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -632,78 +659,83 @@ fun ObservationsDialog(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp),
+                    .padding(dimenNormal),
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 16.dp),
+                        .padding(vertical = dimenNormal),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     IconButton(
                         onClick = {
-                            // Manejar el clic en el botón de cerrar
                             onDismiss.invoke()
-                            // ...
                         },
                     ) {
-                        Icon(imageVector = Icons.Default.Close, contentDescription = "Cerrar")
+                        Icon(
+                            imageVector = Icons.Rounded.Close,
+                            contentDescription = stringResource(id = R.string.close_icon_content_description),
+                        )
                     }
-                    Text("Ingrese las observaciones de rechazo")
-                    Spacer(modifier = Modifier.size(48.dp)) // Espaciado para el icono
+                    Text(
+                        text = stringResource(id = R.string.label_enter_reject_observations),
+                        fontSize = fontSizeNormal,
+                        fontFamily = assistantFamily,
+                    )
+                    Spacer(modifier = Modifier.size(48.dp))
                 }
-
-                // Multiline TextField with character limit
                 TextField(
                     value = observations,
-                    onValueChange = {
-                        // Limit the characters to maxCharacters
-                        if (it.length <= maxCharacters) {
-                            observations = it
+                    onValueChange = { text ->
+                        if (text.length <= MAX_CHARACTERS_BY_OBSERVATIONS) {
+                            observations = text
                         }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(min = 154.dp),
-                    label = { Text("Observaciones (Máx. $maxCharacters caracteres)") },
+                    label = {
+                        Text(
+                            text = stringResource(
+                                id = R.string.label_reject_observations_characters_max_field,
+                                MAX_CHARACTERS_BY_OBSERVATIONS,
+                            ),
+                            fontSize = fontSizeNormal,
+                            fontFamily = assistantFamily,
+                        )
+                    },
                     supportingText = {
                         Text(
-                            text = "Caracteres restantes: ${maxCharacters - observations.length}",
-                            modifier = Modifier.padding(top = 4.dp),
+                            text = stringResource(
+                                id = R.string.label_reject_observations_characters_left_field,
+                                MAX_CHARACTERS_BY_OBSERVATIONS - observations.length,
+                            ),
+                            modifier = Modifier.padding(top = dimenExtraSmall),
                         )
                     },
                     singleLine = false,
-                    maxLines = 5, // Ajustar según sea necesario
+                    maxLines = MULTILINE,
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Done,
                     ),
                     keyboardActions = KeyboardActions(
                         onDone = {
-                            // Manejar la entrada de observaciones, por ejemplo, puedes imprimirla
-                            println("Observations: $observations")
-
-                            // Ocultar el teclado
                             keyboardController?.hide()
-
-                            // Cerrar el diálogo
-                            onDismiss.invoke()
                         },
                     ),
-                    shape = RoundedCornerShape(8.dp),
+                    shape = RoundedCornerShape(dimenSmall),
                     colors = TextFieldDefaults.colors(
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
                     ),
                 )
-
-                // Botón de enviar
                 Button(
                     onClick = {
                         val rejectObservation = RejectObservation(
                             id = rejectObservationId,
-                            observaciones = observations,
-                            prospectoId = prospectId,
+                            observations = observations,
+                            prospectId = prospectId,
                         )
 
                         rejectObservationViewModel.addRejectObservations(rejectObservation)
@@ -713,14 +745,18 @@ fun ObservationsDialog(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 16.dp),
+                        .padding(top = dimenNormal),
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Rounded.Send,
-                        contentDescription = "Enviar",
+                        contentDescription = stringResource(id = R.string.send_icon_content_description),
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Enviar observaciones de rechazo")
+                    Spacer(modifier = Modifier.width(dimenSmall))
+                    Text(
+                        text = stringResource(id = R.string.button_send_observations),
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = assistantFamily,
+                    )
                 }
             }
         }

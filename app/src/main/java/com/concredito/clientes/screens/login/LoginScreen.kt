@@ -40,15 +40,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.content.ContextCompat.getString
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
@@ -57,7 +57,15 @@ import com.concredito.clientes.data.PreferencesManager
 import com.concredito.clientes.data.Resource
 import com.concredito.clientes.navigation.AppScreens
 import com.concredito.clientes.screens.prospect.PromoterViewModel
+import com.concredito.clientes.ui.theme.Dimens.circularIndicator
+import com.concredito.clientes.ui.theme.Dimens.dialogBoxSize
+import com.concredito.clientes.ui.theme.Dimens.dimenMedium
+import com.concredito.clientes.ui.theme.Dimens.dimenNormal
+import com.concredito.clientes.ui.theme.Dimens.dimenSmall
+import com.concredito.clientes.ui.theme.Dimens.imageSizeSmall
+import com.concredito.clientes.ui.theme.Fonts.fontSizeExtraLarge
 import com.concredito.clientes.ui.theme.assistantFamily
+import com.concredito.clientes.util.Constants.DELAY_TIME_TWO_SECONDS
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -97,10 +105,10 @@ fun LoginScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(dimenNormal)
                 .statusBarsPadding(),
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(dimenNormal))
 
             Image(
                 painter = painterResource(
@@ -110,17 +118,17 @@ fun LoginScreen(
                         R.drawable.finacredito_logo_dark_theme
                     },
                 ),
-                contentDescription = null,
+                contentDescription = stringResource(id = R.string.logo_image_content_description),
                 modifier = Modifier
-                    .width(256.dp)
+                    .width(imageSizeSmall)
                     .align(Alignment.CenterHorizontally)
-                    .padding(vertical = 16.dp),
+                    .padding(vertical = dimenNormal),
             )
 
             Text(
-                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                text = "Bienvenido de nuevo",
-                fontSize = 32.sp,
+                modifier = Modifier.fillMaxWidth().padding(vertical = dimenSmall),
+                text = stringResource(id = R.string.welcome_login_text),
+                fontSize = fontSizeExtraLarge,
                 fontWeight = FontWeight.Bold,
                 fontFamily = assistantFamily,
                 textAlign = TextAlign.Center,
@@ -128,15 +136,15 @@ fun LoginScreen(
 
             OutlinedTextField(
                 value = username,
-                onValueChange = {
-                    username = it
+                onValueChange = { user ->
+                    username = user
                     usernameSupportingText = null
                     showUsernameError = false
                     showError = false
                 },
                 label = {
                     Text(
-                        text = "Usuario",
+                        text = stringResource(id = R.string.label_username_field),
                         fontWeight = FontWeight.Normal,
                         fontFamily = assistantFamily,
                     )
@@ -144,13 +152,13 @@ fun LoginScreen(
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Rounded.Person,
-                        contentDescription = null,
+                        contentDescription = stringResource(id = R.string.leading_icon_content_description),
                     )
                 },
                 supportingText = {
-                    usernameSupportingText?.let {
+                    usernameSupportingText?.let { advice ->
                         Text(
-                            text = it,
+                            text = advice,
                             fontWeight = FontWeight.Normal,
                             fontFamily = assistantFamily,
                         )
@@ -159,56 +167,78 @@ fun LoginScreen(
                 isError = showUsernameError,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp),
+                    .padding(bottom = dimenSmall),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Next,
                 ),
                 keyboardActions = KeyboardActions(
                     onNext = {},
                 ),
-                shape = RoundedCornerShape(8.dp),
+                shape = RoundedCornerShape(dimenSmall),
             )
 
             OutlinedTextField(
                 value = password,
-                onValueChange = {
-                    password = it
+                onValueChange = { passwd ->
+                    password = passwd
                     passwordSupportingText = null
                     showPasswordError = false
                     showError = false
                 },
                 label = {
                     Text(
-                        "contraseña",
+                        text = stringResource(id = R.string.label_password_field),
                         fontWeight = FontWeight.Normal,
                         fontFamily = assistantFamily,
                     )
                 },
-                leadingIcon = { Icon(imageVector = Icons.Rounded.Lock, contentDescription = null) },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Rounded.Lock,
+                        contentDescription = stringResource(
+                            id = R.string.leading_icon_content_description,
+                        ),
+                    )
+                },
                 trailingIcon = {
                     IconButton(onClick = {
                         isPasswordVisible = !isPasswordVisible
                     }) {
                         Icon(
-                            imageVector = if (isPasswordVisible) Icons.Rounded.Visibility else Icons.Rounded.VisibilityOff,
-                            contentDescription = if (isPasswordVisible) "Ocultar contraseña" else "Mostrar contraseña",
+                            imageVector =
+                            if (isPasswordVisible) {
+                                Icons.Rounded.Visibility
+                            } else {
+                                Icons.Rounded.VisibilityOff
+                            },
+                            contentDescription =
+                            if (isPasswordVisible) {
+                                stringResource(id = R.string.password_invisible_content_description)
+                            } else {
+                                stringResource(id = R.string.password_visible_content_description)
+                            },
                         )
                     }
                 },
                 supportingText = {
-                    passwordSupportingText?.let {
+                    passwordSupportingText?.let { advice ->
                         Text(
-                            text = it,
+                            text = advice,
                             fontWeight = FontWeight.Normal,
                             fontFamily = assistantFamily,
                         )
                     }
                 },
                 isError = showPasswordError,
-                visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                visualTransformation =
+                if (isPasswordVisible) {
+                    VisualTransformation.None
+                } else {
+                    PasswordVisualTransformation()
+                },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp),
+                    .padding(bottom = dimenNormal),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Done,
                 ),
@@ -217,14 +247,14 @@ fun LoginScreen(
                         keyboardController?.hide()
                     },
                 ),
-                shape = RoundedCornerShape(8.dp),
+                shape = RoundedCornerShape(dimenSmall),
             )
 
             Text(
-                text = "Olvide la contraseña",
+                text = stringResource(id = R.string.forgot_password),
                 fontWeight = FontWeight.Medium,
                 fontFamily = assistantFamily,
-                modifier = Modifier.padding(bottom = 24.dp).clickable {},
+                modifier = Modifier.padding(bottom = dimenMedium).clickable {},
                 color = MaterialTheme.colorScheme.primary,
             )
 
@@ -235,12 +265,12 @@ fun LoginScreen(
                     }
 
                     if (username.isEmpty()) {
-                        usernameSupportingText = "El nombre de usuario es requerido"
+                        usernameSupportingText = getString(context, R.string.advice_username_text)
                         showUsernameError = true
                         return@Button
                     }
                     if (password.isEmpty()) {
-                        passwordSupportingText = "la contraseña es requerida"
+                        passwordSupportingText = getString(context, R.string.advice_password_text)
                         showPasswordError = true
                         return@Button
                     }
@@ -248,14 +278,14 @@ fun LoginScreen(
                     showDialog = true
 
                     promoterViewModel.viewModelScope.launch {
-                        delay(2000)
+                        delay(DELAY_TIME_TWO_SECONDS)
                         val result = promoterViewModel.login(username, password)
 
                         if (result is Resource.Success) {
                             val response = result.data
                             // Extrae el ID del promotor y el nombre de usuario del response
                             val promoterId = response?.id
-                            val loggedInUsername = response?.usuario
+                            val loggedInUsername = response?.username
 
                             // Guarda el ID del promotor y el nombre de usuario utilizando PreferencesManager
                             if (promoterId != null) {
@@ -280,7 +310,7 @@ fun LoginScreen(
                     .fillMaxWidth(),
             ) {
                 Text(
-                    text = "Iniciar sesión",
+                    text = stringResource(id = R.string.login_button_text),
                     fontWeight = FontWeight.Bold,
                     fontFamily = assistantFamily,
                 )
@@ -288,11 +318,11 @@ fun LoginScreen(
 
             if (showError) {
                 Text(
-                    text = "El nombre de usuario y/o la contraseña son incorrectos",
+                    text = stringResource(id = R.string.login_error_text),
                     fontWeight = FontWeight.Normal,
                     fontFamily = assistantFamily,
                     color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier.padding(dimenSmall),
                 )
             }
 
@@ -306,15 +336,15 @@ fun LoginScreen(
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(100.dp)
-                            .clip(RoundedCornerShape(8.dp))
+                            .size(dialogBoxSize)
+                            .clip(RoundedCornerShape(dimenSmall))
                             .background(MaterialTheme.colorScheme.background)
-                            .padding(16.dp),
+                            .padding(dimenNormal),
                         contentAlignment = Alignment.Center,
                     ) {
                         CircularProgressIndicator(
                             color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(50.dp),
+                            modifier = Modifier.size(circularIndicator),
                         )
                     }
                 }

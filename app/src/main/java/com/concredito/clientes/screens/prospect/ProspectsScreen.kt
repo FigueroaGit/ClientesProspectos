@@ -1,7 +1,7 @@
 package com.concredito.clientes.screens.prospect
 
 import LetterTile
-import ProspectiveCustomerAppBar
+import ProspectsAppBar
 import TitleSection
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -36,17 +36,27 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.concredito.clientes.R
 import com.concredito.clientes.data.Resource
 import com.concredito.clientes.model.Prospect
 import com.concredito.clientes.model.ProspectStatus
 import com.concredito.clientes.navigation.AppScreens
+import com.concredito.clientes.ui.theme.Dimens.dimenNormal
+import com.concredito.clientes.ui.theme.Dimens.dimenSmall
+import com.concredito.clientes.ui.theme.Dimens.letterTileSize2x
+import com.concredito.clientes.ui.theme.Fonts.fontSizeMedium
+import com.concredito.clientes.ui.theme.Fonts.fontSizeNormal
 import com.concredito.clientes.ui.theme.assistantFamily
+import com.concredito.clientes.util.Constants.FIRST
+import com.concredito.clientes.util.Constants.LETTER_TILE_FONT_SIZE_2X
+import com.concredito.clientes.util.Constants.ONE_LINE
+import com.concredito.clientes.util.Constants.SECOND
+import com.concredito.clientes.util.Constants.THIRD
 
 @Composable
 fun ProspectsScreen(
@@ -55,8 +65,8 @@ fun ProspectsScreen(
     prospectsViewModel: ProspectsViewModel = hiltViewModel(),
 ) {
     Scaffold(topBar = {
-        ProspectiveCustomerAppBar(
-            title = "Listado de prospectos",
+        ProspectsAppBar(
+            title = stringResource(id = R.string.prospects_screen_app_bar_text),
             isHome = false,
             icon = Icons.AutoMirrored.Rounded.ArrowBack,
             navController = navController,
@@ -102,7 +112,7 @@ fun ProspectList(
                 Resource.Loading(data = listOfProspects)
             } else {
                 LazyColumn {
-                    val groupedProspects = listOfProspects.data?.groupBy { it.estatus }
+                    val groupedProspects = listOfProspects.data?.groupBy { it.status }
 
                     if (sectionVisibility.isEmpty()) {
                         groupedProspects?.keys?.forEach { estatus ->
@@ -113,9 +123,9 @@ fun ProspectList(
                     // Ordenar los grupos según tu preferencia
                     val sortedGroups = groupedProspects?.entries?.sortedBy { entry ->
                         when (entry.key) {
-                            ProspectStatus.ENVIADO -> 0
-                            ProspectStatus.AUTORIZADO -> 1
-                            ProspectStatus.RECHAZADO -> 2
+                            ProspectStatus.ENVIADO -> FIRST
+                            ProspectStatus.AUTORIZADO -> SECOND
+                            ProspectStatus.RECHAZADO -> THIRD
                         }
                     }
 
@@ -125,9 +135,12 @@ fun ProspectList(
                         stickyHeader {
                             TitleSection(
                                 label = when (estatus) {
-                                    ProspectStatus.ENVIADO -> "ENVIADOS"
-                                    ProspectStatus.AUTORIZADO -> "AUTORIZADOS"
-                                    ProspectStatus.RECHAZADO -> "RECHAZADOS"
+                                    ProspectStatus.ENVIADO ->
+                                        stringResource(id = R.string.label_prospects_sent_text)
+                                    ProspectStatus.AUTORIZADO ->
+                                        stringResource(id = R.string.label_prospects_authorized_text)
+                                    ProspectStatus.RECHAZADO ->
+                                        stringResource(id = R.string.label_prospects_rejected_text)
                                 },
                                 onClickArrow = {
                                     sectionVisibility[estatus.name] =
@@ -153,7 +166,6 @@ fun ProspectList(
 
         is Resource.Loading -> {
             Row(
-                modifier = Modifier.padding(end = 2.dp),
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -167,7 +179,7 @@ fun ProspectList(
                 color = Color.Red,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp),
+                    .padding(dimenNormal),
             )
         }
     }
@@ -196,33 +208,33 @@ fun ProspectItem(
 
 @Composable
 fun ProspectInfo(prospect: Prospect) {
-    Column(modifier = Modifier.padding(horizontal = 8.dp)) {
+    Column(modifier = Modifier.padding(horizontal = dimenSmall)) {
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
         ) {
             LetterTile(
-                text = prospect.nombre.take(1),
-                size = 48,
-                fontSize = 22,
+                text = prospect.name.take(1),
+                size = letterTileSize2x,
+                fontSize = LETTER_TILE_FONT_SIZE_2X,
             )
-            Column(modifier = Modifier.padding(8.dp)) {
+            Column(modifier = Modifier.padding(dimenSmall)) {
                 Text(
-                    text = "${prospect.nombre} ${prospect.primerApellido} ${prospect.segundoApellido}",
+                    text = "${prospect.name} ${prospect.surname} ${prospect.secondSurname}",
                     fontWeight = FontWeight.Bold,
                     fontFamily = assistantFamily,
-                    fontSize = 20.sp,
+                    fontSize = fontSizeMedium,
                     overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
+                    maxLines = ONE_LINE,
                 )
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    text = prospect.estatus.name,
+                    text = prospect.status.name,
                     fontWeight = FontWeight.Medium,
                     fontFamily = assistantFamily,
-                    fontSize = 16.sp,
-                    maxLines = 1,
-                    color = when (prospect.estatus) {
+                    fontSize = fontSizeNormal,
+                    maxLines = ONE_LINE,
+                    color = when (prospect.status) {
                         ProspectStatus.ENVIADO -> MaterialTheme.colorScheme.onSurfaceVariant
                         ProspectStatus.AUTORIZADO -> MaterialTheme.colorScheme.primary
                         ProspectStatus.RECHAZADO -> MaterialTheme.colorScheme.error

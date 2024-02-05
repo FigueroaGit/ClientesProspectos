@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -38,6 +39,10 @@ import com.concredito.clientes.model.Prospect
 import com.concredito.clientes.navigation.AppScreens
 import com.concredito.clientes.screens.prospect.ProspectItem
 import com.concredito.clientes.screens.prospect.ProspectsViewModel
+import com.concredito.clientes.ui.theme.Dimens.circularIndicator
+import com.concredito.clientes.ui.theme.Dimens.dimenNormal
+import com.concredito.clientes.ui.theme.Dimens.dimenSmall
+import com.concredito.clientes.ui.theme.Dimens.imageSizeSmall
 import com.concredito.clientes.ui.theme.assistantFamily
 
 @Composable
@@ -53,14 +58,14 @@ fun MainScreen(
 
     LaunchedEffect(promoterId) {
         listOfPromoterId = promoterId?.let { prospectsViewModel.getProspectsByPromoterId(it) }
-            ?: Resource.Error("PromoterId is null")
+            ?: Resource.Loading()
     }
 
     Scaffold(
         topBar = {
             ProspectsLargeTopAppBar(
-                title = "Bienvenido, $username",
-                additionalText = "Mi panel",
+                title = stringResource(id = R.string.welcome_user_text, "$username"),
+                additionalText = stringResource(id = R.string.main_screen_app_bar_text),
                 navController = navController,
                 onLogoutClicked = {
                     PreferencesManager(context).clearCredentials()
@@ -88,7 +93,7 @@ fun MainScreen(
                     // Muestra un indicador de carga, si es necesario
                     CircularProgressIndicator(
                         modifier = Modifier
-                            .size(64.dp)
+                            .size(circularIndicator)
                             .align(Alignment.Center),
                     )
                 }
@@ -100,7 +105,7 @@ fun MainScreen(
                         color = Color.Red,
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(16.dp),
+                            .padding(dimenNormal),
                     )
                 }
             }
@@ -113,38 +118,38 @@ fun ShowEmptyListScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(dimenNormal),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Image(
-            modifier = Modifier.size(256.dp),
-            painter = painterResource(id = R.drawable.ic_list_empty_placeholder),
-            contentDescription = "Imagen de lista vacia",
-            contentScale = ContentScale.Fit, // Optional, adjust as needed
+            modifier = Modifier.size(imageSizeSmall),
+            painter = painterResource(id = R.drawable.empty_list_placeholder),
+            contentDescription = stringResource(id = R.string.empty_list_content_description),
+            contentScale = ContentScale.Fit,
         )
 
         Text(
-            modifier = Modifier.padding(vertical = 8.dp),
-            text = "¡Parece que no hay prospectos aquí!",
+            modifier = Modifier.padding(vertical = dimenSmall),
+            text = stringResource(id = R.string.empty_list_title),
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
             fontFamily = assistantFamily,
         )
 
         Text(
-            text = "Si deseas agregar prospectos y ver cuántos prospectos has agregado, comience a agregar prospectos con el botón a continuación",
+            text = stringResource(id = R.string.empty_list_paragraph),
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Normal,
             fontFamily = assistantFamily,
         )
 
         Button(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(dimenNormal),
             onClick = { navController.navigate(AppScreens.NewProspectScreen.name) },
         ) {
             Text(
-                text = "Capturar prospecto",
+                text = stringResource(id = R.string.button_add_prospect),
                 fontWeight = FontWeight.Bold,
                 fontFamily = assistantFamily,
             )
@@ -164,9 +169,9 @@ fun ShowProspectsListScreen(
             .fillMaxSize(),
         verticalArrangement = Arrangement.Top,
     ) {
-        Row(modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)) {
+        Row(modifier = Modifier.padding(vertical = dimenSmall, horizontal = dimenNormal)) {
             Text(
-                text = "Ultimo prospecto agregado",
+                text = stringResource(id = R.string.label_last_prospect_added),
                 fontWeight = FontWeight.Medium,
                 fontFamily = assistantFamily,
             )
@@ -177,13 +182,13 @@ fun ShowProspectsListScreen(
         }
 
         Row(
-            modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
+            modifier = Modifier.padding(vertical = dimenSmall, horizontal = dimenNormal)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
-                text = "Total de prospectos agregados",
+                text = stringResource(id = R.string.label_total_of_prospects_added),
                 fontWeight = FontWeight.Medium,
                 fontFamily = assistantFamily,
             )
@@ -197,15 +202,15 @@ fun ShowProspectsListScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = 16.dp),
+                .padding(bottom = dimenNormal),
             contentAlignment = Alignment.BottomCenter,
         ) {
             Button(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(dimenNormal),
                 onClick = { navController.navigate(AppScreens.NewProspectScreen.name) },
             ) {
                 Text(
-                    text = "Capturar prospecto",
+                    text = stringResource(id = R.string.button_add_prospect),
                     fontWeight = FontWeight.Bold,
                     fontFamily = assistantFamily,
                 )

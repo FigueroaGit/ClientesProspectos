@@ -19,12 +19,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.concredito.clientes.R
 import com.concredito.clientes.navigation.AppScreens
+import com.concredito.clientes.ui.theme.Dimens.dimenNormal
+import com.concredito.clientes.ui.theme.Dimens.imageSizeSmall
 import com.concredito.clientes.ui.theme.assistantFamily
+import com.concredito.clientes.util.Constants.DELAY_TIME_TWO_SECONDS
 import kotlinx.coroutines.delay
 
 @Composable
@@ -41,7 +44,7 @@ fun SplashScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(dimenNormal),
         contentAlignment = Alignment.Center,
     ) {
         val logoResourceId = if (!isSystemInDarkTheme()) {
@@ -52,10 +55,10 @@ fun SplashScreen(
 
         Image(
             painter = painterResource(id = logoResourceId),
-            contentDescription = "FinaCredito logo",
+            contentDescription = stringResource(id = R.string.logo_image_content_description),
             contentScale = ContentScale.Fit,
             modifier = Modifier
-                .size(272.dp)
+                .size(imageSizeSmall)
                 .scale(scale.value),
         )
     }
@@ -63,11 +66,11 @@ fun SplashScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = 16.dp),
+            .padding(bottom = dimenNormal),
         contentAlignment = Alignment.BottomCenter,
     ) {
         Text(
-            text = "Por FigueroaGit",
+            text = stringResource(id = R.string.app_creator_name),
             fontWeight = FontWeight.Normal,
             fontFamily = assistantFamily,
         )
@@ -79,15 +82,15 @@ private suspend fun animateLogo(scale: Animatable<Float, AnimationVector1D>) {
         targetValue = 0.9f,
         animationSpec = tween(
             durationMillis = 800,
-            easing = {
+            easing = { easing ->
                 OvershootInterpolator(8f)
-                    .getInterpolation(it)
+                    .getInterpolation(easing)
             },
         ),
     )
 }
 
 private suspend fun delayAndNavigate(navController: NavHostController) {
-    delay(2000L)
+    delay(DELAY_TIME_TWO_SECONDS)
     navController.navigate(AppScreens.LoginScreen.name)
 }

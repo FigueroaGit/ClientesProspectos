@@ -23,7 +23,10 @@ interface RejectObservationAPI {
     suspend fun addRejectObservations(@Body rejectObservation: RejectObservation): RejectObservation
 
     @PUT("observaciones-rechazo/{id}")
-    suspend fun updateRejectObservations(@Path("id") id: String, @Body rejectObservation: RejectObservation): RejectObservation
+    suspend fun updateRejectObservations(
+        @Path("id") id: String,
+        @Body rejectObservation: RejectObservation,
+    ): RejectObservation
 
     @DELETE("observaciones-rechazo/{id}")
     suspend fun deleteRejectObservations(@Path("id") id: String)

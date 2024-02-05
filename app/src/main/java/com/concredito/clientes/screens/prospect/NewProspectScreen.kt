@@ -2,7 +2,7 @@ package com.concredito.clientes.screens.prospect
 
 import ExitDialog
 import FormInputText
-import ProspectiveCustomerAppBar
+import ProspectsAppBar
 import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -10,12 +10,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.InsertDriveFile
 import androidx.compose.material.icons.automirrored.rounded.Send
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocalPostOffice
@@ -23,7 +24,10 @@ import androidx.compose.material.icons.filled.Numbers
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.rounded.AddCircle
 import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.InsertDriveFile
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.LocalPostOffice
+import androidx.compose.material.icons.rounded.Numbers
+import androidx.compose.material.icons.rounded.Phone
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -39,18 +43,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getString
 import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.concredito.clientes.R
 import com.concredito.clientes.model.Prospect
 import com.concredito.clientes.model.ProspectStatus
 import com.concredito.clientes.navigation.AppScreens
+import com.concredito.clientes.ui.theme.Dimens.dimenExtraSmall
+import com.concredito.clientes.ui.theme.Dimens.dimenNormal
+import com.concredito.clientes.ui.theme.Dimens.dimenSmall
 import com.concredito.clientes.ui.theme.assistantFamily
+import com.concredito.clientes.util.Constants.EMPTY_STRING
 import com.concredito.clientes.util.Constants.MAX_CHARACTERS_BY_ADDRESS
 import com.concredito.clientes.util.Constants.MAX_CHARACTERS_BY_NAME
 import com.concredito.clientes.util.Constants.MAX_CHARACTERS_BY_NUMBER_ADDRESS
@@ -120,21 +130,19 @@ fun NewProspectScreen(
     if (showExitDialog) {
         ExitDialog(
             onConfirm = {
-                // Perform exit action
                 navController.navigate(AppScreens.MainScreen.name)
             },
             onDismiss = {
-                // Dismiss dialog
                 showExitDialog = false
             },
         )
     }
 
     Scaffold(topBar = {
-        ProspectiveCustomerAppBar(
-            title = "Captura de prospecto",
+        ProspectsAppBar(
+            title = stringResource(id = R.string.new_prospect_screen_app_bar_text),
             isHome = false,
-            icon = Icons.Rounded.ArrowBack,
+            icon = Icons.AutoMirrored.Rounded.ArrowBack,
             navController = navController,
             onBackPressed = {
                 if (
@@ -148,10 +156,8 @@ fun NewProspectScreen(
                     prospectPhoneNumber.isEmpty() &&
                     prospectRFC.isEmpty()
                 ) {
-                    // Si todos los campos están vacíos, navegar directamente a MainScreen
                     navController.navigate(AppScreens.MainScreen.name)
                 } else {
-                    // Mostrar ExitDialog
                     showExitDialog = true
                 }
             },
@@ -162,25 +168,25 @@ fun NewProspectScreen(
                 Column(
                     modifier = Modifier
                         .padding(paddingValues)
-                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                        .padding(start = dimenNormal, end = dimenNormal, bottom = dimenNormal),
                 ) {
                     FormInputText(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp),
+                            .padding(vertical = dimenExtraSmall),
                         text = prospectName,
-                        label = "Nombre",
-                        onTextChange = {
-                            if (it.length <= MAX_CHARACTERS_BY_NAME) {
-                                prospectName = filterNameInput(it)
+                        label = stringResource(id = R.string.label_name_field),
+                        onTextChange = { text ->
+                            if (text.length <= MAX_CHARACTERS_BY_NAME) {
+                                prospectName = filterNameInput(text)
                             }
                             prospectNameSupportingText = null
                             showProspectNameError = false
                         },
                         supportingText = {
-                            prospectNameSupportingText?.let {
+                            prospectNameSupportingText?.let { errorMessage ->
                                 Text(
-                                    text = (it),
+                                    text = (errorMessage),
                                     fontWeight = FontWeight.Normal,
                                     fontFamily = assistantFamily,
                                 )
@@ -194,20 +200,20 @@ fun NewProspectScreen(
                     FormInputText(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 4.dp),
+                            .padding(vertical = dimenExtraSmall),
                         text = prospectSurname,
-                        label = "Primer apellido",
-                        onTextChange = {
-                            if (it.length <= MAX_CHARACTERS_BY_NAME) {
-                                prospectSurname = filterNameInput(it)
+                        label = stringResource(id = R.string.label_surname_field),
+                        onTextChange = { text ->
+                            if (text.length <= MAX_CHARACTERS_BY_NAME) {
+                                prospectSurname = filterNameInput(text)
                             }
                             prospectSurnameSupportingText = null
                             showProspectSurnameError = false
                         },
                         supportingText = {
-                            prospectSurnameSupportingText?.let {
+                            prospectSurnameSupportingText?.let { errorMessage ->
                                 Text(
-                                    text = it,
+                                    text = errorMessage,
                                     fontWeight = FontWeight.Normal,
                                     fontFamily = assistantFamily,
                                 )
@@ -221,12 +227,12 @@ fun NewProspectScreen(
                     FormInputText(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 4.dp),
+                            .padding(vertical = dimenExtraSmall),
                         text = prospectSecondSurname,
-                        label = "Segundo apellido",
-                        onTextChange = {
-                            if (it.length <= MAX_CHARACTERS_BY_NAME) {
-                                prospectSecondSurname = filterNameInput(it)
+                        label = stringResource(id = R.string.label_second_surname_field),
+                        onTextChange = { text ->
+                            if (text.length <= MAX_CHARACTERS_BY_NAME) {
+                                prospectSecondSurname = filterNameInput(text)
                             }
                         },
                         keyboardType = KeyboardType.Text,
@@ -236,21 +242,21 @@ fun NewProspectScreen(
                     FormInputText(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 4.dp),
+                            .padding(vertical = dimenExtraSmall),
                         text = prospectStreetAddress,
-                        label = "Calle",
-                        leadingIcon = Icons.Default.Home,
-                        onTextChange = {
-                            if (it.length <= MAX_CHARACTERS_BY_ADDRESS) {
-                                prospectStreetAddress = filterAddressInput(it)
+                        label = stringResource(id = R.string.label_street_field),
+                        leadingIcon = Icons.Rounded.Home,
+                        onTextChange = { text ->
+                            if (text.length <= MAX_CHARACTERS_BY_ADDRESS) {
+                                prospectStreetAddress = filterAddressInput(text)
                             }
                             prospectStreetAddressSupportingText = null
                             showProspectStreetAddressError = false
                         },
                         supportingText = {
-                            prospectStreetAddressSupportingText?.let {
+                            prospectStreetAddressSupportingText?.let { errorMessage ->
                                 Text(
-                                    text = it,
+                                    text = errorMessage,
                                     fontWeight = FontWeight.Normal,
                                     fontFamily = assistantFamily,
                                 )
@@ -264,21 +270,21 @@ fun NewProspectScreen(
                     FormInputText(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 4.dp),
+                            .padding(vertical = dimenExtraSmall),
                         text = prospectNumberAddress,
-                        label = "Número",
-                        leadingIcon = Icons.Default.Numbers,
-                        onTextChange = {
-                            if (it.length <= MAX_CHARACTERS_BY_NUMBER_ADDRESS) {
-                                prospectNumberAddress = filterLettersAndNumbers(it)
+                        label = stringResource(id = R.string.label_number_field),
+                        leadingIcon = Icons.Rounded.Numbers,
+                        onTextChange = { text ->
+                            if (text.length <= MAX_CHARACTERS_BY_NUMBER_ADDRESS) {
+                                prospectNumberAddress = filterLettersAndNumbers(text)
                             }
                             prospectNumberAddressSupportingText = null
                             showProspectNumberAddressError = false
                         },
                         supportingText = {
-                            prospectNumberAddressSupportingText?.let {
+                            prospectNumberAddressSupportingText?.let { errorMessage ->
                                 Text(
-                                    text = it,
+                                    text = errorMessage,
                                     fontWeight = FontWeight.Normal,
                                     fontFamily = assistantFamily,
                                 )
@@ -292,21 +298,21 @@ fun NewProspectScreen(
                     FormInputText(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 4.dp),
+                            .padding(vertical = dimenExtraSmall),
                         text = prospectNeighborhoodAddress,
-                        label = "Colonia",
-                        leadingIcon = Icons.Default.Home,
-                        onTextChange = {
-                            if (it.length <= MAX_CHARACTERS_BY_ADDRESS) {
-                                prospectNeighborhoodAddress = filterAddressInput(it)
+                        label = stringResource(id = R.string.label_neighborhood_field),
+                        leadingIcon = Icons.Rounded.Home,
+                        onTextChange = { text ->
+                            if (text.length <= MAX_CHARACTERS_BY_ADDRESS) {
+                                prospectNeighborhoodAddress = filterAddressInput(text)
                             }
                             prospectNeighborhoodAddressSupportingText = null
                             showProspectNeighborhoodAddressError = false
                         },
                         supportingText = {
-                            prospectNeighborhoodAddressSupportingText?.let {
+                            prospectNeighborhoodAddressSupportingText?.let { errorMessage ->
                                 Text(
-                                    text = it,
+                                    text = errorMessage,
                                     fontWeight = FontWeight.Normal,
                                     fontFamily = assistantFamily,
                                 )
@@ -320,21 +326,21 @@ fun NewProspectScreen(
                     FormInputText(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 4.dp),
+                            .padding(vertical = dimenExtraSmall),
                         text = prospectZipCode,
-                        label = "Código postal",
-                        leadingIcon = Icons.Default.LocalPostOffice,
-                        onTextChange = {
-                            if (it.length <= MAX_CHARACTERS_BY_ZIP_CODE) {
-                                if (it.isDigitsOnly()) prospectZipCode = it
+                        label = stringResource(id = R.string.label_zip_code_field),
+                        leadingIcon = Icons.Rounded.LocalPostOffice,
+                        onTextChange = { text ->
+                            if (text.length <= MAX_CHARACTERS_BY_ZIP_CODE) {
+                                if (text.isDigitsOnly()) prospectZipCode = text
                             }
                             prospectZipCodeSupportingText = null
                             showProspectZipCodeError = false
                         },
                         supportingText = {
-                            prospectZipCodeSupportingText?.let {
+                            prospectZipCodeSupportingText?.let { errorMessage ->
                                 Text(
-                                    text = it,
+                                    text = errorMessage,
                                     fontWeight = FontWeight.Normal,
                                     fontFamily = assistantFamily,
                                 )
@@ -348,21 +354,21 @@ fun NewProspectScreen(
                     FormInputText(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 4.dp),
+                            .padding(vertical = dimenExtraSmall),
                         text = prospectPhoneNumber,
-                        label = "Numero de teléfono",
-                        leadingIcon = Icons.Default.Phone,
-                        onTextChange = {
-                            if (it.length <= MAX_CHARACTERS_BY_PHONE_NUMBER) {
-                                if (it.isDigitsOnly()) prospectPhoneNumber = it
+                        label = stringResource(id = R.string.label_phone_number_field),
+                        leadingIcon = Icons.Rounded.Phone,
+                        onTextChange = { text ->
+                            if (text.length <= MAX_CHARACTERS_BY_PHONE_NUMBER) {
+                                if (text.isDigitsOnly()) prospectPhoneNumber = text
                             }
                             prospectPhoneNumberSupportingText = null
                             showProspectPhoneNumberError = false
                         },
                         supportingText = {
-                            prospectPhoneNumberSupportingText?.let {
+                            prospectPhoneNumberSupportingText?.let { errorMessage ->
                                 Text(
-                                    text = it,
+                                    text = errorMessage,
                                     fontWeight = FontWeight.Normal,
                                     fontFamily = assistantFamily,
                                 )
@@ -376,20 +382,20 @@ fun NewProspectScreen(
                     FormInputText(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 4.dp),
+                            .padding(vertical = dimenExtraSmall),
                         text = prospectRFC,
-                        label = "RFC",
-                        onTextChange = {
-                            if (it.length <= MAX_CHARACTERS_BY_RFC) {
-                                prospectRFC = filterLettersAndNumbers(it)
+                        label = stringResource(id = R.string.label_rfc_field),
+                        onTextChange = { text ->
+                            if (text.length <= MAX_CHARACTERS_BY_RFC) {
+                                prospectRFC = filterLettersAndNumbers(text)
                             }
                             prospectRFCSupportingText = null
                             showProspectRFCError = false
                         },
                         supportingText = {
-                            prospectRFCSupportingText?.let {
+                            prospectRFCSupportingText?.let { errorMessage ->
                                 Text(
-                                    text = it,
+                                    text = errorMessage,
                                     fontWeight = FontWeight.Normal,
                                     fontFamily = assistantFamily,
                                 )
@@ -439,46 +445,50 @@ fun NewProspectScreen(
                             var allValidationsPassed = true
 
                             if (prospectName.isEmpty()) {
-                                prospectNameSupportingText = "El nombre es necesario"
+                                prospectNameSupportingText =
+                                    getString(context, R.string.name_error_text)
                                 showProspectNameError = true
                                 allValidationsPassed = false
                             }
                             if (prospectSurname.isEmpty()) {
-                                prospectSurnameSupportingText = "El primer apellido es necesario"
+                                prospectSurnameSupportingText =
+                                    getString(context, R.string.surname_error_text)
                                 showProspectSurnameError = true
                                 allValidationsPassed = false
                             }
                             if (prospectStreetAddress.isEmpty()) {
                                 prospectStreetAddressSupportingText =
-                                    "La calle es necesaria"
+                                    getString(context, R.string.address_error_text)
                                 showProspectStreetAddressError = true
                                 allValidationsPassed = false
                             }
                             if (prospectNumberAddress.isEmpty()) {
                                 prospectNumberAddressSupportingText =
-                                    "El numero de calle es necesario"
+                                    getString(context, R.string.number_error_text)
                                 showProspectNumberAddressError = true
                                 allValidationsPassed = false
                             }
                             if (prospectNeighborhoodAddress.isEmpty()) {
                                 prospectNeighborhoodAddressSupportingText =
-                                    "La colonia es necesaria"
+                                    getString(context, R.string.neighborhood_error_text)
                                 showProspectNeighborhoodAddressError = true
                                 allValidationsPassed = false
                             }
                             if (prospectZipCode.isEmpty()) {
-                                prospectZipCodeSupportingText = "El código postal es necesario"
+                                prospectZipCodeSupportingText =
+                                    getString(context, R.string.zip_code_error_text)
                                 showProspectZipCodeError = true
                                 allValidationsPassed = false
                             }
                             if (prospectPhoneNumber.isEmpty()) {
                                 prospectPhoneNumberSupportingText =
-                                    "El numero de telefono es necesario"
+                                    getString(context, R.string.phone_number_error_text)
                                 showProspectPhoneNumberError = true
                                 allValidationsPassed = false
                             }
                             if (prospectRFC.isEmpty()) {
-                                prospectRFCSupportingText = "El RFC es necesario"
+                                prospectRFCSupportingText =
+                                    getString(context, R.string.rfc_error_text)
                                 showProspectRFCError = true
                                 allValidationsPassed = false
                             }
@@ -504,33 +514,39 @@ fun NewProspectScreen(
 
                                 val newProspect = Prospect(
                                     id = prospectId,
-                                    idPromotor = promoterId!!,
-                                    nombre = prospectName,
-                                    primerApellido = prospectSurname,
-                                    segundoApellido = prospectSecondSurname,
-                                    calle = prospectStreetAddress,
-                                    numero = prospectNumberAddress,
-                                    colonia = prospectNeighborhoodAddress,
-                                    codigoPostal = prospectZipCode,
-                                    telefono = prospectPhoneNumber,
+                                    promoterId = promoterId!!,
+                                    name = prospectName,
+                                    surname = prospectSurname,
+                                    secondSurname = prospectSecondSurname,
+                                    streetAddress = prospectStreetAddress,
+                                    numberAddress = prospectNumberAddress,
+                                    neighborhood = prospectNeighborhoodAddress,
+                                    zipCode = prospectZipCode,
+                                    phoneNumber = prospectPhoneNumber,
                                     rfc = prospectRFC,
-                                    estatus = ProspectStatus.ENVIADO,
+                                    status = ProspectStatus.ENVIADO,
                                 )
                                 prospectsViewModel.createProspect(newProspect)
 
-                                Toast.makeText(context, "Los datos del prospecto se han enviado", Toast.LENGTH_LONG)
+                                Toast.makeText(
+                                    context,
+                                    getString(context, R.string.message_send_prospect_data),
+                                    Toast.LENGTH_LONG,
+                                )
                                     .show()
                                 // Toast.makeText(context, "Documento Guardado", Toast.LENGTH_LONG).show()
                                 navController.navigate(AppScreens.ProspectsScreen.name + "/$promoterId")
                             }
                         },
-                        modifier = Modifier.fillMaxWidth().height(48.dp),
-                        shape = RoundedCornerShape(8.dp),
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
-                        Icon(imageVector = Icons.AutoMirrored.Rounded.Send, contentDescription = "Enviar")
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Rounded.Send,
+                            contentDescription = stringResource(id = R.string.send_icon_content_description),
+                        )
+                        Spacer(modifier = Modifier.width(dimenSmall))
                         Text(
-                            text = "Enviar al área de evaluación",
+                            text = stringResource(id = R.string.button_send_to_evaluation_area),
                             fontWeight = FontWeight.Bold,
                             fontFamily = assistantFamily,
                         )
@@ -545,7 +561,7 @@ fun NewProspectScreen(
 @Composable
 @Preview
 fun DocumentSection(
-    documentName: String = "",
+    documentName: String = EMPTY_STRING,
     onDocumentNameChange: (String) -> Unit = {},
     onAddDocument: () -> Unit = {},
     onUploadDocument: () -> Unit = {},
@@ -554,7 +570,7 @@ fun DocumentSection(
     var documentList by remember { mutableStateOf(mutableListOf<String>()) }
     Row(
         modifier = Modifier
-            .fillMaxWidth().padding(vertical = 8.dp),
+            .fillMaxWidth().padding(vertical = dimenSmall),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -562,23 +578,26 @@ fun DocumentSection(
         OutlinedTextField(
             value = documentName,
             onValueChange = { onDocumentNameChange(it) },
-            label = { Text("Document Name") },
+            label = { Text(text = stringResource(id = R.string.label_document_name_field)) },
             leadingIcon = {
                 Icon(
-                    imageVector = Icons.Rounded.InsertDriveFile,
-                    contentDescription = null,
+                    imageVector = Icons.AutoMirrored.Rounded.InsertDriveFile,
+                    contentDescription = stringResource(id = R.string.document_icon_content_description),
                 )
             },
-            shape = RoundedCornerShape(8.dp),
+            shape = RoundedCornerShape(dimenSmall),
         )
 
         Button(
             onClick = {
                 onAddDocument()
             },
-            shape = RoundedCornerShape(8.dp),
+            shape = RoundedCornerShape(dimenSmall),
         ) {
-            Icon(imageVector = Icons.Rounded.AddCircle, contentDescription = "Add document")
+            Icon(
+                imageVector = Icons.Rounded.AddCircle,
+                contentDescription = stringResource(id = R.string.add_document_icon_content_description),
+            )
         }
     }
 }
