@@ -120,7 +120,7 @@ fun ProspectList(
                         }
                     }
 
-                    // Ordenar los grupos según tu preferencia
+                    // Sort the groups according to your preference
                     val sortedGroups = groupedProspects?.entries?.sortedBy { entry ->
                         when (entry.key) {
                             ProspectStatus.ENVIADO -> FIRST
@@ -196,7 +196,9 @@ fun ProspectItem(
     ) {
         Box(
             modifier = Modifier.clickable {
-                navController.navigate(AppScreens.ProspectEvaluationScreen.name + "/${prospect.id}") {
+                navController.navigate(
+                    AppScreens.ProspectEvaluationScreen.name + "/${prospect.id}",
+                ) {
                     launchSingleTop = true
                 }
             },

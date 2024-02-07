@@ -1,17 +1,15 @@
 package com.concredito.clientes.screens.login
 
+import LoadingScreenDialog
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,7 +21,6 @@ import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Visibility
 import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +33,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -46,8 +42,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat.getString
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
@@ -57,8 +51,6 @@ import com.concredito.clientes.data.PreferencesManager
 import com.concredito.clientes.data.Resource
 import com.concredito.clientes.navigation.AppScreens
 import com.concredito.clientes.screens.prospect.PromoterViewModel
-import com.concredito.clientes.ui.theme.Dimens.circularIndicator
-import com.concredito.clientes.ui.theme.Dimens.dialogBoxSize
 import com.concredito.clientes.ui.theme.Dimens.dimenMedium
 import com.concredito.clientes.ui.theme.Dimens.dimenNormal
 import com.concredito.clientes.ui.theme.Dimens.dimenSmall
@@ -74,34 +66,31 @@ fun LoginScreen(
     navController: NavHostController,
     promoterViewModel: PromoterViewModel = hiltViewModel(),
 ) {
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var isPasswordVisible by remember { mutableStateOf(false) }
-    var isLoading by remember { mutableStateOf(false) }
-
-    var showError by remember { mutableStateOf(false) }
-    var usernameSupportingText by remember { mutableStateOf<String?>(null) }
-    var passwordSupportingText by remember { mutableStateOf<String?>(null) }
-
-    var showUsernameError by remember { mutableStateOf(false) }
-    var showPasswordError by remember { mutableStateOf(false) }
-
-    val keyboardController = LocalSoftwareKeyboardController.current
-
-    var showDialog by remember { mutableStateOf(false) }
-
     val context = LocalContext.current
 
     val preferencesManager = PreferencesManager(context)
-
-    // Verifica si el ID del promotor y el nombre de usuario ya están almacenados
     val savedPromoterId = preferencesManager.getPromoterId()
     val savedUsername = preferencesManager.getUsername()
 
-    if (savedPromoterId != null && savedUsername != null) {
-        // Si las credenciales están guardadas, navega directamente a la pantalla principal
+    if (!savedPromoterId.isNullOrEmpty() && !savedUsername.isNullOrEmpty()) {
         navController.navigate(AppScreens.MainScreen.name)
     } else {
+        var username by remember { mutableStateOf("") }
+        var password by remember { mutableStateOf("") }
+        var isPasswordVisible by remember { mutableStateOf(false) }
+        var isLoading by remember { mutableStateOf(false) }
+
+        var showError by remember { mutableStateOf(false) }
+        var usernameSupportingText by remember { mutableStateOf<String?>(null) }
+        var passwordSupportingText by remember { mutableStateOf<String?>(null) }
+
+        var showUsernameError by remember { mutableStateOf(false) }
+        var showPasswordError by remember { mutableStateOf(false) }
+
+        val keyboardController = LocalSoftwareKeyboardController.current
+
+        var showDialog by remember { mutableStateOf(false) }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -283,20 +272,17 @@ fun LoginScreen(
 
                         if (result is Resource.Success) {
                             val response = result.data
-                            // Extrae el ID del promotor y el nombre de usuario del response
+                            // Save promoter id and username from the response
                             val promoterId = response?.id
                             val loggedInUsername = response?.username
 
-                            // Guarda el ID del promotor y el nombre de usuario utilizando PreferencesManager
-                            if (promoterId != null) {
-                                if (loggedInUsername != null) {
-                                    PreferencesManager(context).savePromoterInfo(
-                                        promoterId,
-                                        loggedInUsername,
-                                    )
-                                }
+                            // Save Promoter ID and Username using PreferencesManager
+                            if (!promoterId.isNullOrEmpty() && !loggedInUsername.isNullOrEmpty()) {
+                                PreferencesManager(context).savePromoterInfo(
+                                    promoterId,
+                                    loggedInUsername,
+                                )
                             }
-
                             navController.navigate(AppScreens.MainScreen.name)
                         } else {
                             showError = true
@@ -327,27 +313,7 @@ fun LoginScreen(
             }
 
             if (showDialog) {
-                Dialog(
-                    onDismissRequest = {},
-                    properties = DialogProperties(
-                        dismissOnBackPress = false,
-                        dismissOnClickOutside = false,
-                    ),
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(dialogBoxSize)
-                            .clip(RoundedCornerShape(dimenSmall))
-                            .background(MaterialTheme.colorScheme.background)
-                            .padding(dimenNormal),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        CircularProgressIndicator(
-                            color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(circularIndicator),
-                        )
-                    }
-                }
+                LoadingScreenDialog()
             }
         }
     }

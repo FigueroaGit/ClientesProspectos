@@ -1,6 +1,7 @@
 package com.concredito.clientes.screens.prospect
 
 import LetterTile
+import ObservationsDialog
 import ProspectsAppBar
 import android.content.Intent
 import android.net.Uri
@@ -13,15 +14,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
@@ -29,13 +25,11 @@ import androidx.compose.material.icons.automirrored.rounded.Message
 import androidx.compose.material.icons.automirrored.rounded.Send
 import androidx.compose.material.icons.rounded.Cancel
 import androidx.compose.material.icons.rounded.CheckCircle
-import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.Phone
 import androidx.compose.material.icons.rounded.Visibility
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -44,8 +38,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -53,19 +45,12 @@ import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat.getString
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -84,9 +69,7 @@ import com.concredito.clientes.ui.theme.Fonts.fontSizeMedium
 import com.concredito.clientes.ui.theme.Fonts.fontSizeNormal
 import com.concredito.clientes.ui.theme.assistantFamily
 import com.concredito.clientes.util.Constants.LETTER_TILE_FONT_SIZE_4X
-import com.concredito.clientes.util.Constants.MAX_CHARACTERS_BY_OBSERVATIONS
 import com.concredito.clientes.util.Constants.MESSAGE_URI
-import com.concredito.clientes.util.Constants.MULTILINE
 import com.concredito.clientes.util.Constants.ONE_LINE
 import com.concredito.clientes.util.Constants.PHONE_URI
 import java.util.UUID
@@ -108,6 +91,10 @@ fun ProspectEvaluationScreen(
         produceState<Resource<List<RejectObservation>>>(initialValue = Resource.Loading()) {
             value = rejectObservationViewModel.getRejectObservationsByProspectId(prospectId)
         }.value
+
+    val rejectObservationId = remember { UUID.randomUUID().toString() }
+
+    var observations by remember { mutableStateOf("") }
 
     var showDialog by remember { mutableStateOf(false) }
 
@@ -492,9 +479,7 @@ fun ProspectEvaluationScreen(
                                     fontWeight = FontWeight.Bold,
                                     fontFamily = assistantFamily,
                                 )
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                ) {
+                                Row {
                                     Icon(
                                         imageVector = Icons.Rounded.Visibility,
                                         contentDescription =
@@ -522,6 +507,10 @@ fun ProspectEvaluationScreen(
                                 onDismiss = {
                                     showDialog = false
                                 },
+                                observations = observations,
+                                onObservationsChange = { text ->
+                                    observations = text
+                                },
                                 onClickSend = {
                                     prospectsViewModel.updateProspect(
                                         prospectId,
@@ -541,10 +530,18 @@ fun ProspectEvaluationScreen(
                                         ),
                                     )
 
+                                    val rejectObservation = RejectObservation(
+                                        id = rejectObservationId,
+                                        observations = observations,
+                                        prospectId = prospectId,
+                                    )
+
+                                    rejectObservationViewModel.addRejectObservations(
+                                        rejectObservation,
+                                    )
+
                                     navController.navigate(AppScreens.ProspectsScreen.name + "/$promoterId")
                                 },
-                                prospectId,
-                                rejectObservationViewModel,
                             )
                         }
                     }
@@ -631,132 +628,3 @@ fun DocumentItem(
     }
 }
 */
-
-@Composable
-fun ObservationsDialog(
-    onDismiss: () -> Unit,
-    onClickSend: () -> Unit,
-    prospectId: String,
-    rejectObservationViewModel: RejectObservationViewModel = hiltViewModel(),
-) {
-    val rejectObservationId = remember { UUID.randomUUID().toString() }
-    var observations by remember { mutableStateOf("") }
-
-    val keyboardController = LocalSoftwareKeyboardController.current
-
-    Dialog(
-        onDismissRequest = {
-            onDismiss.invoke()
-        },
-        properties = DialogProperties(
-            dismissOnClickOutside = false,
-            usePlatformDefaultWidth = false,
-        ),
-    ) {
-        Surface {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(dimenNormal),
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = dimenNormal),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    IconButton(
-                        onClick = {
-                            onDismiss.invoke()
-                        },
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.Close,
-                            contentDescription = stringResource(id = R.string.close_icon_content_description),
-                        )
-                    }
-                    Text(
-                        text = stringResource(id = R.string.label_enter_reject_observations),
-                        fontSize = fontSizeNormal,
-                        fontFamily = assistantFamily,
-                    )
-                    Spacer(modifier = Modifier.size(48.dp))
-                }
-                TextField(
-                    value = observations,
-                    onValueChange = { text ->
-                        if (text.length <= MAX_CHARACTERS_BY_OBSERVATIONS) {
-                            observations = text
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = 154.dp),
-                    label = {
-                        Text(
-                            text = stringResource(
-                                id = R.string.label_reject_observations_characters_max_field,
-                                MAX_CHARACTERS_BY_OBSERVATIONS,
-                            ),
-                            fontSize = fontSizeNormal,
-                            fontFamily = assistantFamily,
-                        )
-                    },
-                    supportingText = {
-                        Text(
-                            text = stringResource(
-                                id = R.string.label_reject_observations_characters_left_field,
-                                MAX_CHARACTERS_BY_OBSERVATIONS - observations.length,
-                            ),
-                            modifier = Modifier.padding(top = dimenExtraSmall),
-                        )
-                    },
-                    singleLine = false,
-                    maxLines = MULTILINE,
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Done,
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            keyboardController?.hide()
-                        },
-                    ),
-                    shape = RoundedCornerShape(dimenSmall),
-                    colors = TextFieldDefaults.colors(
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                    ),
-                )
-                Button(
-                    onClick = {
-                        val rejectObservation = RejectObservation(
-                            id = rejectObservationId,
-                            observations = observations,
-                            prospectId = prospectId,
-                        )
-
-                        rejectObservationViewModel.addRejectObservations(rejectObservation)
-
-                        onClickSend.invoke()
-                        onDismiss.invoke()
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = dimenNormal),
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.Send,
-                        contentDescription = stringResource(id = R.string.send_icon_content_description),
-                    )
-                    Spacer(modifier = Modifier.width(dimenSmall))
-                    Text(
-                        text = stringResource(id = R.string.button_send_observations),
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = assistantFamily,
-                    )
-                }
-            }
-        }
-    }
-}

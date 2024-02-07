@@ -3,21 +3,28 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Logout
+import androidx.compose.material.icons.automirrored.rounded.Send
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,10 +34,11 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -44,16 +52,22 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.concredito.clientes.R
+import com.concredito.clientes.ui.theme.Dimens
 import com.concredito.clientes.ui.theme.Dimens.dimenNormal
 import com.concredito.clientes.ui.theme.Dimens.dimenSmall
 import com.concredito.clientes.ui.theme.Dimens.letterTileSize
 import com.concredito.clientes.ui.theme.Dimens.letterTileSize3x
+import com.concredito.clientes.ui.theme.Fonts
 import com.concredito.clientes.ui.theme.Fonts.fontSizeLarge
 import com.concredito.clientes.ui.theme.Fonts.fontSizeMedium
 import com.concredito.clientes.ui.theme.assistantFamily
+import com.concredito.clientes.util.Constants
 import com.concredito.clientes.util.Constants.EMPTY_STRING
 import com.concredito.clientes.util.Constants.LETTER_TILE_FONT_SIZE
 import com.concredito.clientes.util.Constants.LETTER_TILE_FONT_SIZE_3X
@@ -129,6 +143,110 @@ fun ProspectsAppBar(
             }
         },
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ProspectsLargeTopAppBar(
+    title: String,
+    letterTileSize: Dp = letterTileSize3x, // Default size for the LetterTile
+    fontSize: Int = LETTER_TILE_FONT_SIZE_3X,
+    additionalText: String = EMPTY_STRING, // Additional text to be displayed
+    navController: NavController,
+    onLogoutClicked: () -> Unit,
+    onMenuClicked: () -> Unit, // Callback for hamburger icon click
+    onShowProspectsClicked: () -> Unit,
+) {
+    LargeTopAppBar(
+        modifier = Modifier
+            .fillMaxWidth(),
+        title = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                val titleWithGreetings = title.split(SPLIT_DELIMITER)
+                val usernameLetter = titleWithGreetings[1]
+                LetterTile(
+                    text = usernameLetter.take(1).uppercase(),
+                    size = letterTileSize,
+                    fontSize = fontSize,
+                )
+                Column(modifier = Modifier.padding(horizontal = dimenNormal)) {
+                    Text(
+                        text = title,
+                        fontFamily = assistantFamily,
+                    )
+                    Button(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = { onShowProspectsClicked.invoke() },
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.button_show_all_prospects),
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = assistantFamily,
+                        )
+                    }
+                }
+            }
+        },
+        navigationIcon = {
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                IconButton(onClick = onMenuClicked) {
+                    Icon(
+                        imageVector = Icons.Rounded.Menu,
+                        contentDescription = stringResource(id = R.string.menu_icon_content_description),
+                    )
+                }
+
+                if (additionalText.isNotEmpty()) {
+                    Text(
+                        text = additionalText,
+                        fontWeight = FontWeight.Medium,
+                        fontFamily = assistantFamily,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontSize = fontSizeLarge,
+                    )
+                }
+            }
+        },
+        actions = {
+            IconButton(onClick = onLogoutClicked) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Rounded.Logout,
+                    contentDescription = stringResource(id = R.string.logout_content_description),
+                )
+            }
+        },
+    )
+}
+
+@Composable
+fun LetterTile(text: String, size: Dp, fontSize: Int, modifier: Modifier = Modifier) {
+    val randomColor = getRandomColor()
+
+    Box(
+        modifier = modifier
+            .size(size)
+            .background(
+                color = randomColor,
+                shape = CircleShape,
+            )
+            .clip(CircleShape),
+    ) {
+        Text(
+            text = text,
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(dimenSmall)
+                .align(Alignment.Center),
+            textAlign = TextAlign.Center,
+            fontSize = fontSize.sp,
+        )
+    }
 }
 
 @Composable
@@ -273,106 +391,145 @@ fun ExitDialog(
     )
 }
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun ProspectsLargeTopAppBar(
-    title: String,
-    letterTileSize: Dp = letterTileSize3x, // Default size for the LetterTile
-    fontSize: Int = LETTER_TILE_FONT_SIZE_3X,
-    additionalText: String = EMPTY_STRING, // Additional text to be displayed
-    navController: NavController,
-    onLogoutClicked: () -> Unit,
-    onMenuClicked: () -> Unit, // Callback for hamburger icon click
-    onShowProspectsClicked: () -> Unit,
-) {
-    LargeTopAppBar(
-        modifier = Modifier
-            .fillMaxWidth(),
-        title = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                val titleWithGreetings = title.split(SPLIT_DELIMITER)
-                val usernameLetter = titleWithGreetings[1]
-                LetterTile(
-                    text = usernameLetter.take(1).uppercase(),
-                    size = letterTileSize,
-                    fontSize = fontSize,
-                )
-                Column(modifier = Modifier.padding(horizontal = dimenNormal)) {
-                    Text(
-                        text = title,
-                        fontFamily = assistantFamily,
-                    )
-                    Button(
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = { onShowProspectsClicked.invoke() },
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.button_show_all_prospects),
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = assistantFamily,
-                        )
-                    }
-                }
-            }
-        },
-        navigationIcon = {
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                IconButton(onClick = onMenuClicked) {
-                    Icon(
-                        imageVector = Icons.Rounded.Menu,
-                        contentDescription = stringResource(id = R.string.menu_icon_content_description),
-                    )
-                }
-
-                if (additionalText.isNotEmpty()) {
-                    Text(
-                        text = additionalText,
-                        fontWeight = FontWeight.Medium,
-                        fontFamily = assistantFamily,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontSize = fontSizeLarge,
-                    )
-                }
-            }
-        },
-        actions = {
-            IconButton(onClick = onLogoutClicked) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Rounded.Logout,
-                    contentDescription = stringResource(id = R.string.logout_content_description),
-                )
-            }
-        },
-    )
+fun LoadingScreenDialog() {
+    Dialog(
+        onDismissRequest = {},
+        properties = DialogProperties(
+            dismissOnBackPress = false,
+            dismissOnClickOutside = false,
+        ),
+    ) {
+        Box(
+            modifier = Modifier
+                .size(Dimens.dialogBoxSize)
+                .clip(RoundedCornerShape(dimenSmall))
+                .background(MaterialTheme.colorScheme.background)
+                .padding(dimenNormal),
+            contentAlignment = Alignment.Center,
+        ) {
+            CircularProgressIndicator(
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(Dimens.circularIndicator),
+            )
+        }
+    }
 }
 
 @Composable
-fun LetterTile(text: String, size: Dp, fontSize: Int, modifier: Modifier = Modifier) {
-    val randomColor = getRandomColor()
+fun ObservationsDialog(
+    onDismiss: () -> Unit,
+    observations: String,
+    onObservationsChange: (String) -> Unit,
+    onClickSend: () -> Unit,
+) {
+    val keyboardController = LocalSoftwareKeyboardController.current
 
-    Box(
-        modifier = modifier
-            .size(size)
-            .background(
-                color = randomColor,
-                shape = CircleShape,
-            )
-            .clip(CircleShape),
+    Dialog(
+        onDismissRequest = {
+            onDismiss.invoke()
+        },
+        properties = DialogProperties(
+            dismissOnClickOutside = false,
+            usePlatformDefaultWidth = false,
+        ),
     ) {
-        Text(
-            text = text,
-            color = Color.White,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .padding(dimenSmall)
-                .align(Alignment.Center),
-            textAlign = TextAlign.Center,
-            fontSize = fontSize.sp,
-        )
+        Surface {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(dimenNormal),
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = dimenNormal),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    IconButton(
+                        onClick = {
+                            onDismiss.invoke()
+                        },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.Close,
+                            contentDescription = stringResource(id = R.string.close_icon_content_description),
+                        )
+                    }
+                    Text(
+                        text = stringResource(id = R.string.label_enter_reject_observations),
+                        fontSize = Fonts.fontSizeNormal,
+                        fontFamily = assistantFamily,
+                    )
+                    Spacer(modifier = Modifier.size(48.dp))
+                }
+                TextField(
+                    value = observations,
+                    onValueChange = { text ->
+                        if (text.length <= Constants.MAX_CHARACTERS_BY_OBSERVATIONS) {
+                            onObservationsChange(text)
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 154.dp),
+                    label = {
+                        Text(
+                            text = stringResource(
+                                id = R.string.label_reject_observations_characters_max_field,
+                                Constants.MAX_CHARACTERS_BY_OBSERVATIONS,
+                            ),
+                            fontSize = Fonts.fontSizeNormal,
+                            fontFamily = assistantFamily,
+                        )
+                    },
+                    supportingText = {
+                        Text(
+                            text = stringResource(
+                                id = R.string.label_reject_observations_characters_left_field,
+                                Constants.MAX_CHARACTERS_BY_OBSERVATIONS - observations.length,
+                            ),
+                            modifier = Modifier.padding(top = Dimens.dimenExtraSmall),
+                        )
+                    },
+                    singleLine = false,
+                    maxLines = Constants.MULTILINE,
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Done,
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            keyboardController?.hide()
+                        },
+                    ),
+                    shape = RoundedCornerShape(dimenSmall),
+                    colors = TextFieldDefaults.colors(
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                    ),
+                )
+                Button(
+                    onClick = {
+                        onClickSend.invoke()
+                        onDismiss.invoke()
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = dimenNormal),
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Rounded.Send,
+                        contentDescription = stringResource(id = R.string.send_icon_content_description),
+                    )
+                    Spacer(modifier = Modifier.width(dimenSmall))
+                    Text(
+                        text = stringResource(id = R.string.button_send_observations),
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = assistantFamily,
+                    )
+                }
+            }
+        }
     }
 }

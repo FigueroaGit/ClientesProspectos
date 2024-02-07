@@ -42,6 +42,7 @@ import com.concredito.clientes.ui.theme.Dimens.circularIndicator
 import com.concredito.clientes.ui.theme.Dimens.dimenNormal
 import com.concredito.clientes.ui.theme.Dimens.dimenSmall
 import com.concredito.clientes.ui.theme.Dimens.imageSizeSmall
+import com.concredito.clientes.ui.theme.Fonts.fontSizeNormal
 import com.concredito.clientes.ui.theme.assistantFamily
 
 @Composable
@@ -89,11 +90,21 @@ fun MainScreen(
                 }
 
                 is Resource.Loading -> {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(circularIndicator)
-                            .align(Alignment.Center),
-                    )
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .size(circularIndicator),
+                        )
+                        Text(
+                            text = stringResource(id = R.string.label_circular_progress_indicator_text),
+                            fontSize = fontSizeNormal,
+                            fontFamily = assistantFamily,
+                        )
+                    }
                 }
 
                 is Resource.Error -> {
