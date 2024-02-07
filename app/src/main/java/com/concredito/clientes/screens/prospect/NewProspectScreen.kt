@@ -6,9 +6,11 @@ import ProspectsAppBar
 import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -28,6 +30,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -43,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getString
 import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -54,6 +58,7 @@ import com.concredito.clientes.navigation.AppScreens
 import com.concredito.clientes.ui.theme.Dimens.dimenExtraSmall
 import com.concredito.clientes.ui.theme.Dimens.dimenNormal
 import com.concredito.clientes.ui.theme.Dimens.dimenSmall
+import com.concredito.clientes.ui.theme.Dimens.lazyColumnBottomPadding
 import com.concredito.clientes.ui.theme.assistantFamily
 import com.concredito.clientes.util.Constants.EMPTY_STRING
 import com.concredito.clientes.util.Constants.MAX_CHARACTERS_BY_ADDRESS
@@ -158,394 +163,413 @@ fun NewProspectScreen(
             },
         )
     }) { paddingValues ->
-        LazyColumn {
-            item {
-                Column(
-                    modifier = Modifier
-                        .padding(paddingValues)
-                        .padding(start = dimenNormal, end = dimenNormal, bottom = dimenNormal),
-                ) {
-                    FormInputText(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = dimenExtraSmall),
-                        text = prospectName,
-                        label = stringResource(id = R.string.label_name_field),
-                        onTextChange = { text ->
-                            if (text.length <= MAX_CHARACTERS_BY_NAME) {
-                                prospectName = filterNameInput(text)
-                            }
-                            prospectNameSupportingText = null
-                            showProspectNameError = false
-                        },
-                        supportingText = {
-                            prospectNameSupportingText?.let { errorMessage ->
-                                Text(
-                                    text = (errorMessage),
-                                    fontWeight = FontWeight.Normal,
-                                    fontFamily = assistantFamily,
-                                )
-                            }
-                        },
-                        isError = showProspectNameError,
-                        keyboardType = KeyboardType.Text,
-                        keyboardCapitalization = KeyboardCapitalization.Words,
-                    )
-
-                    FormInputText(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = dimenExtraSmall),
-                        text = prospectSurname,
-                        label = stringResource(id = R.string.label_surname_field),
-                        onTextChange = { text ->
-                            if (text.length <= MAX_CHARACTERS_BY_NAME) {
-                                prospectSurname = filterNameInput(text)
-                            }
-                            prospectSurnameSupportingText = null
-                            showProspectSurnameError = false
-                        },
-                        supportingText = {
-                            prospectSurnameSupportingText?.let { errorMessage ->
-                                Text(
-                                    text = errorMessage,
-                                    fontWeight = FontWeight.Normal,
-                                    fontFamily = assistantFamily,
-                                )
-                            }
-                        },
-                        isError = showProspectSurnameError,
-                        keyboardType = KeyboardType.Text,
-                        keyboardCapitalization = KeyboardCapitalization.Words,
-                    )
-
-                    FormInputText(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = dimenExtraSmall),
-                        text = prospectSecondSurname,
-                        label = stringResource(id = R.string.label_second_surname_field),
-                        onTextChange = { text ->
-                            if (text.length <= MAX_CHARACTERS_BY_NAME) {
-                                prospectSecondSurname = filterNameInput(text)
-                            }
-                        },
-                        keyboardType = KeyboardType.Text,
-                        keyboardCapitalization = KeyboardCapitalization.Words,
-                    )
-
-                    FormInputText(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = dimenExtraSmall),
-                        text = prospectStreetAddress,
-                        label = stringResource(id = R.string.label_street_field),
-                        leadingIcon = Icons.Rounded.Home,
-                        onTextChange = { text ->
-                            if (text.length <= MAX_CHARACTERS_BY_ADDRESS) {
-                                prospectStreetAddress = filterAddressInput(text)
-                            }
-                            prospectStreetAddressSupportingText = null
-                            showProspectStreetAddressError = false
-                        },
-                        supportingText = {
-                            prospectStreetAddressSupportingText?.let { errorMessage ->
-                                Text(
-                                    text = errorMessage,
-                                    fontWeight = FontWeight.Normal,
-                                    fontFamily = assistantFamily,
-                                )
-                            }
-                        },
-                        isError = showProspectStreetAddressError,
-                        keyboardType = KeyboardType.Text,
-                        keyboardCapitalization = KeyboardCapitalization.Words,
-                    )
-
-                    FormInputText(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = dimenExtraSmall),
-                        text = prospectNumberAddress,
-                        label = stringResource(id = R.string.label_number_field),
-                        leadingIcon = Icons.Rounded.Numbers,
-                        onTextChange = { text ->
-                            if (text.length <= MAX_CHARACTERS_BY_NUMBER_ADDRESS) {
-                                prospectNumberAddress = filterLettersAndNumbers(text)
-                            }
-                            prospectNumberAddressSupportingText = null
-                            showProspectNumberAddressError = false
-                        },
-                        supportingText = {
-                            prospectNumberAddressSupportingText?.let { errorMessage ->
-                                Text(
-                                    text = errorMessage,
-                                    fontWeight = FontWeight.Normal,
-                                    fontFamily = assistantFamily,
-                                )
-                            }
-                        },
-                        isError = showProspectNumberAddressError,
-                        keyboardType = KeyboardType.Text,
-                        keyboardCapitalization = KeyboardCapitalization.Characters,
-                    )
-
-                    FormInputText(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = dimenExtraSmall),
-                        text = prospectNeighborhoodAddress,
-                        label = stringResource(id = R.string.label_neighborhood_field),
-                        leadingIcon = Icons.Rounded.Home,
-                        onTextChange = { text ->
-                            if (text.length <= MAX_CHARACTERS_BY_ADDRESS) {
-                                prospectNeighborhoodAddress = filterAddressInput(text)
-                            }
-                            prospectNeighborhoodAddressSupportingText = null
-                            showProspectNeighborhoodAddressError = false
-                        },
-                        supportingText = {
-                            prospectNeighborhoodAddressSupportingText?.let { errorMessage ->
-                                Text(
-                                    text = errorMessage,
-                                    fontWeight = FontWeight.Normal,
-                                    fontFamily = assistantFamily,
-                                )
-                            }
-                        },
-                        isError = showProspectNeighborhoodAddressError,
-                        keyboardType = KeyboardType.Text,
-                        keyboardCapitalization = KeyboardCapitalization.Words,
-                    )
-
-                    FormInputText(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = dimenExtraSmall),
-                        text = prospectZipCode,
-                        label = stringResource(id = R.string.label_zip_code_field),
-                        leadingIcon = Icons.Rounded.LocalPostOffice,
-                        onTextChange = { text ->
-                            if (text.length <= MAX_CHARACTERS_BY_ZIP_CODE) {
-                                if (text.isDigitsOnly()) prospectZipCode = text
-                            }
-                            prospectZipCodeSupportingText = null
-                            showProspectZipCodeError = false
-                        },
-                        supportingText = {
-                            prospectZipCodeSupportingText?.let { errorMessage ->
-                                Text(
-                                    text = errorMessage,
-                                    fontWeight = FontWeight.Normal,
-                                    fontFamily = assistantFamily,
-                                )
-                            }
-                        },
-                        isError = showProspectZipCodeError,
-                        keyboardType = KeyboardType.Number,
-                        keyboardCapitalization = KeyboardCapitalization.None,
-                    )
-
-                    FormInputText(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = dimenExtraSmall),
-                        text = prospectPhoneNumber,
-                        label = stringResource(id = R.string.label_phone_number_field),
-                        leadingIcon = Icons.Rounded.Phone,
-                        onTextChange = { text ->
-                            if (text.length <= MAX_CHARACTERS_BY_PHONE_NUMBER) {
-                                if (text.isDigitsOnly()) prospectPhoneNumber = text
-                            }
-                            prospectPhoneNumberSupportingText = null
-                            showProspectPhoneNumberError = false
-                        },
-                        supportingText = {
-                            prospectPhoneNumberSupportingText?.let { errorMessage ->
-                                Text(
-                                    text = errorMessage,
-                                    fontWeight = FontWeight.Normal,
-                                    fontFamily = assistantFamily,
-                                )
-                            }
-                        },
-                        isError = showProspectPhoneNumberError,
-                        keyboardType = KeyboardType.Phone,
-                        keyboardCapitalization = KeyboardCapitalization.None,
-                    )
-
-                    FormInputText(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = dimenExtraSmall),
-                        text = prospectRFC,
-                        label = stringResource(id = R.string.label_rfc_field),
-                        onTextChange = { text ->
-                            if (text.length <= MAX_CHARACTERS_BY_RFC) {
-                                prospectRFC = filterLettersAndNumbers(text)
-                            }
-                            prospectRFCSupportingText = null
-                            showProspectRFCError = false
-                        },
-                        supportingText = {
-                            prospectRFCSupportingText?.let { errorMessage ->
-                                Text(
-                                    text = errorMessage,
-                                    fontWeight = FontWeight.Normal,
-                                    fontFamily = assistantFamily,
-                                )
-                            }
-                        },
-                        isError = showProspectRFCError,
-                        keyboardType = KeyboardType.Text,
-                        keyboardCapitalization = KeyboardCapitalization.Characters,
-                    )
-
-                    /*Row(
-                        modifier = Modifier.padding(bottom = 4.dp),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically,
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(bottom = lazyColumnBottomPadding)
+                    .fillMaxSize(),
+            ) {
+                item {
+                    Column(
+                        modifier = Modifier.padding(
+                            start = dimenNormal,
+                            end = dimenNormal,
+                            bottom = dimenSmall,
+                        ),
                     ) {
-                        Text(text = "Documentos")
-                        TextButton(onClick = {
-                            showDocumentSection = !showDocumentSection
-                        }) {
-                            Text(text = if (showDocumentSection) "-" else "+")
+                        FormInputText(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = dimenExtraSmall),
+                            text = prospectName,
+                            label = stringResource(id = R.string.label_name_field),
+                            onTextChange = { text ->
+                                if (text.length <= MAX_CHARACTERS_BY_NAME) {
+                                    prospectName = filterNameInput(text)
+                                }
+                                prospectNameSupportingText = null
+                                showProspectNameError = false
+                            },
+                            supportingText = {
+                                prospectNameSupportingText?.let { errorMessage ->
+                                    Text(
+                                        text = (errorMessage),
+                                        fontWeight = FontWeight.Normal,
+                                        fontFamily = assistantFamily,
+                                    )
+                                }
+                            },
+                            isError = showProspectNameError,
+                            keyboardType = KeyboardType.Text,
+                            keyboardCapitalization = KeyboardCapitalization.Words,
+                        )
+
+                        FormInputText(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = dimenExtraSmall),
+                            text = prospectSurname,
+                            label = stringResource(id = R.string.label_surname_field),
+                            onTextChange = { text ->
+                                if (text.length <= MAX_CHARACTERS_BY_NAME) {
+                                    prospectSurname = filterNameInput(text)
+                                }
+                                prospectSurnameSupportingText = null
+                                showProspectSurnameError = false
+                            },
+                            supportingText = {
+                                prospectSurnameSupportingText?.let { errorMessage ->
+                                    Text(
+                                        text = errorMessage,
+                                        fontWeight = FontWeight.Normal,
+                                        fontFamily = assistantFamily,
+                                    )
+                                }
+                            },
+                            isError = showProspectSurnameError,
+                            keyboardType = KeyboardType.Text,
+                            keyboardCapitalization = KeyboardCapitalization.Words,
+                        )
+
+                        FormInputText(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = dimenExtraSmall),
+                            text = prospectSecondSurname,
+                            label = stringResource(id = R.string.label_second_surname_field),
+                            onTextChange = { text ->
+                                if (text.length <= MAX_CHARACTERS_BY_NAME) {
+                                    prospectSecondSurname = filterNameInput(text)
+                                }
+                            },
+                            keyboardType = KeyboardType.Text,
+                            keyboardCapitalization = KeyboardCapitalization.Words,
+                        )
+
+                        FormInputText(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = dimenExtraSmall),
+                            text = prospectStreetAddress,
+                            label = stringResource(id = R.string.label_street_field),
+                            leadingIcon = Icons.Rounded.Home,
+                            onTextChange = { text ->
+                                if (text.length <= MAX_CHARACTERS_BY_ADDRESS) {
+                                    prospectStreetAddress = filterAddressInput(text)
+                                }
+                                prospectStreetAddressSupportingText = null
+                                showProspectStreetAddressError = false
+                            },
+                            supportingText = {
+                                prospectStreetAddressSupportingText?.let { errorMessage ->
+                                    Text(
+                                        text = errorMessage,
+                                        fontWeight = FontWeight.Normal,
+                                        fontFamily = assistantFamily,
+                                    )
+                                }
+                            },
+                            isError = showProspectStreetAddressError,
+                            keyboardType = KeyboardType.Text,
+                            keyboardCapitalization = KeyboardCapitalization.Words,
+                        )
+
+                        FormInputText(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = dimenExtraSmall),
+                            text = prospectNumberAddress,
+                            label = stringResource(id = R.string.label_number_field),
+                            leadingIcon = Icons.Rounded.Numbers,
+                            onTextChange = { text ->
+                                if (text.length <= MAX_CHARACTERS_BY_NUMBER_ADDRESS) {
+                                    prospectNumberAddress = filterLettersAndNumbers(text)
+                                }
+                                prospectNumberAddressSupportingText = null
+                                showProspectNumberAddressError = false
+                            },
+                            supportingText = {
+                                prospectNumberAddressSupportingText?.let { errorMessage ->
+                                    Text(
+                                        text = errorMessage,
+                                        fontWeight = FontWeight.Normal,
+                                        fontFamily = assistantFamily,
+                                    )
+                                }
+                            },
+                            isError = showProspectNumberAddressError,
+                            keyboardType = KeyboardType.Text,
+                            keyboardCapitalization = KeyboardCapitalization.Characters,
+                        )
+
+                        FormInputText(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = dimenExtraSmall),
+                            text = prospectNeighborhoodAddress,
+                            label = stringResource(id = R.string.label_neighborhood_field),
+                            leadingIcon = Icons.Rounded.Home,
+                            onTextChange = { text ->
+                                if (text.length <= MAX_CHARACTERS_BY_ADDRESS) {
+                                    prospectNeighborhoodAddress = filterAddressInput(text)
+                                }
+                                prospectNeighborhoodAddressSupportingText = null
+                                showProspectNeighborhoodAddressError = false
+                            },
+                            supportingText = {
+                                prospectNeighborhoodAddressSupportingText?.let { errorMessage ->
+                                    Text(
+                                        text = errorMessage,
+                                        fontWeight = FontWeight.Normal,
+                                        fontFamily = assistantFamily,
+                                    )
+                                }
+                            },
+                            isError = showProspectNeighborhoodAddressError,
+                            keyboardType = KeyboardType.Text,
+                            keyboardCapitalization = KeyboardCapitalization.Words,
+                        )
+
+                        FormInputText(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = dimenExtraSmall),
+                            text = prospectZipCode,
+                            label = stringResource(id = R.string.label_zip_code_field),
+                            leadingIcon = Icons.Rounded.LocalPostOffice,
+                            onTextChange = { text ->
+                                if (text.length <= MAX_CHARACTERS_BY_ZIP_CODE) {
+                                    if (text.isDigitsOnly()) prospectZipCode = text
+                                }
+                                prospectZipCodeSupportingText = null
+                                showProspectZipCodeError = false
+                            },
+                            supportingText = {
+                                prospectZipCodeSupportingText?.let { errorMessage ->
+                                    Text(
+                                        text = errorMessage,
+                                        fontWeight = FontWeight.Normal,
+                                        fontFamily = assistantFamily,
+                                    )
+                                }
+                            },
+                            isError = showProspectZipCodeError,
+                            keyboardType = KeyboardType.Number,
+                            keyboardCapitalization = KeyboardCapitalization.None,
+                        )
+
+                        FormInputText(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = dimenExtraSmall),
+                            text = prospectPhoneNumber,
+                            label = stringResource(id = R.string.label_phone_number_field),
+                            leadingIcon = Icons.Rounded.Phone,
+                            onTextChange = { text ->
+                                if (text.length <= MAX_CHARACTERS_BY_PHONE_NUMBER) {
+                                    if (text.isDigitsOnly()) prospectPhoneNumber = text
+                                }
+                                prospectPhoneNumberSupportingText = null
+                                showProspectPhoneNumberError = false
+                            },
+                            supportingText = {
+                                prospectPhoneNumberSupportingText?.let { errorMessage ->
+                                    Text(
+                                        text = errorMessage,
+                                        fontWeight = FontWeight.Normal,
+                                        fontFamily = assistantFamily,
+                                    )
+                                }
+                            },
+                            isError = showProspectPhoneNumberError,
+                            keyboardType = KeyboardType.Phone,
+                            keyboardCapitalization = KeyboardCapitalization.None,
+                        )
+
+                        FormInputText(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = dimenExtraSmall),
+                            text = prospectRFC,
+                            label = stringResource(id = R.string.label_rfc_field),
+                            onTextChange = { text ->
+                                if (text.length <= MAX_CHARACTERS_BY_RFC) {
+                                    prospectRFC = filterLettersAndNumbers(text)
+                                }
+                                prospectRFCSupportingText = null
+                                showProspectRFCError = false
+                            },
+                            supportingText = {
+                                prospectRFCSupportingText?.let { errorMessage ->
+                                    Text(
+                                        text = errorMessage,
+                                        fontWeight = FontWeight.Normal,
+                                        fontFamily = assistantFamily,
+                                    )
+                                }
+                            },
+                            isError = showProspectRFCError,
+                            keyboardType = KeyboardType.Text,
+                            keyboardCapitalization = KeyboardCapitalization.Characters,
+                        )
+
+                        /*Row(
+                            modifier = Modifier.padding(bottom = 4.dp),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text(text = "Documentos")
+                            TextButton(onClick = {
+                                showDocumentSection = !showDocumentSection
+                            }) {
+                                Text(text = if (showDocumentSection) "-" else "+")
+                            }
                         }
+
+                        if (showDocumentSection) {
+                            DocumentSection(
+                                documentName = documentName,
+                                onDocumentNameChange = {
+                                    documentName = it
+                                    documentNameSupportingText = null
+                                    showDocumentNameError = false
+                                },
+                                onAddDocument = {
+                                    pickDocument.launch("*'/'*")
+                                },
+                            )
+                        }
+
+                        if (documentUri != null) {
+                            Text(
+                                "Selected Document: ${documentUri?.path}",
+                                modifier = Modifier.padding(bottom = 16.dp),
+                            )
+                        }*/
                     }
+                }
+            }
 
-                    if (showDocumentSection) {
-                        DocumentSection(
-                            documentName = documentName,
-                            onDocumentNameChange = {
-                                documentName = it
-                                documentNameSupportingText = null
-                                showDocumentNameError = false
-                            },
-                            onAddDocument = {
-                                pickDocument.launch("*'/'*")
-                            },
-                        )
-                    }
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter),
+                shape = RoundedCornerShape(topStart = dimenNormal, topEnd = dimenNormal),
+            ) {
+                Button(
+                    onClick = {
+                        var allValidationsPassed = true
 
-                    if (documentUri != null) {
-                        Text(
-                            "Selected Document: ${documentUri?.path}",
-                            modifier = Modifier.padding(bottom = 16.dp),
-                        )
-                    }*/
+                        if (prospectName.isEmpty()) {
+                            prospectNameSupportingText =
+                                getString(context, R.string.name_error_text)
+                            showProspectNameError = true
+                            allValidationsPassed = false
+                        }
+                        if (prospectSurname.isEmpty()) {
+                            prospectSurnameSupportingText =
+                                getString(context, R.string.surname_error_text)
+                            showProspectSurnameError = true
+                            allValidationsPassed = false
+                        }
+                        if (prospectStreetAddress.isEmpty()) {
+                            prospectStreetAddressSupportingText =
+                                getString(context, R.string.address_error_text)
+                            showProspectStreetAddressError = true
+                            allValidationsPassed = false
+                        }
+                        if (prospectNumberAddress.isEmpty()) {
+                            prospectNumberAddressSupportingText =
+                                getString(context, R.string.number_error_text)
+                            showProspectNumberAddressError = true
+                            allValidationsPassed = false
+                        }
+                        if (prospectNeighborhoodAddress.isEmpty()) {
+                            prospectNeighborhoodAddressSupportingText =
+                                getString(context, R.string.neighborhood_error_text)
+                            showProspectNeighborhoodAddressError = true
+                            allValidationsPassed = false
+                        }
+                        if (prospectZipCode.isEmpty()) {
+                            prospectZipCodeSupportingText =
+                                getString(context, R.string.zip_code_error_text)
+                            showProspectZipCodeError = true
+                            allValidationsPassed = false
+                        }
+                        if (prospectPhoneNumber.isEmpty()) {
+                            prospectPhoneNumberSupportingText =
+                                getString(context, R.string.phone_number_error_text)
+                            showProspectPhoneNumberError = true
+                            allValidationsPassed = false
+                        }
+                        if (prospectRFC.isEmpty()) {
+                            prospectRFCSupportingText =
+                                getString(context, R.string.rfc_error_text)
+                            showProspectRFCError = true
+                            allValidationsPassed = false
+                        }
 
-                    Button(
-                        onClick = {
-                            var allValidationsPassed = true
+                        if (allValidationsPassed) {
+                            /*val mimeType = documentUri?.let { getMimeType(context, it) }
+                            val metadata = documentUri?.let { getMetadata(context, it) }
 
-                            if (prospectName.isEmpty()) {
-                                prospectNameSupportingText =
-                                    getString(context, R.string.name_error_text)
-                                showProspectNameError = true
-                                allValidationsPassed = false
-                            }
-                            if (prospectSurname.isEmpty()) {
-                                prospectSurnameSupportingText =
-                                    getString(context, R.string.surname_error_text)
-                                showProspectSurnameError = true
-                                allValidationsPassed = false
-                            }
-                            if (prospectStreetAddress.isEmpty()) {
-                                prospectStreetAddressSupportingText =
-                                    getString(context, R.string.address_error_text)
-                                showProspectStreetAddressError = true
-                                allValidationsPassed = false
-                            }
-                            if (prospectNumberAddress.isEmpty()) {
-                                prospectNumberAddressSupportingText =
-                                    getString(context, R.string.number_error_text)
-                                showProspectNumberAddressError = true
-                                allValidationsPassed = false
-                            }
-                            if (prospectNeighborhoodAddress.isEmpty()) {
-                                prospectNeighborhoodAddressSupportingText =
-                                    getString(context, R.string.neighborhood_error_text)
-                                showProspectNeighborhoodAddressError = true
-                                allValidationsPassed = false
-                            }
-                            if (prospectZipCode.isEmpty()) {
-                                prospectZipCodeSupportingText =
-                                    getString(context, R.string.zip_code_error_text)
-                                showProspectZipCodeError = true
-                                allValidationsPassed = false
-                            }
-                            if (prospectPhoneNumber.isEmpty()) {
-                                prospectPhoneNumberSupportingText =
-                                    getString(context, R.string.phone_number_error_text)
-                                showProspectPhoneNumberError = true
-                                allValidationsPassed = false
-                            }
-                            if (prospectRFC.isEmpty()) {
-                                prospectRFCSupportingText =
-                                    getString(context, R.string.rfc_error_text)
-                                showProspectRFCError = true
-                                allValidationsPassed = false
-                            }
+                            if (documentUri != null && mimeType != null && metadata != null) {
+                                val fileBytes =
+                                    context.contentResolver.openInputStream(documentUri!!)
+                                        ?.readBytes()
+                                if (fileBytes != null) {
+                                    documentViewModel.saveDocument(
+                                        prospectId = prospectId,
+                                        name = documentName,
+                                        fileByBytes = fileBytes,
+                                        fileType = mimeType,
+                                        metadata = metadata,
+                                    )
+                                }
+                            }*/
 
-                            if (allValidationsPassed) {
-                                /*val mimeType = documentUri?.let { getMimeType(context, it) }
-                                val metadata = documentUri?.let { getMetadata(context, it) }
+                            val newProspect = Prospect(
+                                id = prospectId,
+                                promoterId = promoterId!!,
+                                name = prospectName,
+                                surname = prospectSurname,
+                                secondSurname = prospectSecondSurname,
+                                streetAddress = prospectStreetAddress,
+                                numberAddress = prospectNumberAddress,
+                                neighborhood = prospectNeighborhoodAddress,
+                                zipCode = prospectZipCode,
+                                phoneNumber = prospectPhoneNumber,
+                                rfc = prospectRFC,
+                                status = ProspectStatus.ENVIADO,
+                            )
+                            prospectsViewModel.createProspect(newProspect)
 
-                                if (documentUri != null && mimeType != null && metadata != null) {
-                                    val fileBytes =
-                                        context.contentResolver.openInputStream(documentUri!!)
-                                            ?.readBytes()
-                                    if (fileBytes != null) {
-                                        documentViewModel.saveDocument(
-                                            prospectId = prospectId,
-                                            name = documentName,
-                                            fileByBytes = fileBytes,
-                                            fileType = mimeType,
-                                            metadata = metadata,
-                                        )
-                                    }
-                                }*/
-
-                                val newProspect = Prospect(
-                                    id = prospectId,
-                                    promoterId = promoterId!!,
-                                    name = prospectName,
-                                    surname = prospectSurname,
-                                    secondSurname = prospectSecondSurname,
-                                    streetAddress = prospectStreetAddress,
-                                    numberAddress = prospectNumberAddress,
-                                    neighborhood = prospectNeighborhoodAddress,
-                                    zipCode = prospectZipCode,
-                                    phoneNumber = prospectPhoneNumber,
-                                    rfc = prospectRFC,
-                                    status = ProspectStatus.ENVIADO,
-                                )
-                                prospectsViewModel.createProspect(newProspect)
-
-                                Toast.makeText(
-                                    context,
-                                    getString(context, R.string.message_send_prospect_data),
-                                    Toast.LENGTH_LONG,
-                                )
-                                    .show()
-                                // Toast.makeText(context, "Documento Guardado", Toast.LENGTH_LONG).show()
-                                navController.navigate(AppScreens.ProspectsScreen.name + "/$promoterId")
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Rounded.Send,
-                            contentDescription = stringResource(id = R.string.send_icon_content_description),
-                        )
-                        Spacer(modifier = Modifier.width(dimenSmall))
-                        Text(
-                            text = stringResource(id = R.string.button_send_to_evaluation_area),
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = assistantFamily,
-                        )
-                    }
+                            Toast.makeText(
+                                context,
+                                getString(context, R.string.message_send_prospect_data),
+                                Toast.LENGTH_LONG,
+                            )
+                                .show()
+                            // Toast.makeText(context, "Documento Guardado", Toast.LENGTH_LONG).show()
+                            navController.navigate(AppScreens.ProspectsScreen.name + "/$promoterId")
+                        }
+                    },
+                    modifier = Modifier.padding(dimenNormal),
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Rounded.Send,
+                        contentDescription = stringResource(id = R.string.send_icon_content_description),
+                    )
+                    Spacer(modifier = Modifier.width(dimenSmall))
+                    Text(
+                        text = stringResource(id = R.string.button_send_to_evaluation_area),
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = assistantFamily,
+                    )
                 }
             }
         }

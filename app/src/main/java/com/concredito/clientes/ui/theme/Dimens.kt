@@ -15,4 +15,5 @@ object Dimens {
     val circularIndicator = 64.dp
     val dialogBoxSize = 128.dp
     val imageSizeSmall = 256.dp
+    val lazyColumnBottomPadding = 72.dp
 }
