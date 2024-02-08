@@ -3,8 +3,12 @@ package com.concredito.clientes.screens.prospect
 import ExitDialog
 import FormInputText
 import ProspectsAppBar
+import android.app.Activity
+import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +16,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -32,6 +37,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -70,6 +76,10 @@ import com.concredito.clientes.util.Constants.MAX_CHARACTERS_BY_ZIP_CODE
 import com.concredito.clientes.util.filterAddressInput
 import com.concredito.clientes.util.filterLettersAndNumbers
 import com.concredito.clientes.util.filterNameInput
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -111,11 +121,19 @@ fun NewProspectScreen(
     var showProspectPhoneNumberError by remember { mutableStateOf(false) }
     var showProspectRFCError by remember { mutableStateOf(false) }
 
+    var selectedFileUri by remember { mutableStateOf<Uri?>(null) }
+
     /*var documentName by remember { mutableStateOf("") }
     var documentNameSupportingText by remember { mutableStateOf<String?>(null) }
     var showDocumentNameError by remember { mutableStateOf(false) }*/
 
-    var documentUri by remember { mutableStateOf<Uri?>(null) }
+    // Escuchador de resultados para el selector de archivos
+    val resultLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            selectedFileUri = data?.data
+        }
+    }
 
     /* val pickDocument =
          rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
@@ -125,7 +143,7 @@ fun NewProspectScreen(
          }*/
 
     var showExitDialog by remember { mutableStateOf(false) }
-    /*var showDocumentSection by remember { mutableStateOf(false) }*/
+    var showDocumentSection by remember { mutableStateOf(false) }
 
     if (showExitDialog) {
         ExitDialog(
@@ -417,7 +435,7 @@ fun NewProspectScreen(
                             keyboardCapitalization = KeyboardCapitalization.Characters,
                         )
 
-                        /*Row(
+                        Row(
                             modifier = Modifier.padding(bottom = 4.dp),
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically,
@@ -431,25 +449,59 @@ fun NewProspectScreen(
                         }
 
                         if (showDocumentSection) {
-                            DocumentSection(
-                                documentName = documentName,
-                                onDocumentNameChange = {
-                                    documentName = it
-                                    documentNameSupportingText = null
-                                    showDocumentNameError = false
-                                },
-                                onAddDocument = {
-                                    pickDocument.launch("*'/'*")
-                                },
-                            )
+                            Column(
+                                modifier = Modifier.padding(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center,
+                            ) {
+                                Button(onClick = {
+                                    // Abrir el selector de archivos
+                                    val intent = Intent(Intent.ACTION_GET_CONTENT)
+                                    intent.type = "*/*"
+                                    intent.addCategory(Intent.CATEGORY_OPENABLE)
+                                    val chooserIntent = Intent.createChooser(intent, "Seleccionar archivo")
+                                    // Comprueba si hay algún selector de archivos disponible
+                                    if (intent.resolveActivity(context.packageManager) != null) {
+                                        // Escucha el resultado del selector de archivos
+                                        resultLauncher.launch(chooserIntent)
+                                    } else {
+                                        // No se encontró un selector de archivos disponible
+                                        Toast.makeText(context, "No se encontró una aplicación para seleccionar archivos", Toast.LENGTH_SHORT).show()
+                                    }
+                                }) {
+                                    Text("Seleccionar archivo")
+                                }
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Button(
+                                    onClick = {
+                                        selectedFileUri?.let {
+                                            val inputStream = context.contentResolver.openInputStream(it)
+                                            val fileName = "archivo_subido" // Cambia este nombre según tus necesidades
+                                            val file = File(context.cacheDir, fileName)
+                                            inputStream?.use { input ->
+                                                file.outputStream().use { output ->
+                                                    input.copyTo(output)
+                                                }
+                                            }
+                                            val contentType = context.contentResolver.getType(it) ?: "application/octet-stream"
+                                            val requestBody = file.asRequestBody(contentType.toMediaType())
+                                            val multipartBody = MultipartBody.Part.createFormData("archivo", file.name, requestBody)
+                                            documentViewModel.uploadDocument(multipartBody, file.name, prospectId)
+                                        }
+                                    },
+                                    enabled = selectedFileUri != null,
+                                ) {
+                                    Text("Subir archivo")
+                                }
+                            }
                         }
 
-                        if (documentUri != null) {
+                        if (selectedFileUri != null) {
                             Text(
-                                "Selected Document: ${documentUri?.path}",
+                                "Selected Document: ${selectedFileUri?.path}",
                                 modifier = Modifier.padding(bottom = 16.dp),
                             )
-                        }*/
+                        }
                     }
                 }
             }

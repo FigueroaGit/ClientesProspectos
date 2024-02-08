@@ -2,7 +2,6 @@ package com.concredito.clientes.screens.prospect
 
 import android.util.Log
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,27 +17,10 @@ import javax.inject.Inject
 class DocumentViewModel @Inject constructor(private val repository: DocumentRepository) :
     ViewModel() {
 
-    var list: List<Document> by mutableStateOf(listOf())
-    var isLoading: Boolean by mutableStateOf(true)
-
-    suspend fun getDocumentsByProspectId(prospectId: String): Resource<List<Document>> {
-        return repository.getDocumentsByProspectId(prospectId)
-    }
-
-    fun saveDocument(
-        prospectId: String,
-        name: String,
-        fileByBytes: ByteArray,
-        fileType: String,
-        metadata: String,
-    ) {
+    fun uploadDocument(file: MultipartBody.Part, name: String, prospectId: String) {
         viewModelScope.launch {
-            try {
-                Log.d("UploadDocument", "Prospect ID: $prospectId, Document Name: $name, Document Type: $fileType")
-                repository.saveDocument(prospectId, name, fileByBytes, fileType, metadata)
-            } catch (e: Exception) {
-                Log.e("UploadDocument", "Error uploading document: ${e.message}")
-            }
+            repository.uploadDocument(file, name, prospectId)
+            Log.d("DocumentViewModel", "Iniciando subida del archivo...")
         }
     }
 
@@ -46,5 +28,13 @@ class DocumentViewModel @Inject constructor(private val repository: DocumentRepo
         viewModelScope.launch {
             repository.downloadDocument(documentId)
         }
+    }
+
+    suspend fun getDocumentsByProspect(prospectId: String): Resource<List<Document>> {
+        return repository.getDocumentsByProspect(prospectId)
+    }
+
+    suspend fun deleteDocument(documentId: String): Resource<String> {
+        return repository.deleteDocument(documentId)
     }
 }

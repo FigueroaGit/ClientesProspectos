@@ -2,29 +2,32 @@ package com.concredito.clientes.network
 
 import com.concredito.clientes.model.Document
 import okhttp3.MultipartBody
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 import retrofit2.http.Streaming
 
 interface DocumentAPI {
 
     @Multipart
-    @POST("documentos/guardar")
-    suspend fun saveDocument(
-        @Part("nombre") name: String,
-        @Part("prospectoId") prospectId: String,
-        @Part file: MultipartBody.Part,
-        @Part("tipoArchivo") fileType: String,
-        @Part("metadata") metadata: String,
+    @POST("documentos/upload")
+    suspend fun uploadDocument(
+        @Part archivo: MultipartBody.Part,
+        @Part("nombre") nombre: String,
+        @Part("prospectoId") prospectoId: String,
     ): Document
 
-    @GET("documentos/porProspecto/{prospectoId}")
-    suspend fun getDocumentsByProspectId(@Path("prospectoId") prospectId: String): List<Document>
-
-    @GET("documentos/descargar/{documentoId}")
+    @GET("documentos/download/{id}")
     @Streaming
-    suspend fun downloadDocument(@Path("documentoId") documentoId: String): Document
+    suspend fun downloadDocument(@Path("id") id: String): Document
+
+    @GET("/api/documentos/documentos-por-prospecto")
+    fun getDocumentsByProspect(@Query("prospectoId") prospectoId: String): List<Document>
+
+    @DELETE("/api/documentos/eliminar-documento")
+    fun deleteDocument(@Query("documentoId") documentoId: String): String
 }
