@@ -19,7 +19,7 @@ interface DocumentAPI {
         @Part archivo: MultipartBody.Part,
         @Part("nombre") nombre: String,
         @Part("prospectoId") prospectoId: String,
-    ): Document
+    ): Unit
 
     @GET("documentos/download/{id}")
     @Streaming

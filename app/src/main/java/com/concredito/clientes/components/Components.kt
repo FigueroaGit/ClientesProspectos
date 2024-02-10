@@ -22,6 +22,7 @@ import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.rounded.PictureAsPdf
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -42,23 +43,28 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.graphics.drawable.IconCompatParcelizer
 import androidx.navigation.NavController
 import com.concredito.clientes.R
 import com.concredito.clientes.ui.theme.Dimens
+import com.concredito.clientes.ui.theme.Dimens.dimenExtraSmall
 import com.concredito.clientes.ui.theme.Dimens.dimenNormal
 import com.concredito.clientes.ui.theme.Dimens.dimenSmall
 import com.concredito.clientes.ui.theme.Dimens.letterTileSize
@@ -66,6 +72,8 @@ import com.concredito.clientes.ui.theme.Dimens.letterTileSize3x
 import com.concredito.clientes.ui.theme.Fonts
 import com.concredito.clientes.ui.theme.Fonts.fontSizeLarge
 import com.concredito.clientes.ui.theme.Fonts.fontSizeMedium
+import com.concredito.clientes.ui.theme.Fonts.fontSizeNormal
+import com.concredito.clientes.ui.theme.Fonts.fontSizeSmall
 import com.concredito.clientes.ui.theme.assistantFamily
 import com.concredito.clientes.util.Constants
 import com.concredito.clientes.util.Constants.EMPTY_STRING
@@ -529,6 +537,38 @@ fun ObservationsDialog(
                         fontFamily = assistantFamily,
                     )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun FileItemUpload(
+    name: String,
+    icon: Painter,
+    contentType: String,
+) {
+    Surface(modifier = Modifier.width(154.dp), shape = RoundedCornerShape(2.dp), tonalElevation = 4.dp) {
+        Column(modifier = Modifier.padding(dimenNormal)) {
+            Text(
+                text = name,
+                fontSize = fontSizeSmall,
+                fontFamily = assistantFamily,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2
+            )
+            Row(
+                Modifier.padding(top = dimenExtraSmall),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(painter = icon, contentDescription = "", tint = Color.Red)
+                Spacer(modifier = Modifier.size(dimenSmall))
+                Text(
+                    text = contentType,
+                    fontSize = fontSizeSmall,
+                    fontFamily = assistantFamily,
+                )
             }
         }
     }

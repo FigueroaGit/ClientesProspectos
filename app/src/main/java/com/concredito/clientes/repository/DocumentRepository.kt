@@ -9,9 +9,10 @@ import javax.inject.Inject
 
 class DocumentRepository @Inject constructor(private val API: DocumentAPI) {
 
-    suspend fun uploadDocument(file: MultipartBody.Part, name: String, prospectId: String): Resource<Document> {
+    suspend fun uploadDocument(file: MultipartBody.Part, name: String, prospectId: String): Resource<Unit> {
         return try {
             Log.d("DocumentRepository", "Iniciando subida del archivo...")
+            Resource.Loading(data = true)
             val item = API.uploadDocument(file, name, prospectId)
             Log.d("DocumentRepository", "Archivo subido con éxito: $item")
             Resource.Success(data = item)
