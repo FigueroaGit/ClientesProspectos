@@ -22,7 +22,6 @@ import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Person
-import androidx.compose.material.icons.rounded.PictureAsPdf
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -60,7 +59,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.core.graphics.drawable.IconCompatParcelizer
 import androidx.navigation.NavController
 import com.concredito.clientes.R
 import com.concredito.clientes.ui.theme.Dimens
@@ -72,7 +70,6 @@ import com.concredito.clientes.ui.theme.Dimens.letterTileSize3x
 import com.concredito.clientes.ui.theme.Fonts
 import com.concredito.clientes.ui.theme.Fonts.fontSizeLarge
 import com.concredito.clientes.ui.theme.Fonts.fontSizeMedium
-import com.concredito.clientes.ui.theme.Fonts.fontSizeNormal
 import com.concredito.clientes.ui.theme.Fonts.fontSizeSmall
 import com.concredito.clientes.ui.theme.assistantFamily
 import com.concredito.clientes.util.Constants
@@ -548,7 +545,11 @@ fun FileItemUpload(
     icon: Painter,
     contentType: String,
 ) {
-    Surface(modifier = Modifier.width(154.dp), shape = RoundedCornerShape(2.dp), tonalElevation = 4.dp) {
+    Surface(
+        modifier = Modifier.width(154.dp),
+        shape = RoundedCornerShape(2.dp),
+        tonalElevation = 4.dp
+    ) {
         Column(modifier = Modifier.padding(dimenNormal)) {
             Text(
                 text = name,
@@ -566,6 +567,42 @@ fun FileItemUpload(
                 Spacer(modifier = Modifier.size(dimenSmall))
                 Text(
                     text = contentType,
+                    fontSize = fontSizeSmall,
+                    fontFamily = assistantFamily,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+@Preview
+fun FileItemForDownload(
+    icon: Int = R.drawable.ic_file_pdf_box,
+    name: String = "DocumentoProspecto.pdf",
+    size: String = "272 KB",
+) {
+    Surface(
+        modifier = Modifier.width(154.dp),
+        shape = RoundedCornerShape(2.dp),
+        tonalElevation = 4.dp
+    ) {
+        Row(
+            Modifier.padding(dimenSmall),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(painter = painterResource(id = icon), contentDescription = "", tint = Color.Red)
+            Column(modifier = Modifier.padding(start = 8.dp)) {
+                Text(
+                    text = name,
+                    fontSize = fontSizeSmall,
+                    fontFamily = assistantFamily,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
+                )
+                Text(
+                    text = size,
                     fontSize = fontSizeSmall,
                     fontFamily = assistantFamily,
                 )

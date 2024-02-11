@@ -13,6 +13,8 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
+import java.text.DecimalFormat
+import kotlin.math.roundToLong
 import kotlin.random.Random
 
 fun getRandomColor(): Color {
@@ -40,5 +42,16 @@ fun filterAddressInput(input: String): String {
 fun filterLettersAndNumbers(input: String): String {
     return input.filter {
         it.isLetterOrDigit()
+    }
+}
+
+fun formatSize(sizeInBytes: Long): String {
+    val kb = 1024
+    val mb = kb * kb
+
+    return when {
+        sizeInBytes < kb -> "$sizeInBytes B"
+        sizeInBytes < mb -> "${(sizeInBytes.toDouble() / kb).roundToLong()} KB"
+        else -> "${(sizeInBytes.toDouble() / mb).roundToLong()} MB"
     }
 }

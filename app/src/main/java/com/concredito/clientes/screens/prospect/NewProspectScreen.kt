@@ -10,6 +10,7 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,6 +28,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.Send
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.AttachFile
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.LocalPostOffice
 import androidx.compose.material.icons.rounded.Numbers
@@ -34,6 +37,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -132,7 +136,6 @@ fun NewProspectScreen(
         }
 
     var showExitDialog by remember { mutableStateOf(false) }
-    var showDocumentSection by remember { mutableStateOf(false) }
 
     if (showExitDialog) {
         ExitDialog(
@@ -424,115 +427,113 @@ fun NewProspectScreen(
                             keyboardCapitalization = KeyboardCapitalization.Characters,
                         )
 
-                        Row(
-                            modifier = Modifier.padding(bottom = 4.dp),
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically,
+                        Surface(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(8.dp),
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
                         ) {
-                            Text(text = "Documentos")
-                            TextButton(onClick = {
-                                showDocumentSection = !showDocumentSection
-                            }) {
-                                Text(text = if (showDocumentSection) "-" else "+")
-                            }
-                        }
-
-                        if (showDocumentSection) {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center,
-                            ) {
-                                FilledTonalIconButton(onClick = {
-                                    // Abrir el selector de archivos
-                                    val intent = Intent(Intent.ACTION_GET_CONTENT)
-                                    intent.type = "*/*"
-                                    intent.addCategory(Intent.CATEGORY_OPENABLE)
-                                    val chooserIntent =
-                                        Intent.createChooser(intent, "Seleccionar archivo")
-                                    // Comprueba si hay algún selector de archivos disponible
-                                    if (intent.resolveActivity(context.packageManager) != null) {
-                                        // Escucha el resultado del selector de archivos
-                                        resultLauncher.launch(chooserIntent)
-                                    } else {
-                                        // No se encontró un selector de archivos disponible
-                                        Toast.makeText(
-                                            context,
-                                            "No se encontró una aplicación para seleccionar archivos",
-                                            Toast.LENGTH_SHORT,
-                                        ).show()
-                                    }
-                                }) {
-                                    Icon(imageVector = Icons.Rounded.Add, contentDescription = "")
-                                }
-                                Spacer(modifier = Modifier.height(16.dp))
-                                Button(
-                                    onClick = {
-                                        selectedFileUri?.let {
-                                            val inputStream =
-                                                context.contentResolver.openInputStream(it)
-                                            val filePathName = File(it.path).name
-                                            val filename = filePathName.substringAfterLast(":")
-                                            val file = File(
-                                                context.cacheDir,
-                                                filename
-                                            )
-                                            inputStream?.use { input ->
-                                                file.outputStream().use { output ->
-                                                    input.copyTo(output)
-                                                }
-                                            }
-                                            val contentType = context.contentResolver.getType(it)
-                                                ?: "application/octet-stream"
-                                            val requestBody =
-                                                file.asRequestBody(contentType.toMediaType())
-                                            val multipartBody = MultipartBody.Part.createFormData(
-                                                "archivo",
-                                                file.name,
-                                                requestBody,
-                                            )
-                                            documentViewModel.uploadDocument(
-                                                multipartBody,
-                                                file.name,
-                                                prospectId,
-                                            )
-                                        }
-                                    },
-                                    enabled = selectedFileUri != null,
+                            if (selectedFileUri == null) {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(12.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center,
                                 ) {
-                                    Text("Subir archivo")
+                                    Row(
+                                        horizontalArrangement = Arrangement.Center,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Rounded.AttachFile,
+                                            contentDescription = "",
+                                            tint = MaterialTheme.colorScheme.outline
+                                        )
+                                        Spacer(modifier = Modifier.width(16.dp))
+                                        Text(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            text = "Documentos",
+                                            fontWeight = FontWeight.Normal,
+                                            fontFamily = assistantFamily,
+                                            color = MaterialTheme.colorScheme.outline
+                                        )
+                                    }
+                                    FilledTonalIconButton(onClick = {
+                                        // Abrir el selector de archivos
+                                        val intent = Intent(Intent.ACTION_GET_CONTENT)
+                                        intent.type = "*/*"
+                                        intent.addCategory(Intent.CATEGORY_OPENABLE)
+                                        val chooserIntent =
+                                            Intent.createChooser(intent, "Seleccionar archivo")
+                                        // Comprueba si hay algún selector de archivos disponible
+                                        if (intent.resolveActivity(context.packageManager) != null) {
+                                            // Escucha el resultado del selector de archivos
+                                            resultLauncher.launch(chooserIntent)
+                                        } else {
+                                            // No se encontró un selector de archivos disponible
+                                            Toast.makeText(
+                                                context,
+                                                "No se encontró una aplicación para seleccionar archivos",
+                                                Toast.LENGTH_SHORT,
+                                            ).show()
+                                        }
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.Rounded.Add,
+                                            contentDescription = ""
+                                        )
+                                    }
+                                }
+                            } else {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                ) {
+                                    Row(modifier = Modifier.padding(bottom = dimenSmall),
+                                        horizontalArrangement = Arrangement.Center,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Rounded.AttachFile,
+                                            contentDescription = "",
+                                            tint = MaterialTheme.colorScheme.outline
+                                        )
+                                        Spacer(modifier = Modifier.width(16.dp))
+                                        Text(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            text = "Documento seleccionado",
+                                            fontWeight = FontWeight.Normal,
+                                            fontFamily = assistantFamily,
+                                            color = MaterialTheme.colorScheme.outline
+                                        )
+                                    }
+                                    Row {
+                                        selectedFileUri?.let {
+                                            val file = File(it.path).name
+                                            val filename = file.substringAfterLast(":")
+                                            val fileType = context.contentResolver.getType(it)
+                                                ?: "application/octet-stream"
+                                            val extension =
+                                                fileType.substringAfterLast("/").uppercase()
+                                            FileItemUpload(
+                                                name = filename,
+                                                icon =
+                                                when (extension) {
+                                                    "PDF" -> {
+                                                        painterResource(id = R.drawable.ic_file_pdf_box)
+                                                    }
+
+                                                    else -> {
+                                                        painterResource(id = R.drawable.ic_image)
+                                                    }
+                                                },
+                                                contentType = extension
+                                            )
+                                        }
+                                    }
                                 }
                             }
-                        }
-
-                        if (selectedFileUri != null) {
-                            selectedFileUri?.let {
-                                val file = File(it.path).name
-                                val filename = file.substringAfterLast(":")
-                                val fileType = context.contentResolver.getType(it)
-                                    ?: "application/octet-stream"
-                                val extension = fileType.substringAfterLast("/").uppercase()
-                                FileItemUpload(
-                                    name = filename,
-                                    icon =
-                                    when (extension) {
-                                        "PDF" -> {
-                                            painterResource(id = R.drawable.ic_file_pdf_box)
-                                        }
-
-                                        else -> {
-                                            painterResource(id = R.drawable.ic_image)
-                                        }
-                                    },
-                                    contentType = extension
-                                )
-                            }
-                            /*Text(
-                                "Selected Document: ${selectedFileUri?.path}",
-                                modifier = Modifier.padding(bottom = 16.dp),
-                            )*/
                         }
                     }
                 }
@@ -596,6 +597,9 @@ fun NewProspectScreen(
                             showProspectRFCError = true
                             allValidationsPassed = false
                         }
+                        if (selectedFileUri == null) {
+                            allValidationsPassed = false
+                        }
 
                         if (allValidationsPassed) {
                             val newProspect = Prospect(
@@ -620,7 +624,38 @@ fun NewProspectScreen(
                                 Toast.LENGTH_LONG,
                             )
                                 .show()
-                            // Toast.makeText(context, "Documento Guardado", Toast.LENGTH_LONG).show()
+
+                            selectedFileUri?.let {
+                                val inputStream =
+                                    context.contentResolver.openInputStream(it)
+                                val filePathName = File(it.path).name
+                                val filename = filePathName.substringAfterLast(":")
+                                val file = File(
+                                    context.cacheDir,
+                                    filename
+                                )
+                                inputStream?.use { input ->
+                                    file.outputStream().use { output ->
+                                        input.copyTo(output)
+                                    }
+                                }
+                                val contentType = context.contentResolver.getType(it)
+                                    ?: "application/octet-stream"
+                                val requestBody =
+                                    file.asRequestBody(contentType.toMediaType())
+                                val multipartBody = MultipartBody.Part.createFormData(
+                                    "archivo",
+                                    file.name,
+                                    requestBody,
+                                )
+                                documentViewModel.uploadDocument(
+                                    multipartBody,
+                                    file.name,
+                                    prospectId,
+                                )
+                            }
+
+                            Toast.makeText(context, "Documento Guardado", Toast.LENGTH_LONG).show()
                             navController.navigate(AppScreens.ProspectsScreen.name + "/$promoterId")
                         }
                     },

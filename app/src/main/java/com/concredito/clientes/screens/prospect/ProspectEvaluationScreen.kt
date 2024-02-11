@@ -1,5 +1,7 @@
 package com.concredito.clientes.screens.prospect
 
+import FileItemForDownload
+import FileItemUpload
 import LetterTile
 import ObservationsDialog
 import ProspectsAppBar
@@ -15,6 +17,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -47,15 +51,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getString
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.concredito.clientes.R
 import com.concredito.clientes.data.Resource
+import com.concredito.clientes.model.Document
 import com.concredito.clientes.model.Prospect
 import com.concredito.clientes.model.ProspectStatus
 import com.concredito.clientes.model.RejectObservation
@@ -72,6 +79,7 @@ import com.concredito.clientes.util.Constants.LETTER_TILE_FONT_SIZE_4X
 import com.concredito.clientes.util.Constants.MESSAGE_URI
 import com.concredito.clientes.util.Constants.ONE_LINE
 import com.concredito.clientes.util.Constants.PHONE_URI
+import com.concredito.clientes.util.formatSize
 import java.util.UUID
 
 @Composable
@@ -79,12 +87,17 @@ fun ProspectEvaluationScreen(
     navController: NavHostController = NavHostController(LocalContext.current),
     prospectId: String,
     prospectsViewModel: ProspectsViewModel = hiltViewModel(),
+    documentViewModel: DocumentViewModel = hiltViewModel(),
     rejectObservationViewModel: RejectObservationViewModel = hiltViewModel(),
 ) {
     val promoterId = prospectsViewModel.getPromoterId()
 
     val prospect = produceState<Resource<Prospect>>(initialValue = Resource.Loading()) {
         value = prospectsViewModel.getProspectById(prospectId)
+    }.value
+
+    val documents = produceState<Resource<List<Document>>>(initialValue = Resource.Loading()) {
+        value = documentViewModel.getDocumentsByProspect(prospectId)
     }.value
 
     val observation =
@@ -470,6 +483,25 @@ fun ProspectEvaluationScreen(
                                 }
                             }
                         }
+                        documents.data?.let {
+                            Column(modifier = Modifier.padding(dimenNormal)) {
+                                Text(
+                                    text = "Documentos adjuntos:",
+                                    fontSize = fontSizeMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = assistantFamily,
+                                )
+                                LazyRow(modifier = Modifier.padding(vertical = 8.dp)) {
+                                    items(items = it) {
+                                        FileItemForDownload(
+                                            icon = R.drawable.ic_file_pdf_box,
+                                            name = it.nombre,
+                                            size = formatSize(it.tamanoArchivo.toLong())
+                                        )
+                                    }
+                                }
+                            }
+                        }
 
                         if (prospect.data.status == ProspectStatus.RECHAZADO) {
                             Column(modifier = Modifier.padding(dimenNormal)) {
@@ -550,81 +582,3 @@ fun ProspectEvaluationScreen(
         }
     }
 }
-
-/*
-@Composable
-@Preview
-fun ProspectDocuments() {
-    Card(
-        modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 4.dp)
-            .fillMaxWidth(),
-        shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.cardElevation(0.dp),
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "Documents Added",
-                fontWeight = FontWeight.Bold,
-                fontFamily = assistantFamily,
-                fontSize = 18.sp,
-                maxLines = 1,
-            )
-            LazyRow {
-                item {
-                    DocumentItem()
-                    DocumentItem(R.drawable.ic_png_file, "Credencial_prospecto_2024.png")
-                    DocumentItem()
-                }
-            }
-        }
-    }
-}
-
-@Composable
-@Preview
-fun DocumentItem(
-    iconType: Int = R.drawable.ic_pdf_file,
-    name: String = "Formato_prospecto_2024.pdf",
-) {
-    Card(
-        modifier = Modifier
-            .width(140.dp)
-            .padding(4.dp),
-        shape = RoundedCornerShape(4.dp),
-        colors = CardDefaults.cardColors(Color.White),
-        border = BorderStroke(1.dp, Color.LightGray),
-    ) {
-        Box(modifier = Modifier.clickable { }) {
-            Row(modifier = Modifier.padding(8.dp)) {
-                Image(
-                    modifier = Modifier.size(48.dp),
-                    painter = painterResource(id = iconType),
-                    contentDescription = null,
-                )
-                Divider(
-                    color = Color.LightGray,
-                    modifier = Modifier
-                        .padding(horizontal = 2.dp)
-                        .height(48.dp)
-                        .width(1.dp),
-                )
-                val fileName = name.substringBeforeLast(".")
-                val fileExtension = name.substringAfterLast(".")
-
-                val truncatedFileName =
-                    if (fileName.length > 15) "${fileName.substring(0, 15)}..." else fileName
-
-                val truncatedText = "$truncatedFileName.$fileExtension"
-
-                Text(
-                    text = truncatedText,
-                    fontWeight = FontWeight.Normal,
-                    fontFamily = assistantFamily,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
-        }
-    }
-}
-*/

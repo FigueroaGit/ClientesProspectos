@@ -25,9 +25,9 @@ interface DocumentAPI {
     @Streaming
     suspend fun downloadDocument(@Path("id") id: String): Document
 
-    @GET("/api/documentos/documentos-por-prospecto")
-    fun getDocumentsByProspect(@Query("prospectoId") prospectoId: String): List<Document>
+    @GET("documentos/documentos-por-prospecto/{prospectoId}")
+    suspend fun getDocumentsByProspect(@Path("prospectoId") prospectoId: String): List<Document>
 
-    @DELETE("/api/documentos/eliminar-documento")
-    fun deleteDocument(@Query("documentoId") documentoId: String): String
+    @DELETE("documentos/eliminar-documento")
+    suspend fun deleteDocument(@Query("documentoId") documentoId: String): String
 }
