@@ -18,11 +18,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
@@ -41,7 +41,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -85,6 +84,8 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.util.UUID
 
+//TODO: Refactor New Prospect Screen
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewProspectScreen(
@@ -124,14 +125,20 @@ fun NewProspectScreen(
     var showProspectPhoneNumberError by remember { mutableStateOf(false) }
     var showProspectRFCError by remember { mutableStateOf(false) }
 
-    var selectedFileUri by remember { mutableStateOf<Uri?>(null) }
+    var selectedFilesUris by remember { mutableStateOf<List<Uri>>(emptyList()) }
 
     // Listener for results of file selector
     val resultLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val data: Intent? = result.data
-                selectedFileUri = data?.data
+                val uris = data?.clipData?.let { clipData ->
+                    (0 until clipData.itemCount).map { index ->
+                        clipData.getItemAt(index).uri
+                    }
+                } ?: listOf(data?.data).filterNotNull()
+                // Update the status with the updated list of selected URIs.
+                selectedFilesUris += uris
             }
         }
 
@@ -432,7 +439,7 @@ fun NewProspectScreen(
                             shape = RoundedCornerShape(8.dp),
                             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
                         ) {
-                            if (selectedFileUri == null) {
+                            if (selectedFilesUris.isEmpty()) {
                                 Column(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -459,18 +466,18 @@ fun NewProspectScreen(
                                         )
                                     }
                                     FilledTonalIconButton(onClick = {
-                                        // Abrir el selector de archivos
+                                        // Open the file selector
                                         val intent = Intent(Intent.ACTION_GET_CONTENT)
                                         intent.type = "*/*"
+                                        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
                                         intent.addCategory(Intent.CATEGORY_OPENABLE)
                                         val chooserIntent =
                                             Intent.createChooser(intent, "Seleccionar archivo")
-                                        // Comprueba si hay algún selector de archivos disponible
+                                        // Check if there's any file selector available.
                                         if (intent.resolveActivity(context.packageManager) != null) {
-                                            // Escucha el resultado del selector de archivos
+                                            // Listen to the result of the file selector.
                                             resultLauncher.launch(chooserIntent)
                                         } else {
-                                            // No se encontró un selector de archivos disponible
                                             Toast.makeText(
                                                 context,
                                                 "No se encontró una aplicación para seleccionar archivos",
@@ -490,7 +497,8 @@ fun NewProspectScreen(
                                         .fillMaxWidth()
                                         .padding(16.dp),
                                 ) {
-                                    Row(modifier = Modifier.padding(bottom = dimenSmall),
+                                    Row(
+                                        modifier = Modifier.padding(bottom = dimenSmall),
                                         horizontalArrangement = Arrangement.Center,
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
@@ -502,18 +510,26 @@ fun NewProspectScreen(
                                         Spacer(modifier = Modifier.width(16.dp))
                                         Text(
                                             modifier = Modifier.fillMaxWidth(),
-                                            text = "Documento seleccionado",
+                                            text = "Documentos seleccionados",
                                             fontWeight = FontWeight.Normal,
                                             fontFamily = assistantFamily,
                                             color = MaterialTheme.colorScheme.outline
                                         )
                                     }
-                                    Row {
-                                        selectedFileUri?.let {
-                                            val file = File(it.path).name
+                                    LazyRow(
+                                        horizontalArrangement = Arrangement.Center,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        items(
+                                            items = selectedFilesUris.distinctBy {
+                                                it.toString()
+                                            }
+                                        ) { selectedFileUri ->
+                                            val file = File(selectedFileUri.path).name
                                             val filename = file.substringAfterLast(":")
-                                            val fileType = context.contentResolver.getType(it)
-                                                ?: "application/octet-stream"
+                                            val fileType =
+                                                context.contentResolver.getType(selectedFileUri)
+                                                    ?: "application/octet-stream"
                                             val extension =
                                                 fileType.substringAfterLast("/").uppercase()
                                             FileItemUpload(
@@ -530,6 +546,36 @@ fun NewProspectScreen(
                                                 },
                                                 contentType = extension
                                             )
+                                        }
+                                        item {
+                                            FilledTonalIconButton(onClick = {
+                                                // Open the file selector
+                                                val intent = Intent(Intent.ACTION_GET_CONTENT)
+                                                intent.type = "*/*"
+                                                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                                                intent.addCategory(Intent.CATEGORY_OPENABLE)
+                                                val chooserIntent =
+                                                    Intent.createChooser(
+                                                        intent,
+                                                        "Seleccionar archivo"
+                                                    )
+                                                // Check if there's any file selector available.
+                                                if (intent.resolveActivity(context.packageManager) != null) {
+                                                    // Escucha el resultado del selector de archivos
+                                                    resultLauncher.launch(chooserIntent)
+                                                } else {
+                                                    Toast.makeText(
+                                                        context,
+                                                        "No se encontró una aplicación para seleccionar archivos",
+                                                        Toast.LENGTH_SHORT,
+                                                    ).show()
+                                                }
+                                            }) {
+                                                Icon(
+                                                    imageVector = Icons.Rounded.Add,
+                                                    contentDescription = ""
+                                                )
+                                            }
                                         }
                                     }
                                 }
@@ -597,7 +643,7 @@ fun NewProspectScreen(
                             showProspectRFCError = true
                             allValidationsPassed = false
                         }
-                        if (selectedFileUri == null) {
+                        if (selectedFilesUris == null) {
                             allValidationsPassed = false
                         }
 
@@ -625,7 +671,7 @@ fun NewProspectScreen(
                             )
                                 .show()
 
-                            selectedFileUri?.let {
+                            selectedFilesUris?.forEach {
                                 val inputStream =
                                     context.contentResolver.openInputStream(it)
                                 val filePathName = File(it.path).name

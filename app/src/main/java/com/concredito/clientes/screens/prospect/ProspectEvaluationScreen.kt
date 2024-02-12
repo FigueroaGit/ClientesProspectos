@@ -494,7 +494,11 @@ fun ProspectEvaluationScreen(
                                 LazyRow(modifier = Modifier.padding(vertical = 8.dp)) {
                                     items(items = it) {
                                         FileItemForDownload(
-                                            icon = R.drawable.ic_file_pdf_box,
+                                            //TODO: Create enum or objects for icon fileType
+                                            icon = when(it.tipoArchivo.substringAfterLast("/").uppercase()) {
+                                                "PDF" -> R.drawable.ic_file_pdf_box
+                                                else -> { R.drawable.ic_image }
+                                            },
                                             name = it.nombre,
                                             size = formatSize(it.tamanoArchivo.toLong())
                                         )

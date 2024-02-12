@@ -539,6 +539,8 @@ fun ObservationsDialog(
     }
 }
 
+//TODO: Refactor file item upload composable
+
 @Composable
 fun FileItemUpload(
     name: String,
@@ -546,7 +548,7 @@ fun FileItemUpload(
     contentType: String,
 ) {
     Surface(
-        modifier = Modifier.width(154.dp),
+        modifier = Modifier.width(154.dp).padding(dimenSmall),
         shape = RoundedCornerShape(2.dp),
         tonalElevation = 4.dp
     ) {
@@ -575,6 +577,8 @@ fun FileItemUpload(
     }
 }
 
+//TODO: Refactor file item for download composable
+
 @Composable
 @Preview
 fun FileItemForDownload(
@@ -583,7 +587,7 @@ fun FileItemForDownload(
     size: String = "272 KB",
 ) {
     Surface(
-        modifier = Modifier.width(154.dp),
+        modifier = Modifier.width(154.dp).padding(dimenSmall),
         shape = RoundedCornerShape(2.dp),
         tonalElevation = 4.dp
     ) {
