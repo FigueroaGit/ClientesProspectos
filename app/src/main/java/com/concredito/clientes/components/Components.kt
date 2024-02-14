@@ -1,3 +1,6 @@
+import android.content.Context
+import android.content.Intent
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +20,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Logout
 import androidx.compose.material.icons.automirrored.rounded.Send
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.AttachFile
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
@@ -26,6 +31,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
@@ -79,6 +85,7 @@ import com.concredito.clientes.util.Constants.LETTER_TILE_FONT_SIZE_3X
 import com.concredito.clientes.util.Constants.ONE_LINE
 import com.concredito.clientes.util.Constants.SPLIT_DELIMITER
 import com.concredito.clientes.util.getRandomColor
+import com.concredito.clientes.util.openFileSelector
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -539,6 +546,58 @@ fun ObservationsDialog(
     }
 }
 
+@Composable
+fun HeaderFileRow(text: String, icon: ImageVector, modifier: Modifier = Modifier) {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = "",
+            tint = MaterialTheme.colorScheme.outline
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = text,
+            fontWeight = FontWeight.Normal,
+            fontFamily = assistantFamily,
+            color = MaterialTheme.colorScheme.outline
+        )
+    }
+}
+
+@Composable
+fun FileSelectorField(
+    context: Context,
+    resultLauncher: ActivityResultLauncher<Intent>,
+    headerText: String,
+    headerIcon: ImageVector,
+    onIconButtonClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        HeaderFileRow(
+            text = headerText,
+            icon = headerIcon,
+            modifier = Modifier.fillMaxWidth()
+        )
+        FilledTonalIconButton(onClick = onIconButtonClick) {
+            Icon(
+                imageVector = Icons.Rounded.Add,
+                contentDescription = ""
+            )
+        }
+    }
+}
+
 //TODO: Refactor file item upload composable
 
 @Composable
@@ -548,7 +607,9 @@ fun FileItemUpload(
     contentType: String,
 ) {
     Surface(
-        modifier = Modifier.width(154.dp).padding(dimenSmall),
+        modifier = Modifier
+            .width(154.dp)
+            .padding(dimenSmall),
         shape = RoundedCornerShape(2.dp),
         tonalElevation = 4.dp
     ) {
@@ -587,7 +648,9 @@ fun FileItemForDownload(
     size: String = "272 KB",
 ) {
     Surface(
-        modifier = Modifier.width(154.dp).padding(dimenSmall),
+        modifier = Modifier
+            .width(154.dp)
+            .padding(dimenSmall),
         shape = RoundedCornerShape(2.dp),
         tonalElevation = 4.dp
     ) {

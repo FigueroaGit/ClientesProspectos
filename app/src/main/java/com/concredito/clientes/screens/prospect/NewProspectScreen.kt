@@ -2,7 +2,9 @@ package com.concredito.clientes.screens.prospect
 
 import ExitDialog
 import FileItemUpload
+import FileSelectorField
 import FormInputText
+import HeaderFileRow
 import ProspectsAppBar
 import android.app.Activity
 import android.content.Intent
@@ -14,7 +16,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,7 +35,6 @@ import androidx.compose.material.icons.rounded.LocalPostOffice
 import androidx.compose.material.icons.rounded.Numbers
 import androidx.compose.material.icons.rounded.Phone
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -78,6 +78,7 @@ import com.concredito.clientes.util.Constants.MAX_CHARACTERS_BY_ZIP_CODE
 import com.concredito.clientes.util.filterAddressInput
 import com.concredito.clientes.util.filterLettersAndNumbers
 import com.concredito.clientes.util.filterNameInput
+import com.concredito.clientes.util.openFileSelector
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -86,7 +87,6 @@ import java.util.UUID
 
 //TODO: Refactor New Prospect Screen
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewProspectScreen(
     navController: NavHostController,
@@ -94,9 +94,9 @@ fun NewProspectScreen(
     documentViewModel: DocumentViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
+    val promoterId = prospectsViewModel.getPromoterId()
 
     val prospectId = rememberSaveable { UUID.randomUUID().toString() }
-    val promoterId = prospectsViewModel.getPromoterId()
     var prospectName by rememberSaveable { mutableStateOf("") }
     var prospectSurname by rememberSaveable { mutableStateOf("") }
     var prospectSecondSurname by rememberSaveable { mutableStateOf("") }
@@ -440,82 +440,27 @@ fun NewProspectScreen(
                             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
                         ) {
                             if (selectedFilesUris.isEmpty()) {
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(12.dp),
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.Center,
-                                ) {
-                                    Row(
-                                        horizontalArrangement = Arrangement.Center,
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Rounded.AttachFile,
-                                            contentDescription = "",
-                                            tint = MaterialTheme.colorScheme.outline
+                                FileSelectorField(
+                                    context = context,
+                                    resultLauncher = resultLauncher,
+                                    headerText = "Documentos",
+                                    headerIcon = Icons.Rounded.AttachFile,
+                                    onIconButtonClick = {
+                                        openFileSelector(
+                                            context,
+                                            resultLauncher
                                         )
-                                        Spacer(modifier = Modifier.width(16.dp))
-                                        Text(
-                                            modifier = Modifier.fillMaxWidth(),
-                                            text = "Documentos",
-                                            fontWeight = FontWeight.Normal,
-                                            fontFamily = assistantFamily,
-                                            color = MaterialTheme.colorScheme.outline
-                                        )
-                                    }
-                                    FilledTonalIconButton(onClick = {
-                                        // Open the file selector
-                                        val intent = Intent(Intent.ACTION_GET_CONTENT)
-                                        intent.type = "*/*"
-                                        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                                        intent.addCategory(Intent.CATEGORY_OPENABLE)
-                                        val chooserIntent =
-                                            Intent.createChooser(intent, "Seleccionar archivo")
-                                        // Check if there's any file selector available.
-                                        if (intent.resolveActivity(context.packageManager) != null) {
-                                            // Listen to the result of the file selector.
-                                            resultLauncher.launch(chooserIntent)
-                                        } else {
-                                            Toast.makeText(
-                                                context,
-                                                "No se encontró una aplicación para seleccionar archivos",
-                                                Toast.LENGTH_SHORT,
-                                            ).show()
-                                        }
-                                    }) {
-                                        Icon(
-                                            imageVector = Icons.Rounded.Add,
-                                            contentDescription = ""
-                                        )
-                                    }
-                                }
+                                    })
                             } else {
                                 Column(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(16.dp),
                                 ) {
-                                    Row(
-                                        modifier = Modifier.padding(bottom = dimenSmall),
-                                        horizontalArrangement = Arrangement.Center,
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Rounded.AttachFile,
-                                            contentDescription = "",
-                                            tint = MaterialTheme.colorScheme.outline
-                                        )
-                                        Spacer(modifier = Modifier.width(16.dp))
-                                        Text(
-                                            modifier = Modifier.fillMaxWidth(),
-                                            text = "Documentos seleccionados",
-                                            fontWeight = FontWeight.Normal,
-                                            fontFamily = assistantFamily,
-                                            color = MaterialTheme.colorScheme.outline
-                                        )
-                                    }
+                                    HeaderFileRow(
+                                        text = "Documentos Seleccionados",
+                                        icon = Icons.Rounded.AttachFile
+                                    )
                                     LazyRow(
                                         horizontalArrangement = Arrangement.Center,
                                         verticalAlignment = Alignment.CenterVertically
@@ -549,27 +494,7 @@ fun NewProspectScreen(
                                         }
                                         item {
                                             FilledTonalIconButton(onClick = {
-                                                // Open the file selector
-                                                val intent = Intent(Intent.ACTION_GET_CONTENT)
-                                                intent.type = "*/*"
-                                                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                                                intent.addCategory(Intent.CATEGORY_OPENABLE)
-                                                val chooserIntent =
-                                                    Intent.createChooser(
-                                                        intent,
-                                                        "Seleccionar archivo"
-                                                    )
-                                                // Check if there's any file selector available.
-                                                if (intent.resolveActivity(context.packageManager) != null) {
-                                                    // Escucha el resultado del selector de archivos
-                                                    resultLauncher.launch(chooserIntent)
-                                                } else {
-                                                    Toast.makeText(
-                                                        context,
-                                                        "No se encontró una aplicación para seleccionar archivos",
-                                                        Toast.LENGTH_SHORT,
-                                                    ).show()
-                                                }
+                                                openFileSelector(context, resultLauncher)
                                             }) {
                                                 Icon(
                                                     imageVector = Icons.Rounded.Add,
@@ -643,9 +568,6 @@ fun NewProspectScreen(
                             showProspectRFCError = true
                             allValidationsPassed = false
                         }
-                        if (selectedFilesUris == null) {
-                            allValidationsPassed = false
-                        }
 
                         if (allValidationsPassed) {
                             val newProspect = Prospect(
@@ -671,7 +593,7 @@ fun NewProspectScreen(
                             )
                                 .show()
 
-                            selectedFilesUris?.forEach {
+                            selectedFilesUris.forEach {
                                 val inputStream =
                                     context.contentResolver.openInputStream(it)
                                 val filePathName = File(it.path).name
