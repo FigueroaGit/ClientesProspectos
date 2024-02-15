@@ -168,7 +168,8 @@ fun NewProspectScreen(
                     prospectNeighborhoodAddress.isEmpty() &&
                     prospectZipCode.isEmpty() &&
                     prospectPhoneNumber.isEmpty() &&
-                    prospectRFC.isEmpty()
+                    prospectRFC.isEmpty() &&
+                    selectedFilesUris.isEmpty()
                 ) {
                     navController.navigate(AppScreens.MainScreen.name)
                 } else {
