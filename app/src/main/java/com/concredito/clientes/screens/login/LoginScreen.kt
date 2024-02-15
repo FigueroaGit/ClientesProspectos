@@ -51,10 +51,10 @@ import com.concredito.clientes.data.PreferencesManager
 import com.concredito.clientes.data.Resource
 import com.concredito.clientes.navigation.AppScreens
 import com.concredito.clientes.screens.prospect.PromoterViewModel
-import com.concredito.clientes.ui.theme.Dimens.dimenMedium
-import com.concredito.clientes.ui.theme.Dimens.dimenNormal
-import com.concredito.clientes.ui.theme.Dimens.dimenSmall
-import com.concredito.clientes.ui.theme.Dimens.imageSizeSmall
+import com.concredito.clientes.ui.theme.Dimens.densityPixels24
+import com.concredito.clientes.ui.theme.Dimens.densityPixels16
+import com.concredito.clientes.ui.theme.Dimens.densityPixels8
+import com.concredito.clientes.ui.theme.Dimens.densityPixels256
 import com.concredito.clientes.ui.theme.Fonts.fontSizeExtraLarge
 import com.concredito.clientes.ui.theme.assistantFamily
 import com.concredito.clientes.util.Constants.DELAY_TIME_TWO_SECONDS
@@ -94,10 +94,10 @@ fun LoginScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(dimenNormal)
+                .padding(densityPixels16)
                 .statusBarsPadding(),
         ) {
-            Spacer(modifier = Modifier.height(dimenNormal))
+            Spacer(modifier = Modifier.height(densityPixels16))
 
             Image(
                 painter = painterResource(
@@ -109,13 +109,13 @@ fun LoginScreen(
                 ),
                 contentDescription = stringResource(id = R.string.logo_image_content_description),
                 modifier = Modifier
-                    .width(imageSizeSmall)
+                    .width(densityPixels256)
                     .align(Alignment.CenterHorizontally)
-                    .padding(vertical = dimenNormal),
+                    .padding(vertical = densityPixels16),
             )
 
             Text(
-                modifier = Modifier.fillMaxWidth().padding(vertical = dimenSmall),
+                modifier = Modifier.fillMaxWidth().padding(vertical = densityPixels8),
                 text = stringResource(id = R.string.welcome_login_text),
                 fontSize = fontSizeExtraLarge,
                 fontWeight = FontWeight.Bold,
@@ -156,14 +156,14 @@ fun LoginScreen(
                 isError = showUsernameError,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = dimenSmall),
+                    .padding(bottom = densityPixels8),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Next,
                 ),
                 keyboardActions = KeyboardActions(
                     onNext = {},
                 ),
-                shape = RoundedCornerShape(dimenSmall),
+                shape = RoundedCornerShape(densityPixels8),
             )
 
             OutlinedTextField(
@@ -227,7 +227,7 @@ fun LoginScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = dimenNormal),
+                    .padding(bottom = densityPixels16),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Done,
                 ),
@@ -236,14 +236,14 @@ fun LoginScreen(
                         keyboardController?.hide()
                     },
                 ),
-                shape = RoundedCornerShape(dimenSmall),
+                shape = RoundedCornerShape(densityPixels8),
             )
 
             Text(
                 text = stringResource(id = R.string.forgot_password),
                 fontWeight = FontWeight.Medium,
                 fontFamily = assistantFamily,
-                modifier = Modifier.padding(bottom = dimenMedium).clickable {},
+                modifier = Modifier.padding(bottom = densityPixels24).clickable {},
                 color = MaterialTheme.colorScheme.primary,
             )
 
@@ -308,7 +308,7 @@ fun LoginScreen(
                     fontWeight = FontWeight.Normal,
                     fontFamily = assistantFamily,
                     color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(dimenSmall),
+                    modifier = Modifier.padding(densityPixels8),
                 )
             }
 

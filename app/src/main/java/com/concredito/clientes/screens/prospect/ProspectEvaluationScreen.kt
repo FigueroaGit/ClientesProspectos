@@ -65,10 +65,10 @@ import com.concredito.clientes.model.Prospect
 import com.concredito.clientes.model.ProspectStatus
 import com.concredito.clientes.model.RejectObservation
 import com.concredito.clientes.navigation.AppScreens
-import com.concredito.clientes.ui.theme.Dimens.dimenExtraSmall
-import com.concredito.clientes.ui.theme.Dimens.dimenNormal
-import com.concredito.clientes.ui.theme.Dimens.dimenSmall
-import com.concredito.clientes.ui.theme.Dimens.letterTileSize4x
+import com.concredito.clientes.ui.theme.Dimens.densityPixels4
+import com.concredito.clientes.ui.theme.Dimens.densityPixels16
+import com.concredito.clientes.ui.theme.Dimens.densityPixels8
+import com.concredito.clientes.ui.theme.Dimens.densityPixels160
 import com.concredito.clientes.ui.theme.Fonts.fontSizeLarge
 import com.concredito.clientes.ui.theme.Fonts.fontSizeMedium
 import com.concredito.clientes.ui.theme.Fonts.fontSizeNormal
@@ -153,21 +153,21 @@ fun ProspectEvaluationScreen(
                         Surface(
                             modifier = Modifier
                                 .align(Alignment.CenterHorizontally)
-                                .padding(dimenNormal),
+                                .padding(densityPixels16),
                             shape = CircleShape,
                             color = MaterialTheme.colorScheme.primary,
-                            tonalElevation = dimenSmall,
-                            shadowElevation = dimenSmall,
+                            tonalElevation = densityPixels8,
+                            shadowElevation = densityPixels8,
                         ) {
                             LetterTile(
                                 text = prospect.data.name.take(1),
-                                size = letterTileSize4x,
+                                size = densityPixels160,
                                 fontSize = LETTER_TILE_FONT_SIZE_4X,
                                 modifier = Modifier
                                     .align(
                                         Alignment.CenterHorizontally,
                                     )
-                                    .padding(dimenExtraSmall),
+                                    .padding(densityPixels4),
                             )
                         }
 
@@ -207,8 +207,8 @@ fun ProspectEvaluationScreen(
                         Surface(
                             modifier = Modifier
                                 .align(Alignment.CenterHorizontally)
-                                .padding(vertical = dimenNormal),
-                            shape = RoundedCornerShape(dimenExtraSmall),
+                                .padding(vertical = densityPixels16),
+                            shape = RoundedCornerShape(densityPixels4),
                             color =
                             when (prospect.data.status) {
                                 ProspectStatus.ENVIADO -> MaterialTheme.colorScheme.surfaceVariant
@@ -217,7 +217,7 @@ fun ProspectEvaluationScreen(
                             },
                         ) {
                             Row(
-                                modifier = Modifier.padding(dimenSmall),
+                                modifier = Modifier.padding(densityPixels8),
                                 horizontalArrangement = Arrangement.Center,
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
@@ -229,7 +229,7 @@ fun ProspectEvaluationScreen(
                                     },
                                     contentDescription = stringResource(id = R.string.icon_status_content_description),
                                 )
-                                Spacer(modifier = Modifier.padding(horizontal = dimenExtraSmall))
+                                Spacer(modifier = Modifier.padding(horizontal = densityPixels4))
                                 prospect.data.status.let {
                                     Text(
                                         text = it.name,
@@ -244,7 +244,7 @@ fun ProspectEvaluationScreen(
                         }
 
                         if (prospect.data.status == ProspectStatus.ENVIADO) {
-                            Row(modifier = Modifier.padding(horizontal = dimenNormal)) {
+                            Row(modifier = Modifier.padding(horizontal = densityPixels16)) {
                                 Button(
                                     modifier = Modifier.weight(1F),
                                     onClick = {
@@ -278,7 +278,7 @@ fun ProspectEvaluationScreen(
                                             contentDescription =
                                             stringResource(id = R.string.authorize_icon_content_description),
                                         )
-                                        Spacer(modifier = Modifier.padding(horizontal = dimenExtraSmall))
+                                        Spacer(modifier = Modifier.padding(horizontal = densityPixels4))
                                         Text(
                                             text = stringResource(id = R.string.button_authorize_prospect),
                                             fontWeight = FontWeight.Bold,
@@ -286,7 +286,7 @@ fun ProspectEvaluationScreen(
                                         )
                                     }
                                 }
-                                Spacer(modifier = Modifier.padding(horizontal = dimenExtraSmall))
+                                Spacer(modifier = Modifier.padding(horizontal = densityPixels4))
                                 OutlinedButton(
                                     modifier = Modifier.weight(1F),
                                     onClick = {
@@ -302,7 +302,7 @@ fun ProspectEvaluationScreen(
                                             contentDescription =
                                             stringResource(id = R.string.reject_icon_content_description),
                                         )
-                                        Spacer(modifier = Modifier.padding(horizontal = dimenExtraSmall))
+                                        Spacer(modifier = Modifier.padding(horizontal = densityPixels4))
                                         Text(
                                             text = stringResource(id = R.string.button_reject_prospect),
                                             fontWeight = FontWeight.Bold,
@@ -315,7 +315,7 @@ fun ProspectEvaluationScreen(
                             Box {}
                         }
 
-                        Column(modifier = Modifier.padding(dimenNormal)) {
+                        Column(modifier = Modifier.padding(densityPixels16)) {
                             Text(
                                 text = stringArrayResource(id = R.array.labels_address_text)[0],
                                 fontSize = fontSizeMedium,
@@ -323,7 +323,7 @@ fun ProspectEvaluationScreen(
                                 fontFamily = assistantFamily,
                             )
                             Row(
-                                modifier = Modifier.padding(vertical = dimenSmall),
+                                modifier = Modifier.padding(vertical = densityPixels8),
                             ) {
                                 Icon(
                                     imageVector = Icons.Rounded.LocationOn,
@@ -332,7 +332,7 @@ fun ProspectEvaluationScreen(
                                     tint = MaterialTheme.colorScheme.primary,
                                 )
 
-                                Spacer(modifier = Modifier.padding(horizontal = dimenExtraSmall))
+                                Spacer(modifier = Modifier.padding(horizontal = densityPixels4))
                                 Column {
                                     Row {
                                         Text(
@@ -393,7 +393,7 @@ fun ProspectEvaluationScreen(
                                 }
                             }
                         }
-                        Column(modifier = Modifier.padding(dimenNormal)) {
+                        Column(modifier = Modifier.padding(densityPixels16)) {
                             Text(
                                 text = stringArrayResource(id = R.array.labels_address_text)[5],
                                 fontSize = fontSizeMedium,
@@ -409,7 +409,7 @@ fun ProspectEvaluationScreen(
                                     tint = MaterialTheme.colorScheme.primary,
                                 )
 
-                                Spacer(modifier = Modifier.padding(horizontal = dimenExtraSmall))
+                                Spacer(modifier = Modifier.padding(horizontal = densityPixels4))
                                 Text(
                                     text = stringArrayResource(id = R.array.labels_address_text)[6],
                                     fontSize = fontSizeNormal,
@@ -484,9 +484,9 @@ fun ProspectEvaluationScreen(
                             }
                         }
                         documents.data?.let {
-                            Column(modifier = Modifier.padding(dimenNormal)) {
+                            Column(modifier = Modifier.padding(densityPixels16)) {
                                 Text(
-                                    text = "Documentos adjuntos:",
+                                    text = stringResource(id = R.string.label_attachments_text),
                                     fontSize = fontSizeMedium,
                                     fontWeight = FontWeight.Bold,
                                     fontFamily = assistantFamily,
@@ -504,7 +504,7 @@ fun ProspectEvaluationScreen(
                         }
 
                         if (prospect.data.status == ProspectStatus.RECHAZADO) {
-                            Column(modifier = Modifier.padding(dimenNormal)) {
+                            Column(modifier = Modifier.padding(densityPixels16)) {
                                 Text(
                                     text = stringResource(id = R.string.label_reject_observations_text),
                                     fontSize = fontSizeMedium,
@@ -519,7 +519,7 @@ fun ProspectEvaluationScreen(
                                         tint = MaterialTheme.colorScheme.primary,
                                     )
 
-                                    Spacer(modifier = Modifier.padding(horizontal = dimenExtraSmall))
+                                    Spacer(modifier = Modifier.padding(horizontal = densityPixels4))
                                     observation.data?.last()?.let {
                                         Text(
                                             text = it.observations,

@@ -24,8 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import com.concredito.clientes.R
 import com.concredito.clientes.navigation.AppScreens
-import com.concredito.clientes.ui.theme.Dimens.dimenNormal
-import com.concredito.clientes.ui.theme.Dimens.imageSizeSmall
+import com.concredito.clientes.ui.theme.Dimens.densityPixels16
+import com.concredito.clientes.ui.theme.Dimens.densityPixels256
 import com.concredito.clientes.ui.theme.assistantFamily
 import com.concredito.clientes.util.Constants.DELAY_TIME_TWO_SECONDS
 import kotlinx.coroutines.delay
@@ -44,7 +44,7 @@ fun SplashScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(dimenNormal),
+            .padding(densityPixels16),
         contentAlignment = Alignment.Center,
     ) {
         val logoResourceId = if (!isSystemInDarkTheme()) {
@@ -58,7 +58,7 @@ fun SplashScreen(
             contentDescription = stringResource(id = R.string.logo_image_content_description),
             contentScale = ContentScale.Fit,
             modifier = Modifier
-                .size(imageSizeSmall)
+                .size(densityPixels256)
                 .scale(scale.value),
         )
     }
@@ -66,7 +66,7 @@ fun SplashScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = dimenNormal),
+            .padding(bottom = densityPixels16),
         contentAlignment = Alignment.BottomCenter,
     ) {
         Text(

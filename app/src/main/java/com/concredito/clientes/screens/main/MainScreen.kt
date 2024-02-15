@@ -38,10 +38,10 @@ import com.concredito.clientes.model.Prospect
 import com.concredito.clientes.navigation.AppScreens
 import com.concredito.clientes.screens.prospect.ProspectItem
 import com.concredito.clientes.screens.prospect.ProspectsViewModel
-import com.concredito.clientes.ui.theme.Dimens.circularIndicator
-import com.concredito.clientes.ui.theme.Dimens.dimenNormal
-import com.concredito.clientes.ui.theme.Dimens.dimenSmall
-import com.concredito.clientes.ui.theme.Dimens.imageSizeSmall
+import com.concredito.clientes.ui.theme.Dimens.densityPixels64
+import com.concredito.clientes.ui.theme.Dimens.densityPixels16
+import com.concredito.clientes.ui.theme.Dimens.densityPixels8
+import com.concredito.clientes.ui.theme.Dimens.densityPixels256
 import com.concredito.clientes.ui.theme.Fonts.fontSizeNormal
 import com.concredito.clientes.ui.theme.assistantFamily
 
@@ -97,7 +97,7 @@ fun MainScreen(
                     ) {
                         CircularProgressIndicator(
                             modifier = Modifier
-                                .size(circularIndicator),
+                                .size(densityPixels64),
                         )
                         Text(
                             text = stringResource(id = R.string.label_circular_progress_indicator_text),
@@ -113,7 +113,7 @@ fun MainScreen(
                         color = Color.Red,
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(dimenNormal),
+                            .padding(densityPixels16),
                     )
                 }
             }
@@ -126,19 +126,19 @@ fun ShowEmptyListScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(dimenNormal),
+            .padding(densityPixels16),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Image(
-            modifier = Modifier.size(imageSizeSmall),
+            modifier = Modifier.size(densityPixels256),
             painter = painterResource(id = R.drawable.empty_list_placeholder),
             contentDescription = stringResource(id = R.string.empty_list_content_description),
             contentScale = ContentScale.Fit,
         )
 
         Text(
-            modifier = Modifier.padding(vertical = dimenSmall),
+            modifier = Modifier.padding(vertical = densityPixels8),
             text = stringResource(id = R.string.empty_list_title),
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
@@ -153,7 +153,7 @@ fun ShowEmptyListScreen(navController: NavHostController) {
         )
 
         Button(
-            modifier = Modifier.padding(dimenNormal),
+            modifier = Modifier.padding(densityPixels16),
             onClick = { navController.navigate(AppScreens.NewProspectScreen.name) },
         ) {
             Text(
@@ -177,7 +177,7 @@ fun ShowProspectsListScreen(
             .fillMaxSize(),
         verticalArrangement = Arrangement.Top,
     ) {
-        Row(modifier = Modifier.padding(vertical = dimenSmall, horizontal = dimenNormal)) {
+        Row(modifier = Modifier.padding(vertical = densityPixels8, horizontal = densityPixels16)) {
             Text(
                 text = stringResource(id = R.string.label_last_prospect_added),
                 fontWeight = FontWeight.Medium,
@@ -190,7 +190,7 @@ fun ShowProspectsListScreen(
         }
 
         Row(
-            modifier = Modifier.padding(vertical = dimenSmall, horizontal = dimenNormal)
+            modifier = Modifier.padding(vertical = densityPixels8, horizontal = densityPixels16)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -210,11 +210,11 @@ fun ShowProspectsListScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = dimenNormal),
+                .padding(bottom = densityPixels16),
             contentAlignment = Alignment.BottomCenter,
         ) {
             Button(
-                modifier = Modifier.padding(dimenNormal),
+                modifier = Modifier.padding(densityPixels16),
                 onClick = { navController.navigate(AppScreens.NewProspectScreen.name) },
             ) {
                 Text(

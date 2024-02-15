@@ -7,6 +7,7 @@ object Constants {
     const val PHONE_URI = "tel:"
     const val MESSAGE_URI = "sms:"
     const val ONE_LINE = 1
+    const val TWO_LINES = 2
     const val MULTILINE = 5
     const val FIRST = 0
     const val SECOND = 1

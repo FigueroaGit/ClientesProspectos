@@ -54,7 +54,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getString
 import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -63,10 +62,11 @@ import com.concredito.clientes.R
 import com.concredito.clientes.model.Prospect
 import com.concredito.clientes.model.ProspectStatus
 import com.concredito.clientes.navigation.AppScreens
-import com.concredito.clientes.ui.theme.Dimens.dimenExtraSmall
-import com.concredito.clientes.ui.theme.Dimens.dimenNormal
-import com.concredito.clientes.ui.theme.Dimens.dimenSmall
-import com.concredito.clientes.ui.theme.Dimens.lazyColumnBottomPadding
+import com.concredito.clientes.ui.theme.Dimens.densityPixels4
+import com.concredito.clientes.ui.theme.Dimens.densityPixels16
+import com.concredito.clientes.ui.theme.Dimens.densityPixels72
+import com.concredito.clientes.ui.theme.Dimens.densityPixels8
+import com.concredito.clientes.ui.theme.Dimens.strokeBorder
 import com.concredito.clientes.ui.theme.assistantFamily
 import com.concredito.clientes.util.Constants.MAX_CHARACTERS_BY_ADDRESS
 import com.concredito.clientes.util.Constants.MAX_CHARACTERS_BY_NAME
@@ -82,10 +82,6 @@ import com.concredito.clientes.util.getFileDetails
 import com.concredito.clientes.util.getIconResource
 import com.concredito.clientes.util.openFileSelector
 import com.concredito.clientes.util.processFile
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import java.io.File
 import java.util.UUID
 
 @Composable
@@ -188,21 +184,21 @@ fun NewProspectScreen(
         ) {
             LazyColumn(
                 modifier = Modifier
-                    .padding(bottom = lazyColumnBottomPadding)
+                    .padding(bottom = densityPixels72)
                     .fillMaxSize(),
             ) {
                 item {
                     Column(
                         modifier = Modifier.padding(
-                            start = dimenNormal,
-                            end = dimenNormal,
-                            bottom = dimenSmall,
+                            start = densityPixels16,
+                            end = densityPixels16,
+                            bottom = densityPixels8,
                         ),
                     ) {
                         FormInputText(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = dimenExtraSmall),
+                                .padding(vertical = densityPixels4),
                             text = prospectName,
                             label = stringResource(id = R.string.label_name_field),
                             onTextChange = { text ->
@@ -229,7 +225,7 @@ fun NewProspectScreen(
                         FormInputText(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = dimenExtraSmall),
+                                .padding(vertical = densityPixels4),
                             text = prospectSurname,
                             label = stringResource(id = R.string.label_surname_field),
                             onTextChange = { text ->
@@ -256,7 +252,7 @@ fun NewProspectScreen(
                         FormInputText(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = dimenExtraSmall),
+                                .padding(vertical = densityPixels4),
                             text = prospectSecondSurname,
                             label = stringResource(id = R.string.label_second_surname_field),
                             onTextChange = { text ->
@@ -271,7 +267,7 @@ fun NewProspectScreen(
                         FormInputText(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = dimenExtraSmall),
+                                .padding(vertical = densityPixels4),
                             text = prospectStreetAddress,
                             label = stringResource(id = R.string.label_street_field),
                             leadingIcon = Icons.Rounded.Home,
@@ -299,7 +295,7 @@ fun NewProspectScreen(
                         FormInputText(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = dimenExtraSmall),
+                                .padding(vertical = densityPixels4),
                             text = prospectNumberAddress,
                             label = stringResource(id = R.string.label_number_field),
                             leadingIcon = Icons.Rounded.Numbers,
@@ -327,7 +323,7 @@ fun NewProspectScreen(
                         FormInputText(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = dimenExtraSmall),
+                                .padding(vertical = densityPixels4),
                             text = prospectNeighborhoodAddress,
                             label = stringResource(id = R.string.label_neighborhood_field),
                             leadingIcon = Icons.Rounded.Home,
@@ -355,7 +351,7 @@ fun NewProspectScreen(
                         FormInputText(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = dimenExtraSmall),
+                                .padding(vertical = densityPixels4),
                             text = prospectZipCode,
                             label = stringResource(id = R.string.label_zip_code_field),
                             leadingIcon = Icons.Rounded.LocalPostOffice,
@@ -383,7 +379,7 @@ fun NewProspectScreen(
                         FormInputText(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = dimenExtraSmall),
+                                .padding(vertical = densityPixels4),
                             text = prospectPhoneNumber,
                             label = stringResource(id = R.string.label_phone_number_field),
                             leadingIcon = Icons.Rounded.Phone,
@@ -411,7 +407,7 @@ fun NewProspectScreen(
                         FormInputText(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = dimenExtraSmall),
+                                .padding(vertical = densityPixels4),
                             text = prospectRFC,
                             label = stringResource(id = R.string.label_rfc_field),
                             onTextChange = { text ->
@@ -437,14 +433,17 @@ fun NewProspectScreen(
 
                         Surface(
                             modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(8.dp),
-                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
+                            shape = RoundedCornerShape(densityPixels8),
+                            border = BorderStroke(
+                                strokeBorder,
+                                MaterialTheme.colorScheme.outline
+                            )
                         ) {
                             if (selectedFilesUris.isEmpty()) {
                                 FileSelectorField(
                                     context = context,
                                     resultLauncher = resultLauncher,
-                                    headerText = "Documentos",
+                                    headerText = stringResource(id = R.string.label_add_documents_field),
                                     headerIcon = Icons.Rounded.AttachFile,
                                     onIconButtonClick = {
                                         openFileSelector(
@@ -456,10 +455,10 @@ fun NewProspectScreen(
                                 Column(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(16.dp),
+                                        .padding(densityPixels16),
                                 ) {
                                     HeaderFileRow(
-                                        text = "Documentos Seleccionados",
+                                        text = stringResource(id = R.string.label_selected_documents),
                                         icon = Icons.Rounded.AttachFile
                                     )
                                     LazyRow(
@@ -471,7 +470,10 @@ fun NewProspectScreen(
                                                 it.toString()
                                             }
                                         ) { selectedFileUri ->
-                                            val (filename, fileType) = getFileDetails(context, selectedFileUri)
+                                            val (filename, fileType) = getFileDetails(
+                                                context,
+                                                selectedFileUri
+                                            )
                                             val extension = getExtension(fileType)
                                             FileItemForUpload(
                                                 icon = getIconResource(extension),
@@ -484,7 +486,9 @@ fun NewProspectScreen(
                                             }) {
                                                 Icon(
                                                     imageVector = Icons.Rounded.Add,
-                                                    contentDescription = ""
+                                                    contentDescription = stringResource(
+                                                        id = R.string.add_document_icon_content_description
+                                                    )
                                                 )
                                             }
                                         }
@@ -500,7 +504,7 @@ fun NewProspectScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.BottomCenter),
-                shape = RoundedCornerShape(topStart = dimenNormal, topEnd = dimenNormal),
+                shape = RoundedCornerShape(topStart = densityPixels16, topEnd = densityPixels16),
             ) {
                 Button(
                     onClick = {
@@ -580,25 +584,26 @@ fun NewProspectScreen(
                                 .show()
 
                             selectedFilesUris.forEach { selectedFileUri ->
-                                val (multipartBody, filename) = processFile(context, selectedFileUri)
+                                val (multipartBody, filename) = processFile(
+                                    context,
+                                    selectedFileUri
+                                )
                                 documentViewModel.uploadDocument(
                                     multipartBody,
                                     filename,
                                     prospectId,
                                 )
                             }
-
-                            Toast.makeText(context, "Documento Guardado", Toast.LENGTH_LONG).show()
                             navController.navigate(AppScreens.ProspectsScreen.name + "/$promoterId")
                         }
                     },
-                    modifier = Modifier.padding(dimenNormal),
+                    modifier = Modifier.padding(densityPixels16),
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Rounded.Send,
                         contentDescription = stringResource(id = R.string.send_icon_content_description),
                     )
-                    Spacer(modifier = Modifier.width(dimenSmall))
+                    Spacer(modifier = Modifier.width(densityPixels8))
                     Text(
                         text = stringResource(id = R.string.button_send_to_evaluation_area),
                         fontWeight = FontWeight.Bold,

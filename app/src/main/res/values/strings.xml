@@ -39,6 +39,9 @@
     <string name="label_zip_code_field">Código postal</string>
     <string name="label_phone_number_field">Número de teléfono</string>
     <string name="label_rfc_field">RFC</string>
+    <string name="label_add_documents_field">Agregar documentos</string>
+    <string name="label_selected_documents">Documentos seleccionados</string>
+    <string name="image_icon_content_description">Tipo de archivo</string>
     <string name="name_error_text">El nombre es necesario</string>
     <string name="surname_error_text">El primer apellido es necesario</string>
     <string name="address_error_text">La calle es necesaria</string>
@@ -77,6 +80,7 @@
     <string name="phone_icon_content_description">Teléfono</string>
     <string name="message_icon_content_description">Mensaje</string>
     <string name="message_launch_intent_error">No se puede realizar esta acción</string>
+    <string name="label_attachments_text">Documentos adjuntos:</string>
     <string name="label_reject_observations_text">Observaciones:</string>
     <string name="observations_icon_content_description">Observacion</string>
     <string name="close_icon_content_description">Cerrar</string>

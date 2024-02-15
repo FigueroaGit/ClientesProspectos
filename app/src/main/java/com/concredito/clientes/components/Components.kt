@@ -61,18 +61,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.concredito.clientes.R
 import com.concredito.clientes.ui.theme.Dimens
-import com.concredito.clientes.ui.theme.Dimens.dimenExtraSmall
-import com.concredito.clientes.ui.theme.Dimens.dimenNormal
-import com.concredito.clientes.ui.theme.Dimens.dimenSmall
-import com.concredito.clientes.ui.theme.Dimens.letterTileSize
-import com.concredito.clientes.ui.theme.Dimens.letterTileSize3x
+import com.concredito.clientes.ui.theme.Dimens.densityPixels12
+import com.concredito.clientes.ui.theme.Dimens.densityPixels154
+import com.concredito.clientes.ui.theme.Dimens.densityPixels4
+import com.concredito.clientes.ui.theme.Dimens.densityPixels16
+import com.concredito.clientes.ui.theme.Dimens.densityPixels2
+import com.concredito.clientes.ui.theme.Dimens.densityPixels256
+import com.concredito.clientes.ui.theme.Dimens.densityPixels8
+import com.concredito.clientes.ui.theme.Dimens.densityPixels40
+import com.concredito.clientes.ui.theme.Dimens.densityPixels48
+import com.concredito.clientes.ui.theme.Dimens.densityPixels72
+import com.concredito.clientes.ui.theme.Dimens.densityPixels80
 import com.concredito.clientes.ui.theme.Fonts
 import com.concredito.clientes.ui.theme.Fonts.fontSizeExtraSmall
 import com.concredito.clientes.ui.theme.Fonts.fontSizeLarge
@@ -85,6 +90,7 @@ import com.concredito.clientes.util.Constants.LETTER_TILE_FONT_SIZE
 import com.concredito.clientes.util.Constants.LETTER_TILE_FONT_SIZE_3X
 import com.concredito.clientes.util.Constants.ONE_LINE
 import com.concredito.clientes.util.Constants.SPLIT_DELIMITER
+import com.concredito.clientes.util.Constants.TWO_LINES
 import com.concredito.clientes.util.getRandomColor
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -102,14 +108,14 @@ fun ProspectsAppBar(
             if (isHome) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(dimenSmall),
+                    horizontalArrangement = Arrangement.spacedBy(densityPixels8),
                 ) {
                     val titleWithGreetings = title.split(SPLIT_DELIMITER)
                     val usernameLetter = titleWithGreetings[1]
 
                     LetterTile(
                         text = usernameLetter.take(1).uppercase(),
-                        size = letterTileSize,
+                        size = densityPixels40,
                         fontSize = LETTER_TILE_FONT_SIZE,
                     )
                     Text(
@@ -161,7 +167,7 @@ fun ProspectsAppBar(
 @Composable
 fun ProspectsLargeTopAppBar(
     title: String,
-    letterTileSize: Dp = letterTileSize3x, // Default size for the LetterTile
+    letterTileSize: Dp = densityPixels72, // Default size for the LetterTile
     fontSize: Int = LETTER_TILE_FONT_SIZE_3X,
     additionalText: String = EMPTY_STRING, // Additional text to be displayed
     navController: NavController,
@@ -183,7 +189,7 @@ fun ProspectsLargeTopAppBar(
                     size = letterTileSize,
                     fontSize = fontSize,
                 )
-                Column(modifier = Modifier.padding(horizontal = dimenNormal)) {
+                Column(modifier = Modifier.padding(horizontal = densityPixels16)) {
                     Text(
                         text = title,
                         fontFamily = assistantFamily,
@@ -253,7 +259,7 @@ fun LetterTile(text: String, size: Dp, fontSize: Int, modifier: Modifier = Modif
             color = Color.White,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .padding(dimenSmall)
+                .padding(densityPixels8)
                 .align(Alignment.Center),
             textAlign = TextAlign.Center,
             fontSize = fontSize.sp,
@@ -306,7 +312,7 @@ fun FormInputText(
                 keyboardController?.hide()
             },
         ),
-        shape = RoundedCornerShape(dimenSmall),
+        shape = RoundedCornerShape(densityPixels8),
         maxLines = maxLine,
     )
 }
@@ -322,7 +328,7 @@ fun TitleSection(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = dimenNormal),
+                .padding(horizontal = densityPixels16),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -414,15 +420,15 @@ fun LoadingScreenDialog() {
     ) {
         Box(
             modifier = Modifier
-                .size(Dimens.dialogBoxSize)
-                .clip(RoundedCornerShape(dimenSmall))
+                .size(Dimens.densityPixels128)
+                .clip(RoundedCornerShape(densityPixels8))
                 .background(MaterialTheme.colorScheme.background)
-                .padding(dimenNormal),
+                .padding(densityPixels16),
             contentAlignment = Alignment.Center,
         ) {
             CircularProgressIndicator(
                 color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(Dimens.circularIndicator),
+                modifier = Modifier.size(Dimens.densityPixels64),
             )
         }
     }
@@ -450,12 +456,12 @@ fun ObservationsDialog(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(dimenNormal),
+                    .padding(densityPixels16),
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = dimenNormal),
+                        .padding(vertical = densityPixels16),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -474,7 +480,7 @@ fun ObservationsDialog(
                         fontSize = Fonts.fontSizeNormal,
                         fontFamily = assistantFamily,
                     )
-                    Spacer(modifier = Modifier.size(48.dp))
+                    Spacer(modifier = Modifier.size(densityPixels48))
                 }
                 TextField(
                     value = observations,
@@ -485,7 +491,7 @@ fun ObservationsDialog(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(min = 154.dp),
+                        .heightIn(min = densityPixels154),
                     label = {
                         Text(
                             text = stringResource(
@@ -502,7 +508,7 @@ fun ObservationsDialog(
                                 id = R.string.label_reject_observations_characters_left_field,
                                 Constants.MAX_CHARACTERS_BY_OBSERVATIONS - observations.length,
                             ),
-                            modifier = Modifier.padding(top = Dimens.dimenExtraSmall),
+                            modifier = Modifier.padding(top = densityPixels4),
                         )
                     },
                     singleLine = false,
@@ -515,7 +521,7 @@ fun ObservationsDialog(
                             keyboardController?.hide()
                         },
                     ),
-                    shape = RoundedCornerShape(dimenSmall),
+                    shape = RoundedCornerShape(densityPixels8),
                     colors = TextFieldDefaults.colors(
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
@@ -528,13 +534,13 @@ fun ObservationsDialog(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = dimenNormal),
+                        .padding(top = densityPixels16),
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Rounded.Send,
                         contentDescription = stringResource(id = R.string.send_icon_content_description),
                     )
-                    Spacer(modifier = Modifier.width(dimenSmall))
+                    Spacer(modifier = Modifier.width(densityPixels8))
                     Text(
                         text = stringResource(id = R.string.button_send_observations),
                         fontWeight = FontWeight.Bold,
@@ -554,10 +560,10 @@ fun HeaderFileRow(text: String, icon: ImageVector, modifier: Modifier = Modifier
     ) {
         Icon(
             imageVector = icon,
-            contentDescription = "",
+            contentDescription = stringResource(id = R.string.leading_icon_content_description),
             tint = MaterialTheme.colorScheme.outline
         )
-        Spacer(modifier = Modifier.width(16.dp))
+        Spacer(modifier = Modifier.width(densityPixels16))
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = text,
@@ -580,7 +586,7 @@ fun FileSelectorField(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(12.dp),
+            .padding(densityPixels12),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
@@ -592,7 +598,7 @@ fun FileSelectorField(
         FilledTonalIconButton(onClick = onIconButtonClick) {
             Icon(
                 imageVector = Icons.Rounded.Add,
-                contentDescription = ""
+                contentDescription = stringResource(id = R.string.add_document_icon_content_description)
             )
         }
     }
@@ -608,24 +614,24 @@ fun FileItemForUpload(
 ) {
     Surface(
         modifier = Modifier
-            .padding(dimenSmall),
-        shape = RoundedCornerShape(2.dp),
-        tonalElevation = 4.dp
+            .padding(densityPixels8),
+        shape = RoundedCornerShape(densityPixels2),
+        tonalElevation = densityPixels4
     ) {
         Column(
-            modifier = Modifier.padding(dimenSmall),
+            modifier = Modifier.padding(densityPixels8),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Image(painter = painterResource(id = icon), contentDescription = "")
-            Spacer(modifier = Modifier.padding(vertical = dimenExtraSmall))
+            Image(painter = painterResource(id = icon), contentDescription = stringResource(id = R.string.image_icon_content_description))
+            Spacer(modifier = Modifier.padding(vertical = densityPixels4))
             Text(
-                modifier = Modifier.width(80.dp),
+                modifier = Modifier.width(densityPixels80),
                 text = name,
                 fontSize = fontSizeSmall,
                 fontFamily = assistantFamily,
                 overflow = TextOverflow.Ellipsis,
-                maxLines = 2
+                maxLines = TWO_LINES
             )
         }
     }
@@ -640,21 +646,21 @@ fun FileItemForDownload(
 ) {
     Surface(
         modifier = Modifier
-            .width(256.dp)
-            .height(80.dp)
-            .padding(dimenSmall),
-        shape = RoundedCornerShape(2.dp),
-        tonalElevation = 4.dp
+            .width(densityPixels256)
+            .height(densityPixels80)
+            .padding(densityPixels8),
+        shape = RoundedCornerShape(densityPixels2),
+        tonalElevation = densityPixels4
     ) {
         Row(
-            modifier = Modifier.padding(dimenSmall),
+            modifier = Modifier.padding(densityPixels8),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(painter = painterResource(id = icon), contentDescription = "")
+            Image(painter = painterResource(id = icon), contentDescription = stringResource(id = R.string.image_icon_content_description))
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start = 8.dp),
+                    .padding(start = densityPixels8),
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Top
             ) {
@@ -663,7 +669,7 @@ fun FileItemForDownload(
                     fontSize = fontSizeExtraSmall,
                     fontFamily = assistantFamily,
                     overflow = TextOverflow.Ellipsis,
-                    maxLines = 1
+                    maxLines = ONE_LINE
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(

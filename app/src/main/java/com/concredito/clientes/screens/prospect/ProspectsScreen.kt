@@ -46,9 +46,9 @@ import com.concredito.clientes.data.Resource
 import com.concredito.clientes.model.Prospect
 import com.concredito.clientes.model.ProspectStatus
 import com.concredito.clientes.navigation.AppScreens
-import com.concredito.clientes.ui.theme.Dimens.dimenNormal
-import com.concredito.clientes.ui.theme.Dimens.dimenSmall
-import com.concredito.clientes.ui.theme.Dimens.letterTileSize2x
+import com.concredito.clientes.ui.theme.Dimens.densityPixels16
+import com.concredito.clientes.ui.theme.Dimens.densityPixels8
+import com.concredito.clientes.ui.theme.Dimens.densityPixels48
 import com.concredito.clientes.ui.theme.Fonts.fontSizeMedium
 import com.concredito.clientes.ui.theme.Fonts.fontSizeNormal
 import com.concredito.clientes.ui.theme.assistantFamily
@@ -179,7 +179,7 @@ fun ProspectList(
                 color = Color.Red,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(dimenNormal),
+                    .padding(densityPixels16),
             )
         }
     }
@@ -210,17 +210,17 @@ fun ProspectItem(
 
 @Composable
 fun ProspectInfo(prospect: Prospect) {
-    Column(modifier = Modifier.padding(horizontal = dimenSmall)) {
+    Column(modifier = Modifier.padding(horizontal = densityPixels8)) {
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
         ) {
             LetterTile(
                 text = prospect.name.take(1),
-                size = letterTileSize2x,
+                size = densityPixels48,
                 fontSize = LETTER_TILE_FONT_SIZE_2X,
             )
-            Column(modifier = Modifier.padding(dimenSmall)) {
+            Column(modifier = Modifier.padding(densityPixels8)) {
                 Text(
                     text = "${prospect.name} ${prospect.surname} ${prospect.secondSurname}",
                     fontWeight = FontWeight.Bold,
