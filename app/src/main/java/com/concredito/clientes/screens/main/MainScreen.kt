@@ -75,7 +75,11 @@ fun MainScreen(
                     }
                 },
                 onMenuClicked = { /*TODO*/ },
-                onShowProspectsClicked = { navController.navigate(AppScreens.ProspectsScreen.name + "/$promoterId") },
+                onShowProspectsClicked = {
+                    navController.navigate(AppScreens.ProspectsScreen.name + "/$promoterId") {
+                        launchSingleTop = true
+                    }
+                },
             )
         },
     ) { paddingValues ->
@@ -190,7 +194,8 @@ fun ShowProspectsListScreen(
         }
 
         Row(
-            modifier = Modifier.padding(vertical = densityPixels8, horizontal = densityPixels16)
+            modifier = Modifier
+                .padding(vertical = densityPixels8, horizontal = densityPixels16)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -215,7 +220,11 @@ fun ShowProspectsListScreen(
         ) {
             Button(
                 modifier = Modifier.padding(densityPixels16),
-                onClick = { navController.navigate(AppScreens.NewProspectScreen.name) },
+                onClick = {
+                    navController.navigate(AppScreens.NewProspectScreen.name) {
+                        launchSingleTop = true
+                    }
+                },
             ) {
                 Text(
                     text = stringResource(id = R.string.button_add_prospect),
