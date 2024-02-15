@@ -1,7 +1,6 @@
 package com.concredito.clientes.screens.prospect
 
 import FileItemForDownload
-import FileItemUpload
 import LetterTile
 import ObservationsDialog
 import ProspectsAppBar
@@ -51,7 +50,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -80,6 +78,8 @@ import com.concredito.clientes.util.Constants.MESSAGE_URI
 import com.concredito.clientes.util.Constants.ONE_LINE
 import com.concredito.clientes.util.Constants.PHONE_URI
 import com.concredito.clientes.util.formatSize
+import com.concredito.clientes.util.getExtension
+import com.concredito.clientes.util.getIconResource
 import java.util.UUID
 
 @Composable
@@ -494,11 +494,7 @@ fun ProspectEvaluationScreen(
                                 LazyRow(modifier = Modifier.padding(vertical = 8.dp)) {
                                     items(items = it) {
                                         FileItemForDownload(
-                                            //TODO: Create enum or objects for icon fileType
-                                            icon = when(it.tipoArchivo.substringAfterLast("/").uppercase()) {
-                                                "PDF" -> R.drawable.ic_file_pdf_box
-                                                else -> { R.drawable.ic_image }
-                                            },
+                                            icon = getIconResource(getExtension(it.tipoArchivo)),
                                             name = it.nombre,
                                             size = formatSize(it.tamanoArchivo.toLong())
                                         )

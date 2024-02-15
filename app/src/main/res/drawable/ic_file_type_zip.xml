@@ -1,0 +1,20 @@
+<vector android:autoMirrored="true" android:height="64.08dp"
+    android:viewportHeight="64.08" android:viewportWidth="48.07"
+    android:width="48.07dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#e9e9e0"
+        android:pathData="M34.1,0H1.7C0.8,0 0.07,0.75 0.07,2.2v60.66c0,0.39 0.73,1.14 1.63,1.14h44.73c0.9,0 1.63,-0.75 1.63,-1.14V14.83c0,-0.8 -0.1,-1.05 -0.29,-1.24L34.79,0.29c-0.18,-0.19 -0.43,-0.29 -0.69,-0.29Z" android:strokeWidth="0"/>
+    <path android:fillColor="#d9d7ca"
+        android:pathData="M34.67,0.17v11.54c0,1.1 0.9,2 2,2h11.23L34.67,0.17Z" android:strokeWidth="0"/>
+    <path android:fillColor="#556080"
+        android:pathData="M46.37,64.08H1.63c-0.9,0 -1.63,-0.75 -1.63,-1.67v-17.76h48v17.76c0,0.92 -0.73,1.67 -1.63,1.67Z" android:strokeWidth="0"/>
+    <path android:fillColor="#c8bdb8"
+        android:pathData="M24.63,27.43v-2.29h2.23v-2.29h-2.23v-2.29h2.23v-2.29h-2.23v-2.29h2.23v-2.29h-2.23v-2.29h2.23v-2.29h-2.23v-2.29h-2.23v2.29h-2.23v2.29h2.23v2.29h-2.23v2.29h2.23v2.29h-2.23v2.29h2.23v2.29h-2.23v2.29h2.23v2.29h-4.47v5.71c0,3.15 2.5,5.71 5.58,5.71s5.58,-2.56 5.58,-5.71v-5.71h-4.47ZM26.86,33.14c0,1.89 -1.5,3.43 -3.35,3.43s-3.35,-1.54 -3.35,-3.43v-3.43h6.7v3.43Z" android:strokeWidth="0"/>
+    <path android:fillColor="#c8bdb8"
+        android:pathData="M22.39,34.29h2.23c0.62,0 1.12,-0.51 1.12,-1.14s-0.5,-1.14 -1.12,-1.14h-2.23c-0.62,0 -1.12,0.51 -1.12,1.14s0.5,1.14 1.12,1.14Z" android:strokeWidth="0"/>
+    <path android:fillColor="#fff"
+        android:pathData="M12.49,58.86l5.52,-8.5h-5.01v-1.71h7.51v1.22l-5.52,8.5h5.57v1.71h-8.07v-1.22Z" android:strokeWidth="0"/>
+    <path android:fillColor="#fff"
+        android:pathData="M22.57,48.65h2.03v11.43h-2.03v-11.43Z" android:strokeWidth="0"/>
+    <path android:fillColor="#fff"
+        android:pathData="M27.5,48.65h3.6c2.54,0 4.41,0.88 4.41,3.52s-1.88,3.7 -4.34,3.7h-1.64v4.2h-2.03v-11.43ZM31,54.26c1.7,0 2.51,-0.68 2.51,-2.08s-0.89,-1.9 -2.58,-1.9h-1.4v3.98h1.47Z" android:strokeWidth="0"/>
+</vector>

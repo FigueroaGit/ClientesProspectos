@@ -1,7 +1,7 @@
 package com.concredito.clientes.screens.prospect
 
 import ExitDialog
-import FileItemUpload
+import FileItemForUpload
 import FileSelectorField
 import FormInputText
 import HeaderFileRow
@@ -50,7 +50,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -78,14 +77,16 @@ import com.concredito.clientes.util.Constants.MAX_CHARACTERS_BY_ZIP_CODE
 import com.concredito.clientes.util.filterAddressInput
 import com.concredito.clientes.util.filterLettersAndNumbers
 import com.concredito.clientes.util.filterNameInput
+import com.concredito.clientes.util.getExtension
+import com.concredito.clientes.util.getFileDetails
+import com.concredito.clientes.util.getIconResource
 import com.concredito.clientes.util.openFileSelector
+import com.concredito.clientes.util.processFile
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.util.UUID
-
-//TODO: Refactor New Prospect Screen
 
 @Composable
 fun NewProspectScreen(
@@ -125,7 +126,7 @@ fun NewProspectScreen(
     var showProspectPhoneNumberError by remember { mutableStateOf(false) }
     var showProspectRFCError by remember { mutableStateOf(false) }
 
-    var selectedFilesUris by remember { mutableStateOf<List<Uri>>(emptyList()) }
+    var selectedFilesUris by rememberSaveable { mutableStateOf<List<Uri>>(emptyList()) }
 
     // Listener for results of file selector
     val resultLauncher =
@@ -470,26 +471,11 @@ fun NewProspectScreen(
                                                 it.toString()
                                             }
                                         ) { selectedFileUri ->
-                                            val file = File(selectedFileUri.path).name
-                                            val filename = file.substringAfterLast(":")
-                                            val fileType =
-                                                context.contentResolver.getType(selectedFileUri)
-                                                    ?: "application/octet-stream"
-                                            val extension =
-                                                fileType.substringAfterLast("/").uppercase()
-                                            FileItemUpload(
+                                            val (filename, fileType) = getFileDetails(context, selectedFileUri)
+                                            val extension = getExtension(fileType)
+                                            FileItemForUpload(
+                                                icon = getIconResource(extension),
                                                 name = filename,
-                                                icon =
-                                                when (extension) {
-                                                    "PDF" -> {
-                                                        painterResource(id = R.drawable.ic_file_pdf_box)
-                                                    }
-
-                                                    else -> {
-                                                        painterResource(id = R.drawable.ic_image)
-                                                    }
-                                                },
-                                                contentType = extension
                                             )
                                         }
                                         item {
@@ -593,32 +579,11 @@ fun NewProspectScreen(
                             )
                                 .show()
 
-                            selectedFilesUris.forEach {
-                                val inputStream =
-                                    context.contentResolver.openInputStream(it)
-                                val filePathName = File(it.path).name
-                                val filename = filePathName.substringAfterLast(":")
-                                val file = File(
-                                    context.cacheDir,
-                                    filename
-                                )
-                                inputStream?.use { input ->
-                                    file.outputStream().use { output ->
-                                        input.copyTo(output)
-                                    }
-                                }
-                                val contentType = context.contentResolver.getType(it)
-                                    ?: "application/octet-stream"
-                                val requestBody =
-                                    file.asRequestBody(contentType.toMediaType())
-                                val multipartBody = MultipartBody.Part.createFormData(
-                                    "archivo",
-                                    file.name,
-                                    requestBody,
-                                )
+                            selectedFilesUris.forEach { selectedFileUri ->
+                                val (multipartBody, filename) = processFile(context, selectedFileUri)
                                 documentViewModel.uploadDocument(
                                     multipartBody,
-                                    file.name,
+                                    filename,
                                     prospectId,
                                 )
                             }

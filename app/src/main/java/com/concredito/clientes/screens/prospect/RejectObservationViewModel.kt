@@ -17,40 +17,6 @@ import javax.inject.Inject
 class RejectObservationViewModel @Inject constructor(private val repository: RejectObservationRepository) :
     ViewModel() {
 
-    var list: List<RejectObservation> by mutableStateOf(listOf())
-    var isLoading: Boolean by mutableStateOf(true)
-
-    init {
-        loadObservations()
-    }
-
-    private fun loadObservations() {
-        viewModelScope.launch {
-            try {
-                when (val response = repository.getAllRejectObservations()) {
-                    is Resource.Success -> {
-                        list = response.data!!
-                        if (list.isNotEmpty()) isLoading = false
-                    }
-
-                    is Resource.Error -> {
-                        isLoading = false
-                        Log.d("Network", "searchProspects: Failed getting prospects")
-                        Log.d("RES", "searchProspects: Failed getting prospects")
-                    }
-
-                    else -> {
-                        isLoading = false
-                    }
-                }
-            } catch (exception: Exception) {
-                isLoading = false
-                Log.d("Network", "searchProspects: ${exception.message}")
-                Log.d("RES", "searchProspects: ${exception.message}")
-            }
-        }
-    }
-
     suspend fun getRejectObservationsById(rejectObservationId: String): Resource<RejectObservation> {
         return repository.getRejectObservationsById(rejectObservationId)
     }

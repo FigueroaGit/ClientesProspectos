@@ -1,6 +1,7 @@
 import android.content.Context
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -21,7 +23,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Logout
 import androidx.compose.material.icons.automirrored.rounded.Send
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.AttachFile
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
@@ -48,7 +49,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -74,6 +74,7 @@ import com.concredito.clientes.ui.theme.Dimens.dimenSmall
 import com.concredito.clientes.ui.theme.Dimens.letterTileSize
 import com.concredito.clientes.ui.theme.Dimens.letterTileSize3x
 import com.concredito.clientes.ui.theme.Fonts
+import com.concredito.clientes.ui.theme.Fonts.fontSizeExtraSmall
 import com.concredito.clientes.ui.theme.Fonts.fontSizeLarge
 import com.concredito.clientes.ui.theme.Fonts.fontSizeMedium
 import com.concredito.clientes.ui.theme.Fonts.fontSizeSmall
@@ -85,7 +86,6 @@ import com.concredito.clientes.util.Constants.LETTER_TILE_FONT_SIZE_3X
 import com.concredito.clientes.util.Constants.ONE_LINE
 import com.concredito.clientes.util.Constants.SPLIT_DELIMITER
 import com.concredito.clientes.util.getRandomColor
-import com.concredito.clientes.util.openFileSelector
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -601,77 +601,77 @@ fun FileSelectorField(
 //TODO: Refactor file item upload composable
 
 @Composable
-fun FileItemUpload(
-    name: String,
-    icon: Painter,
-    contentType: String,
+@Preview
+fun FileItemForUpload(
+    icon: Int = R.drawable.ic_file_type,
+    name: String = "DocumentoProspecto2024.pdf",
 ) {
     Surface(
         modifier = Modifier
-            .width(154.dp)
             .padding(dimenSmall),
         shape = RoundedCornerShape(2.dp),
         tonalElevation = 4.dp
     ) {
-        Column(modifier = Modifier.padding(dimenNormal)) {
+        Column(
+            modifier = Modifier.padding(dimenSmall),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Image(painter = painterResource(id = icon), contentDescription = "")
+            Spacer(modifier = Modifier.padding(vertical = dimenExtraSmall))
             Text(
+                modifier = Modifier.width(80.dp),
                 text = name,
                 fontSize = fontSizeSmall,
                 fontFamily = assistantFamily,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 2
             )
-            Row(
-                Modifier.padding(top = dimenExtraSmall),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(painter = icon, contentDescription = "", tint = Color.Red)
-                Spacer(modifier = Modifier.size(dimenSmall))
-                Text(
-                    text = contentType,
-                    fontSize = fontSizeSmall,
-                    fontFamily = assistantFamily,
-                )
-            }
         }
     }
 }
 
-//TODO: Refactor file item for download composable
-
 @Composable
 @Preview
 fun FileItemForDownload(
-    icon: Int = R.drawable.ic_file_pdf_box,
-    name: String = "DocumentoProspecto.pdf",
+    icon: Int = R.drawable.ic_file_type,
+    name: String = "DocumentoProspecto2024.pdf",
     size: String = "272 KB",
 ) {
     Surface(
         modifier = Modifier
-            .width(154.dp)
+            .width(256.dp)
+            .height(80.dp)
             .padding(dimenSmall),
         shape = RoundedCornerShape(2.dp),
         tonalElevation = 4.dp
     ) {
         Row(
-            Modifier.padding(dimenSmall),
-            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(dimenSmall),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(painter = painterResource(id = icon), contentDescription = "", tint = Color.Red)
-            Column(modifier = Modifier.padding(start = 8.dp)) {
+            Image(painter = painterResource(id = icon), contentDescription = "")
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 8.dp),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Top
+            ) {
                 Text(
                     text = name,
-                    fontSize = fontSizeSmall,
+                    fontSize = fontSizeExtraSmall,
                     fontFamily = assistantFamily,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1
                 )
+                Spacer(modifier = Modifier.weight(1f))
                 Text(
+                    modifier = Modifier.fillMaxWidth(),
                     text = size,
-                    fontSize = fontSizeSmall,
+                    fontSize = fontSizeExtraSmall,
                     fontFamily = assistantFamily,
+                    textAlign = TextAlign.End
                 )
             }
         }

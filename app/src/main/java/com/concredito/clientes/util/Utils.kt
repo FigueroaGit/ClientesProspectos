@@ -2,11 +2,18 @@ package com.concredito.clientes.util
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.ui.graphics.Color
+import com.concredito.clientes.R
+import com.concredito.clientes.model.DocumentType
 import com.concredito.clientes.util.Constants.LIST_OF_CHARACTERS_WITH_ACCENT
 import com.concredito.clientes.util.Constants.LIST_OF_SPECIAL_CHARACTERS
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 import kotlin.math.roundToLong
 import kotlin.random.Random
 
@@ -49,6 +56,20 @@ fun formatSize(sizeInBytes: Long): String {
     }
 }
 
+fun getIconResource(extension: String): Int {
+    return when (extension.uppercase()) {
+        DocumentType.PDF.name -> R.drawable.ic_file_type_pdf
+        DocumentType.DOC.name -> R.drawable.ic_file_type_doc
+        DocumentType.TXT.name -> R.drawable.ic_file_type_txt
+        DocumentType.JPEG.name -> R.drawable.ic_file_type_jpg
+        DocumentType.PNG.name -> R.drawable.ic_file_type_png
+        DocumentType.GIF.name -> R.drawable.ic_file_type_gif
+        DocumentType.ZIP.name -> R.drawable.ic_file_type_zip
+        DocumentType.RAR.name -> R.drawable.ic_file_type_rar
+        else -> R.drawable.ic_file_type
+    }
+}
+
 fun openFileSelector(context: Context, resultLauncher: ActivityResultLauncher<Intent>) {
     // Open the file selector
     val intent = Intent(Intent.ACTION_GET_CONTENT)
@@ -68,4 +89,32 @@ fun openFileSelector(context: Context, resultLauncher: ActivityResultLauncher<In
             Toast.LENGTH_SHORT,
         ).show()
     }
+}
+
+fun getFileDetails(context: Context, selectedFileUri: Uri): Pair<String, String> {
+    val file = File(selectedFileUri.path)
+    val filename = file.name.substringAfterLast(":")
+    val fileType = context.contentResolver.getType(selectedFileUri) ?: "application/octet-stream"
+    return Pair(filename, fileType)
+}
+
+fun getExtension(extension: String): String {
+    return extension.substringAfterLast("/")
+}
+
+fun processFile(context: Context, selectedFileUri: Uri): Pair<MultipartBody.Part, String> {
+    val inputStream = context.contentResolver.openInputStream(selectedFileUri)
+    val (filename, filetype) = getFileDetails(context, selectedFileUri)
+    val file = File(context.cacheDir, filename)
+
+    inputStream?.use { input ->
+        file.outputStream().use { output ->
+            input.copyTo(output)
+        }
+    }
+
+    val requestBody = file.asRequestBody(filetype.toMediaType())
+    val multipartBody = MultipartBody.Part.createFormData("archivo", file.name, requestBody)
+
+    return Pair(multipartBody, file.name)
 }
