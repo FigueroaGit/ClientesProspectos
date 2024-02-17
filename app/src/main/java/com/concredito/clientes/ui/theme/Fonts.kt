@@ -9,4 +9,5 @@ object Fonts {
     val fontSizeMedium = 18.sp
     val fontSizeLarge = 22.sp
     val fontSizeExtraLarge = 32.sp
+    val fontSizeHuge = 80.sp
 }

@@ -1,24 +1,52 @@
 package com.concredito.clientes.screens.main
 
+import ActionTonalButton
 import ProspectsLargeTopAppBar
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.Logout
+import androidx.compose.material.icons.rounded.Logout
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,6 +57,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.concredito.clientes.R
@@ -38,12 +67,24 @@ import com.concredito.clientes.model.Prospect
 import com.concredito.clientes.navigation.AppScreens
 import com.concredito.clientes.screens.prospect.ProspectItem
 import com.concredito.clientes.screens.prospect.ProspectsViewModel
+import com.concredito.clientes.ui.theme.Dimens.densityPixels128
 import com.concredito.clientes.ui.theme.Dimens.densityPixels64
 import com.concredito.clientes.ui.theme.Dimens.densityPixels16
+import com.concredito.clientes.ui.theme.Dimens.densityPixels24
 import com.concredito.clientes.ui.theme.Dimens.densityPixels8
 import com.concredito.clientes.ui.theme.Dimens.densityPixels256
+import com.concredito.clientes.ui.theme.Dimens.densityPixels32
+import com.concredito.clientes.ui.theme.Dimens.densityPixels4
+import com.concredito.clientes.ui.theme.Dimens.densityPixels40
+import com.concredito.clientes.ui.theme.Dimens.densityPixels48
+import com.concredito.clientes.ui.theme.Dimens.densityPixels72
+import com.concredito.clientes.ui.theme.Dimens.densityPixels80
+import com.concredito.clientes.ui.theme.Fonts.fontSizeExtraSmall
+import com.concredito.clientes.ui.theme.Fonts.fontSizeMedium
 import com.concredito.clientes.ui.theme.Fonts.fontSizeNormal
+import com.concredito.clientes.ui.theme.Fonts.fontSizeSmall
 import com.concredito.clientes.ui.theme.assistantFamily
+import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen(
@@ -67,19 +108,7 @@ fun MainScreen(
                 title = stringResource(id = R.string.welcome_user_text, "$username"),
                 additionalText = stringResource(id = R.string.main_screen_app_bar_text),
                 navController = navController,
-                onLogoutClicked = {
-                    PreferencesManager(context).clearCredentials()
-                    navController.navigate(AppScreens.LoginScreen.name) {
-                        popUpTo(navController.graph.startDestinationId)
-                        launchSingleTop = true
-                    }
-                },
-                onMenuClicked = { /*TODO*/ },
-                onShowProspectsClicked = {
-                    navController.navigate(AppScreens.ProspectsScreen.name + "/$promoterId") {
-                        launchSingleTop = true
-                    }
-                },
+                jobRole = stringResource(id = R.string.role_user_text)
             )
         },
     ) { paddingValues ->
@@ -87,9 +116,11 @@ fun MainScreen(
             when (val result = listOfPromoterId) {
                 is Resource.Success -> {
                     if (result.data?.isEmpty() == true) {
-                        ShowEmptyListScreen(navController)
+                        ShowEmptyListScreen(context, navController)
                     } else {
-                        ShowProspectsListScreen(result, navController)
+                        if (promoterId != null) {
+                            ShowProspectsListScreen(context, promoterId, result, navController)
+                        }
                     }
                 }
 
@@ -113,7 +144,7 @@ fun MainScreen(
 
                 is Resource.Error -> {
                     Text(
-                        text = "Error: ${result.message}",
+                        text = "${result.message}",
                         color = Color.Red,
                         modifier = Modifier
                             .fillMaxSize()
@@ -126,7 +157,7 @@ fun MainScreen(
 }
 
 @Composable
-fun ShowEmptyListScreen(navController: NavHostController) {
+fun ShowEmptyListScreen(context: Context, navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -161,16 +192,45 @@ fun ShowEmptyListScreen(navController: NavHostController) {
             onClick = { navController.navigate(AppScreens.NewProspectScreen.name) },
         ) {
             Text(
-                text = stringResource(id = R.string.button_add_prospect),
+                text = stringResource(id = R.string.button_add_prospect_empty_list),
                 fontWeight = FontWeight.Bold,
                 fontFamily = assistantFamily,
             )
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+        TextButton(
+            onClick = {
+                PreferencesManager(context).clearCredentials()
+                navController.navigate(AppScreens.LoginScreen.name) {
+                    popUpTo(navController.graph.startDestinationId)
+                    launchSingleTop = true
+                }
+            },
+            modifier = Modifier
+                .padding(densityPixels16)
+                .fillMaxWidth()
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = stringResource(id = R.string.logout_content_description),
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = assistantFamily,
+                )
+                Icon(
+                    imageVector = Icons.AutoMirrored.Rounded.Logout,
+                    contentDescription = stringResource(id = R.string.logout_content_description),
+                    modifier = Modifier.padding(start = densityPixels8)
+                )
+            }
         }
     }
 }
 
 @Composable
 fun ShowProspectsListScreen(
+    context: Context,
+    promoterId: String,
     listOfPromoterId: Resource<List<Prospect>>,
     navController: NavHostController,
 ) {
@@ -178,7 +238,8 @@ fun ShowProspectsListScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Top,
     ) {
         Row(modifier = Modifier.padding(vertical = densityPixels8, horizontal = densityPixels16)) {
@@ -212,24 +273,88 @@ fun ShowProspectsListScreen(
             )
         }
 
-        Box(
+        Row(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = densityPixels16),
-            contentAlignment = Alignment.BottomCenter,
+                .padding(horizontal = densityPixels16)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Button(
-                modifier = Modifier.padding(densityPixels16),
+            Text(
+                text = stringResource(id = R.string.label_dashboard_actions),
+                fontSize = fontSizeMedium,
+                fontWeight = FontWeight.Bold,
+                fontFamily = assistantFamily
+            )
+        }
+
+        Row {
+            ActionTonalButton(
                 onClick = {
                     navController.navigate(AppScreens.NewProspectScreen.name) {
                         launchSingleTop = true
                     }
                 },
-            ) {
+                modifier = Modifier
+                    .padding(
+                        top = densityPixels16,
+                        bottom = densityPixels16,
+                        start = densityPixels24,
+                        end = densityPixels8
+                    ),
+                icon = R.drawable.ic_add_info,
+                text = stringResource(id = R.string.button_add_prospect),
+                fontWeight = FontWeight.Bold,
+                fontFamily = assistantFamily,
+                fontSize = fontSizeExtraSmall,
+                textColor = MaterialTheme.colorScheme.onSurface
+            )
+
+            ActionTonalButton(
+                onClick = {
+                    navController.navigate(AppScreens.ProspectsScreen.name + "/$promoterId") {
+                        launchSingleTop = true
+                    }
+                },
+                modifier = Modifier
+                    .padding(
+                        top = densityPixels16,
+                        bottom = densityPixels16,
+                        start = densityPixels24,
+                        end = densityPixels8
+                    ),
+                icon = R.drawable.ic_show_data,
+                text = stringResource(id = R.string.button_show_all_prospects),
+                fontWeight = FontWeight.Bold,
+                fontFamily = assistantFamily,
+                fontSize = fontSizeExtraSmall,
+                textColor = MaterialTheme.colorScheme.onSurface
+            )
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+        TextButton(
+            onClick = {
+                PreferencesManager(context).clearCredentials()
+                navController.navigate(AppScreens.LoginScreen.name) {
+                    popUpTo(navController.graph.startDestinationId)
+                    launchSingleTop = true
+                }
+            },
+            modifier = Modifier
+                .padding(densityPixels16)
+                .fillMaxWidth()
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = stringResource(id = R.string.button_add_prospect),
+                    text = stringResource(id = R.string.logout_content_description),
                     fontWeight = FontWeight.Bold,
                     fontFamily = assistantFamily,
+                )
+                Icon(
+                    imageVector = Icons.AutoMirrored.Rounded.Logout,
+                    contentDescription = stringResource(id = R.string.logout_content_description),
+                    modifier = Modifier.padding(start = densityPixels8)
                 )
             }
         }

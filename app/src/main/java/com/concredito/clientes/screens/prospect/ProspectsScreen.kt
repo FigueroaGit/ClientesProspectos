@@ -49,11 +49,11 @@ import com.concredito.clientes.navigation.AppScreens
 import com.concredito.clientes.ui.theme.Dimens.densityPixels16
 import com.concredito.clientes.ui.theme.Dimens.densityPixels8
 import com.concredito.clientes.ui.theme.Dimens.densityPixels48
+import com.concredito.clientes.ui.theme.Fonts.fontSizeLarge
 import com.concredito.clientes.ui.theme.Fonts.fontSizeMedium
 import com.concredito.clientes.ui.theme.Fonts.fontSizeNormal
 import com.concredito.clientes.ui.theme.assistantFamily
 import com.concredito.clientes.util.Constants.FIRST
-import com.concredito.clientes.util.Constants.LETTER_TILE_FONT_SIZE_2X
 import com.concredito.clientes.util.Constants.ONE_LINE
 import com.concredito.clientes.util.Constants.SECOND
 import com.concredito.clientes.util.Constants.THIRD
@@ -70,7 +70,7 @@ fun ProspectsScreen(
             isHome = false,
             icon = Icons.AutoMirrored.Rounded.ArrowBack,
             navController = navController,
-            onBackPressed = { navController.navigate(AppScreens.MainScreen.name) },
+            onBackPressed = { navController.popBackStack() },
         )
     }) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
@@ -175,7 +175,7 @@ fun ProspectList(
 
         is Resource.Error -> {
             Text(
-                text = "Error: ${listOfProspects.message}",
+                text = "${listOfProspects.message}",
                 color = Color.Red,
                 modifier = Modifier
                     .fillMaxSize()
@@ -218,7 +218,7 @@ fun ProspectInfo(prospect: Prospect) {
             LetterTile(
                 text = prospect.name.take(1),
                 size = densityPixels48,
-                fontSize = LETTER_TILE_FONT_SIZE_2X,
+                fontSize = fontSizeLarge,
             )
             Column(modifier = Modifier.padding(densityPixels8)) {
                 Text(

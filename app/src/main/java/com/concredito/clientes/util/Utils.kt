@@ -8,8 +8,16 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.ui.graphics.Color
 import com.concredito.clientes.R
 import com.concredito.clientes.model.DocumentType
+import com.concredito.clientes.util.Constants.BYTE
+import com.concredito.clientes.util.Constants.COLON
+import com.concredito.clientes.util.Constants.FILE_TYPE
+import com.concredito.clientes.util.Constants.KILOBYTE
+import com.concredito.clientes.util.Constants.SELECT_FILES
 import com.concredito.clientes.util.Constants.LIST_OF_CHARACTERS_WITH_ACCENT
 import com.concredito.clientes.util.Constants.LIST_OF_SPECIAL_CHARACTERS
+import com.concredito.clientes.util.Constants.MEGABYTE
+import com.concredito.clientes.util.Constants.NOT_FOUND_APP
+import com.concredito.clientes.util.Constants.SLASH
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -50,9 +58,9 @@ fun formatSize(sizeInBytes: Long): String {
     val mb = kb * kb
 
     return when {
-        sizeInBytes < kb -> "$sizeInBytes B"
-        sizeInBytes < mb -> "${(sizeInBytes.toDouble() / kb).roundToLong()} KB"
-        else -> "${(sizeInBytes.toDouble() / mb).roundToLong()} MB"
+        sizeInBytes < kb -> "$sizeInBytes $BYTE"
+        sizeInBytes < mb -> "${(sizeInBytes.toDouble() / kb).roundToLong()} $KILOBYTE"
+        else -> "${(sizeInBytes.toDouble() / mb).roundToLong()} $MEGABYTE"
     }
 }
 
@@ -77,15 +85,16 @@ fun openFileSelector(context: Context, resultLauncher: ActivityResultLauncher<In
     intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
     intent.addCategory(Intent.CATEGORY_OPENABLE)
     val chooserIntent =
-        Intent.createChooser(intent, "Seleccionar archivo")
+        Intent.createChooser(intent, SELECT_FILES)
     // Check if there's any file selector available.
-    if (intent.resolveActivity(context.packageManager) != null) {
+    if (intent.resolveActivity(context.packageManager) != null ||
+        chooserIntent.resolveActivity(context.packageManager) != null) {
         // Listen to the result of the file selector.
         resultLauncher.launch(chooserIntent)
     } else {
         Toast.makeText(
             context,
-            "No se encontró una aplicación para seleccionar archivos",
+            NOT_FOUND_APP,
             Toast.LENGTH_SHORT,
         ).show()
     }
@@ -93,13 +102,13 @@ fun openFileSelector(context: Context, resultLauncher: ActivityResultLauncher<In
 
 fun getFileDetails(context: Context, selectedFileUri: Uri): Pair<String, String> {
     val file = File(selectedFileUri.path)
-    val filename = file.name.substringAfterLast(":")
-    val fileType = context.contentResolver.getType(selectedFileUri) ?: "application/octet-stream"
+    val filename = file.name.substringAfterLast(COLON)
+    val fileType = context.contentResolver.getType(selectedFileUri) ?: FILE_TYPE
     return Pair(filename, fileType)
 }
 
 fun getExtension(extension: String): String {
-    return extension.substringAfterLast("/")
+    return extension.substringAfterLast(SLASH)
 }
 
 fun processFile(context: Context, selectedFileUri: Uri): Pair<MultipartBody.Part, String> {

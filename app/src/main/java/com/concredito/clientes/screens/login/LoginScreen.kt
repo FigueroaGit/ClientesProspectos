@@ -124,7 +124,7 @@ fun LoginScreen(
             )
 
             OutlinedTextField(
-                value = username,
+                value = username.trim(),
                 onValueChange = { user ->
                     username = user
                     usernameSupportingText = null
@@ -167,7 +167,7 @@ fun LoginScreen(
             )
 
             OutlinedTextField(
-                value = password,
+                value = password.trim(),
                 onValueChange = { passwd ->
                     password = passwd
                     passwordSupportingText = null

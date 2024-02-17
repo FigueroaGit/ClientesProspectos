@@ -144,7 +144,7 @@ fun NewProspectScreen(
     if (showExitDialog) {
         ExitDialog(
             onConfirm = {
-                navController.navigate(AppScreens.MainScreen.name)
+                navController.popBackStack()
             },
             onDismiss = {
                 showExitDialog = false
@@ -171,7 +171,7 @@ fun NewProspectScreen(
                     prospectRFC.isEmpty() &&
                     selectedFilesUris.isEmpty()
                 ) {
-                    navController.navigate(AppScreens.MainScreen.name)
+                    navController.popBackStack()
                 } else {
                     showExitDialog = true
                 }
@@ -595,7 +595,10 @@ fun NewProspectScreen(
                                     prospectId,
                                 )
                             }
-                            navController.navigate(AppScreens.ProspectsScreen.name + "/$promoterId")
+                            navController.navigate(AppScreens.ProspectsScreen.name + "/$promoterId") {
+                                navController.popBackStack()
+                                launchSingleTop = true
+                            }
                         }
                     },
                     modifier = Modifier.padding(densityPixels16),

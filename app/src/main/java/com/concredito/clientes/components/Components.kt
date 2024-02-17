@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,18 +21,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.Logout
 import androidx.compose.material.icons.automirrored.rounded.Send
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
-import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -49,10 +49,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -61,7 +63,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
@@ -79,15 +81,15 @@ import com.concredito.clientes.ui.theme.Dimens.densityPixels48
 import com.concredito.clientes.ui.theme.Dimens.densityPixels72
 import com.concredito.clientes.ui.theme.Dimens.densityPixels80
 import com.concredito.clientes.ui.theme.Fonts
+import com.concredito.clientes.ui.theme.Fonts.fontSizeExtraLarge
 import com.concredito.clientes.ui.theme.Fonts.fontSizeExtraSmall
 import com.concredito.clientes.ui.theme.Fonts.fontSizeLarge
 import com.concredito.clientes.ui.theme.Fonts.fontSizeMedium
+import com.concredito.clientes.ui.theme.Fonts.fontSizeNormal
 import com.concredito.clientes.ui.theme.Fonts.fontSizeSmall
 import com.concredito.clientes.ui.theme.assistantFamily
 import com.concredito.clientes.util.Constants
 import com.concredito.clientes.util.Constants.EMPTY_STRING
-import com.concredito.clientes.util.Constants.LETTER_TILE_FONT_SIZE
-import com.concredito.clientes.util.Constants.LETTER_TILE_FONT_SIZE_3X
 import com.concredito.clientes.util.Constants.ONE_LINE
 import com.concredito.clientes.util.Constants.SPLIT_DELIMITER
 import com.concredito.clientes.util.Constants.TWO_LINES
@@ -101,7 +103,6 @@ fun ProspectsAppBar(
     icon: ImageVector? = null,
     navController: NavController,
     onBackPressed: () -> Unit = {},
-    onLogoutPressed: () -> Unit = {},
 ) {
     TopAppBar(
         title = {
@@ -116,7 +117,7 @@ fun ProspectsAppBar(
                     LetterTile(
                         text = usernameLetter.take(1).uppercase(),
                         size = densityPixels40,
-                        fontSize = LETTER_TILE_FONT_SIZE,
+                        fontSize = fontSizeMedium,
                     )
                     Text(
                         text = title,
@@ -150,16 +151,6 @@ fun ProspectsAppBar(
                 Box {}
             }
         },
-        actions = {
-            if (isHome) {
-                IconButton(onClick = { onLogoutPressed.invoke() }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.Logout,
-                        contentDescription = stringResource(id = R.string.logout_content_description),
-                    )
-                }
-            }
-        },
     )
 }
 
@@ -167,13 +158,11 @@ fun ProspectsAppBar(
 @Composable
 fun ProspectsLargeTopAppBar(
     title: String,
-    letterTileSize: Dp = densityPixels72, // Default size for the LetterTile
-    fontSize: Int = LETTER_TILE_FONT_SIZE_3X,
-    additionalText: String = EMPTY_STRING, // Additional text to be displayed
+    letterTileSize: Dp = densityPixels72,
+    fontSize: TextUnit = fontSizeExtraLarge,
+    additionalText: String = EMPTY_STRING,
+    jobRole: String,
     navController: NavController,
-    onLogoutClicked: () -> Unit,
-    onMenuClicked: () -> Unit, // Callback for hamburger icon click
-    onShowProspectsClicked: () -> Unit,
 ) {
     LargeTopAppBar(
         modifier = Modifier
@@ -194,16 +183,13 @@ fun ProspectsLargeTopAppBar(
                         text = title,
                         fontFamily = assistantFamily,
                     )
-                    Button(
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = { onShowProspectsClicked.invoke() },
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.button_show_all_prospects),
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = assistantFamily,
-                        )
-                    }
+                    Text(
+                        text = jobRole,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontFamily = assistantFamily,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = fontSizeNormal
+                    )
                 }
             }
         },
@@ -212,12 +198,11 @@ fun ProspectsLargeTopAppBar(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                IconButton(onClick = onMenuClicked) {
-                    Icon(
-                        imageVector = Icons.Rounded.Menu,
-                        contentDescription = stringResource(id = R.string.menu_icon_content_description),
-                    )
-                }
+                Image(
+                    modifier = Modifier.size(densityPixels40),
+                    painter = painterResource(id = R.drawable.ic_finacredito),
+                    contentDescription = stringResource(id = R.string.icon_content_description),
+                )
 
                 if (additionalText.isNotEmpty()) {
                     Text(
@@ -230,19 +215,11 @@ fun ProspectsLargeTopAppBar(
                 }
             }
         },
-        actions = {
-            IconButton(onClick = onLogoutClicked) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Rounded.Logout,
-                    contentDescription = stringResource(id = R.string.logout_content_description),
-                )
-            }
-        },
     )
 }
 
 @Composable
-fun LetterTile(text: String, size: Dp, fontSize: Int, modifier: Modifier = Modifier) {
+fun LetterTile(text: String, size: Dp, fontSize: TextUnit, modifier: Modifier = Modifier) {
     val randomColor = getRandomColor()
 
     Box(
@@ -262,7 +239,7 @@ fun LetterTile(text: String, size: Dp, fontSize: Int, modifier: Modifier = Modif
                 .padding(densityPixels8)
                 .align(Alignment.Center),
             textAlign = TextAlign.Center,
-            fontSize = fontSize.sp,
+            fontSize = fontSize,
         )
     }
 }
@@ -553,6 +530,64 @@ fun ObservationsDialog(
 }
 
 @Composable
+fun ActionTonalButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    shape: Shape = RoundedCornerShape(densityPixels8),
+    contentPadding: PaddingValues = PaddingValues(
+        top = densityPixels4,
+        start = densityPixels4,
+        end = densityPixels16,
+        bottom = densityPixels4
+    ),
+    icon: Int,
+    text: String,
+    fontWeight: FontWeight = FontWeight.Bold,
+    fontFamily: FontFamily,
+    fontSize: TextUnit,
+    iconBackgroundColor: Color = MaterialTheme.colorScheme.background,
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
+    buttonColor: Color = MaterialTheme.colorScheme.primary,
+    iconColor: Color = MaterialTheme.colorScheme.primary,
+) {
+    FilledTonalButton(
+        onClick = onClick,
+        modifier = modifier,
+        shape = shape,
+        contentPadding = contentPadding
+    ) {
+        Column(
+            horizontalAlignment = Alignment.Start,
+            modifier = Modifier
+                .padding(densityPixels8)
+        ) {
+            Surface(
+                modifier = Modifier.size(densityPixels40),
+                shape = CircleShape,
+                color = iconBackgroundColor
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .padding(densityPixels8)
+                        .size(Dimens.densityPixels32),
+                    painter = painterResource(id = icon),
+                    contentDescription = stringResource(id = R.string.icon_content_description),
+                    tint = iconColor
+                )
+            }
+            Spacer(modifier = Modifier.padding(densityPixels4))
+            Text(
+                text = text,
+                fontWeight = fontWeight,
+                fontFamily = fontFamily,
+                fontSize = fontSize,
+                color = textColor
+            )
+        }
+    }
+}
+
+@Composable
 fun HeaderFileRow(text: String, icon: ImageVector, modifier: Modifier = Modifier) {
     Row(
         horizontalArrangement = Arrangement.Center,
@@ -623,7 +658,10 @@ fun FileItemForUpload(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Image(painter = painterResource(id = icon), contentDescription = stringResource(id = R.string.image_icon_content_description))
+            Image(
+                painter = painterResource(id = icon),
+                contentDescription = stringResource(id = R.string.image_icon_content_description)
+            )
             Spacer(modifier = Modifier.padding(vertical = densityPixels4))
             Text(
                 modifier = Modifier.width(densityPixels80),
@@ -656,7 +694,10 @@ fun FileItemForDownload(
             modifier = Modifier.padding(densityPixels8),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(painter = painterResource(id = icon), contentDescription = stringResource(id = R.string.image_icon_content_description))
+            Image(
+                painter = painterResource(id = icon),
+                contentDescription = stringResource(id = R.string.image_icon_content_description)
+            )
             Column(
                 modifier = Modifier
                     .weight(1f)

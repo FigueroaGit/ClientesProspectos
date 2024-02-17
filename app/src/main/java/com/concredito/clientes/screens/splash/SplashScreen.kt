@@ -92,5 +92,7 @@ private suspend fun animateLogo(scale: Animatable<Float, AnimationVector1D>) {
 
 private suspend fun delayAndNavigate(navController: NavHostController) {
     delay(DELAY_TIME_TWO_SECONDS)
-    navController.navigate(AppScreens.LoginScreen.name)
+    navController.navigate(AppScreens.LoginScreen.name) {
+        navController.popBackStack()
+    }
 }

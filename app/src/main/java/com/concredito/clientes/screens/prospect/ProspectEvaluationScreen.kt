@@ -64,16 +64,15 @@ import com.concredito.clientes.model.Document
 import com.concredito.clientes.model.Prospect
 import com.concredito.clientes.model.ProspectStatus
 import com.concredito.clientes.model.RejectObservation
-import com.concredito.clientes.navigation.AppScreens
 import com.concredito.clientes.ui.theme.Dimens.densityPixels4
 import com.concredito.clientes.ui.theme.Dimens.densityPixels16
 import com.concredito.clientes.ui.theme.Dimens.densityPixels8
 import com.concredito.clientes.ui.theme.Dimens.densityPixels160
+import com.concredito.clientes.ui.theme.Fonts.fontSizeHuge
 import com.concredito.clientes.ui.theme.Fonts.fontSizeLarge
 import com.concredito.clientes.ui.theme.Fonts.fontSizeMedium
 import com.concredito.clientes.ui.theme.Fonts.fontSizeNormal
 import com.concredito.clientes.ui.theme.assistantFamily
-import com.concredito.clientes.util.Constants.LETTER_TILE_FONT_SIZE_4X
 import com.concredito.clientes.util.Constants.MESSAGE_URI
 import com.concredito.clientes.util.Constants.ONE_LINE
 import com.concredito.clientes.util.Constants.PHONE_URI
@@ -90,8 +89,6 @@ fun ProspectEvaluationScreen(
     documentViewModel: DocumentViewModel = hiltViewModel(),
     rejectObservationViewModel: RejectObservationViewModel = hiltViewModel(),
 ) {
-    val promoterId = prospectsViewModel.getPromoterId()
-
     val prospect = produceState<Resource<Prospect>>(initialValue = Resource.Loading()) {
         value = prospectsViewModel.getProspectById(prospectId)
     }.value
@@ -125,9 +122,7 @@ fun ProspectEvaluationScreen(
             icon = Icons.AutoMirrored.Rounded.ArrowBack,
             navController = navController,
             onBackPressed = {
-                navController.navigate(AppScreens.ProspectsScreen.name + "/$promoterId") {
-                    launchSingleTop = true
-                }
+                navController.popBackStack()
             },
         )
     }) { paddingValues ->
@@ -162,7 +157,7 @@ fun ProspectEvaluationScreen(
                             LetterTile(
                                 text = prospect.data.name.take(1),
                                 size = densityPixels160,
-                                fontSize = LETTER_TILE_FONT_SIZE_4X,
+                                fontSize = fontSizeHuge,
                                 modifier = Modifier
                                     .align(
                                         Alignment.CenterHorizontally,
@@ -266,7 +261,7 @@ fun ProspectEvaluationScreen(
                                             ),
                                         )
 
-                                        navController.navigate(AppScreens.ProspectsScreen.name + "/$promoterId")
+                                        navController.popBackStack()
                                     },
                                 ) {
                                     Row(
@@ -571,8 +566,7 @@ fun ProspectEvaluationScreen(
                                     rejectObservationViewModel.addRejectObservations(
                                         rejectObservation,
                                     )
-
-                                    navController.navigate(AppScreens.ProspectsScreen.name + "/$promoterId")
+                                    navController.popBackStack()
                                 },
                             )
                         }
