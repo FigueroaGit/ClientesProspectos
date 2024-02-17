@@ -23,17 +23,6 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import kotlin.math.roundToLong
-import kotlin.random.Random
-
-fun getRandomColor(): Color {
-    val random = Random.Default
-    return Color(
-        red = random.nextFloat(),
-        green = random.nextFloat(),
-        blue = random.nextFloat(),
-        alpha = 1f,
-    )
-}
 
 fun filterNameInput(input: String): String {
     return input.filter {

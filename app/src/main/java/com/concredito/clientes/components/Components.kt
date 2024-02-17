@@ -93,7 +93,6 @@ import com.concredito.clientes.util.Constants.EMPTY_STRING
 import com.concredito.clientes.util.Constants.ONE_LINE
 import com.concredito.clientes.util.Constants.SPLIT_DELIMITER
 import com.concredito.clientes.util.Constants.TWO_LINES
-import com.concredito.clientes.util.getRandomColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -220,13 +219,11 @@ fun ProspectsLargeTopAppBar(
 
 @Composable
 fun LetterTile(text: String, size: Dp, fontSize: TextUnit, modifier: Modifier = Modifier) {
-    val randomColor = getRandomColor()
-
     Box(
         modifier = modifier
             .size(size)
             .background(
-                color = randomColor,
+                color = MaterialTheme.colorScheme.inversePrimary,
                 shape = CircleShape,
             )
             .clip(CircleShape),
