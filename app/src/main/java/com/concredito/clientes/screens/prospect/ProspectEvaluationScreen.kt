@@ -60,7 +60,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.concredito.clientes.R
 import com.concredito.clientes.data.Resource
-import com.concredito.clientes.model.Document
+import com.concredito.clientes.model.File
 import com.concredito.clientes.model.Prospect
 import com.concredito.clientes.model.ProspectStatus
 import com.concredito.clientes.model.RejectObservation
@@ -86,15 +86,15 @@ fun ProspectEvaluationScreen(
     navController: NavHostController = NavHostController(LocalContext.current),
     prospectId: String,
     prospectsViewModel: ProspectsViewModel = hiltViewModel(),
-    documentViewModel: DocumentViewModel = hiltViewModel(),
+    fileViewModel: FileViewModel = hiltViewModel(),
     rejectObservationViewModel: RejectObservationViewModel = hiltViewModel(),
 ) {
     val prospect = produceState<Resource<Prospect>>(initialValue = Resource.Loading()) {
         value = prospectsViewModel.getProspectById(prospectId)
     }.value
 
-    val documents = produceState<Resource<List<Document>>>(initialValue = Resource.Loading()) {
-        value = documentViewModel.getDocumentsByProspect(prospectId)
+    val files = produceState<Resource<List<File>>>(initialValue = Resource.Loading()) {
+        value = fileViewModel.getFilesByProspect(prospectId)
     }.value
 
     val observation =
@@ -478,7 +478,7 @@ fun ProspectEvaluationScreen(
                                 }
                             }
                         }
-                        documents.data?.let {
+                        files.data?.let {
                             Column(modifier = Modifier.padding(densityPixels16)) {
                                 Text(
                                     text = stringResource(id = R.string.label_attachments_text),
@@ -489,9 +489,9 @@ fun ProspectEvaluationScreen(
                                 LazyRow(modifier = Modifier.padding(vertical = 8.dp)) {
                                     items(items = it) {
                                         FileItemForDownload(
-                                            icon = getIconResource(getExtension(it.tipoArchivo)),
-                                            name = it.nombre,
-                                            size = formatSize(it.tamanoArchivo.toLong())
+                                            icon = getIconResource(getExtension(it.fileType)),
+                                            name = it.name,
+                                            size = formatSize(it.fileSize.toLong())
                                         )
                                     }
                                 }

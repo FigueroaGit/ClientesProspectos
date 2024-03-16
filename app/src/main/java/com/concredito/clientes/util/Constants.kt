@@ -11,6 +11,7 @@ object Constants {
     const val SELECT_FILES = "Seleccionar archivos"
     const val NOT_FOUND_APP = "No se encontró una aplicación para seleccionar archivos"
     const val FILE_TYPE = "application/octet-stream"
+    const val FILE = "archivo"
     const val BYTE = "B"
     const val KILOBYTE = "KB"
     const val MEGABYTE = "MB"

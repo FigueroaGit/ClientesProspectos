@@ -5,11 +5,11 @@ import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
-import androidx.compose.ui.graphics.Color
 import com.concredito.clientes.R
-import com.concredito.clientes.model.DocumentType
+import com.concredito.clientes.model.FileType
 import com.concredito.clientes.util.Constants.BYTE
 import com.concredito.clientes.util.Constants.COLON
+import com.concredito.clientes.util.Constants.FILE
 import com.concredito.clientes.util.Constants.FILE_TYPE
 import com.concredito.clientes.util.Constants.KILOBYTE
 import com.concredito.clientes.util.Constants.SELECT_FILES
@@ -55,14 +55,14 @@ fun formatSize(sizeInBytes: Long): String {
 
 fun getIconResource(extension: String): Int {
     return when (extension.uppercase()) {
-        DocumentType.PDF.name -> R.drawable.ic_file_type_pdf
-        DocumentType.DOC.name -> R.drawable.ic_file_type_doc
-        DocumentType.TXT.name -> R.drawable.ic_file_type_txt
-        DocumentType.JPEG.name -> R.drawable.ic_file_type_jpg
-        DocumentType.PNG.name -> R.drawable.ic_file_type_png
-        DocumentType.GIF.name -> R.drawable.ic_file_type_gif
-        DocumentType.ZIP.name -> R.drawable.ic_file_type_zip
-        DocumentType.RAR.name -> R.drawable.ic_file_type_rar
+        FileType.PDF.name -> R.drawable.ic_file_type_pdf
+        FileType.DOC.name -> R.drawable.ic_file_type_doc
+        FileType.TXT.name -> R.drawable.ic_file_type_txt
+        FileType.JPEG.name -> R.drawable.ic_file_type_jpg
+        FileType.PNG.name -> R.drawable.ic_file_type_png
+        FileType.GIF.name -> R.drawable.ic_file_type_gif
+        FileType.ZIP.name -> R.drawable.ic_file_type_zip
+        FileType.RAR.name -> R.drawable.ic_file_type_rar
         else -> R.drawable.ic_file_type
     }
 }
@@ -112,7 +112,7 @@ fun processFile(context: Context, selectedFileUri: Uri): Pair<MultipartBody.Part
     }
 
     val requestBody = file.asRequestBody(filetype.toMediaType())
-    val multipartBody = MultipartBody.Part.createFormData("archivo", file.name, requestBody)
+    val multipartBody = MultipartBody.Part.createFormData(FILE, file.name, requestBody)
 
     return Pair(multipartBody, file.name)
 }

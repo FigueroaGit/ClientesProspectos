@@ -2,11 +2,11 @@ package com.concredito.clientes.di
 
 import android.content.Context
 import com.concredito.clientes.data.PreferencesManager
-import com.concredito.clientes.network.DocumentAPI
+import com.concredito.clientes.network.FileAPI
 import com.concredito.clientes.network.PromoterAPI
 import com.concredito.clientes.network.ProspectAPI
 import com.concredito.clientes.network.RejectObservationAPI
-import com.concredito.clientes.repository.DocumentRepository
+import com.concredito.clientes.repository.FileRepository
 import com.concredito.clientes.repository.PromoterRepository
 import com.concredito.clientes.repository.ProspectRepository
 import com.concredito.clientes.repository.RejectObservationRepository
@@ -40,7 +40,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideDocumentRepository(API: DocumentAPI) = DocumentRepository(API)
+    fun provideDocumentRepository(API: FileAPI) = FileRepository(API)
 
     @Singleton
     @Provides
@@ -64,10 +64,10 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideDocumentAPI(): DocumentAPI {
+    fun provideDocumentAPI(): FileAPI {
         return Retrofit.Builder().baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create()).build()
-            .create(DocumentAPI::class.java)
+            .create(FileAPI::class.java)
     }
 
     @Singleton

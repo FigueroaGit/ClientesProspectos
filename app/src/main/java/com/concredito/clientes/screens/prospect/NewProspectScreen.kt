@@ -88,7 +88,7 @@ import java.util.UUID
 fun NewProspectScreen(
     navController: NavHostController,
     prospectsViewModel: ProspectsViewModel = hiltViewModel(),
-    documentViewModel: DocumentViewModel = hiltViewModel(),
+    fileViewModel: FileViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val promoterId = prospectsViewModel.getPromoterId()
@@ -589,7 +589,7 @@ fun NewProspectScreen(
                                     context,
                                     selectedFileUri
                                 )
-                                documentViewModel.uploadDocument(
+                                fileViewModel.uploadFile(
                                     multipartBody,
                                     filename,
                                     prospectId,

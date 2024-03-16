@@ -1,6 +1,6 @@
 package com.concredito.clientes.model
 
-enum class DocumentType {
+enum class FileType {
     PDF,
     DOC,
     TXT,
