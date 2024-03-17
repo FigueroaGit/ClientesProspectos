@@ -14,7 +14,7 @@
 ### Light mode
 
 <div align="center">
-  <img width="192" alt="finacredito-login" src="/screenshots/login_light_mode.png"> <img width="192" alt="finacredito-home" src="/screenshots/home_light_mode.png"> <img width="192" alt="finacredito-capture-data" src="/screenshots/capture_data_light_mode.png"> <img width="192" alt="finacredito-data-list" src="/screenshots/data_list_light_mode.png"> <img width="192" alt="finacredito-prospect-information" src="/screenshots/prospect_information_light_mode.png">
+  <img width="160" alt="finacredito-login" src="/screenshots/login_light_mode.png"> <img width="160" alt="finacredito-home" src="/screenshots/home_light_mode.png"> <img width="160" alt="finacredito-capture-data" src="/screenshots/capture_data_light_mode.png"> <img width="160" alt="finacredito-data-list" src="/screenshots/data_list_light_mode.png"> <img width="160" alt="finacredito-prospect-information" src="/screenshots/prospect_information_light_mode.png">
 </div>
 
 ### Dark mode
