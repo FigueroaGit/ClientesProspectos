@@ -20,14 +20,14 @@
 ### Dark mode
 
 <div align="center">
-  <img width="192" alt="finacredito-login-dark" src="/screenshots/login_dark_mode.png"> <img width="192" alt="finacredito-home-dark" src="/screenshots/home_dark_mode.png"> <img width="192" alt="finacredito-capture-data-dark" src="/screenshots/capture_data_dark_mode.png"> <img width="192" alt="finacredito-data-list-dark" src="/screenshots/data_list_dark_mode.png"> <img width="192" alt="finacredito-prospect-information-dark" src="/screenshots/prospect_information_dark_mode.png">
+  <img width="160" alt="finacredito-login-dark" src="/screenshots/login_dark_mode.png"> <img width="160" alt="finacredito-home-dark" src="/screenshots/home_dark_mode.png"> <img width="160" alt="finacredito-capture-data-dark" src="/screenshots/capture_data_dark_mode.png"> <img width="160" alt="finacredito-data-list-dark" src="/screenshots/data_list_dark_mode.png"> <img width="160" alt="finacredito-prospect-information-dark" src="/screenshots/prospect_information_dark_mode.png">
 </div>
 
 ### Dynamic Colors - Android 12+
 Dynamic Color enables users to personalize their devices to align tonally with the color scheme of their personal wallpaper or through a selected color in the wallpaper picker. You can read more about Dynamic Colors [here](https://developer.android.com/develop/ui/views/theming/dynamic-colors).
 
 <div align="center">
-  <img width="192" alt="finacredito-login-dynamic" src="/screenshots/login_dynamic_mode.png"> <img width="192" alt="finacredito-home-dynamic" src="/screenshots/home_dynamic_mode.png"> <img width="192" alt="finacredito-capture-data-dynamic" src="/screenshots/capture_data_dynamic_mode.png"> <img width="192" alt="finacredito-data-list-dynamic" src="/screenshots/data_list_dynamic_mode.png"> <img width="192" alt="finacredito-prospect-information-dynamic" src="/screenshots/prospect_information_dynamic_mode.png">
+  <img width="160" alt="finacredito-login-dynamic" src="/screenshots/login_dynamic_mode.png"> <img width="160" alt="finacredito-home-dynamic" src="/screenshots/home_dynamic_mode.png"> <img width="160" alt="finacredito-capture-data-dynamic" src="/screenshots/capture_data_dynamic_mode.png"> <img width="160" alt="finacredito-data-list-dynamic" src="/screenshots/data_list_dynamic_mode.png"> <img width="160" alt="finacredito-prospect-information-dynamic" src="/screenshots/prospect_information_dynamic_mode.png">
 </div>
 
 ## Example of App working
