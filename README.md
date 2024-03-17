@@ -39,7 +39,6 @@ https://github.com/FigueroaGit/ClientesProspectos/assets/37342701/7fb7f250-e618-
 * [100% Kotlin](https://kotlinlang.org/)
     + [Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html) - perform background operations
     + [Kotlin Symbol Processing](https://kotlinlang.org/docs/ksp-overview.html) - enable compiler plugins
-    + [Kotlin Serialization](https://kotlinlang.org/docs/serialization.html) - parse [JSON](https://www.json.org/json-en.html)
 * [Jetpack](https://developer.android.com/jetpack)
     - [Compose](https://developer.android.com/jetpack/compose) - modern, native UI kit
     - [Compose Navigation](https://developer.android.com/jetpack/compose/navigation) - in-app navigation
