@@ -10,6 +10,25 @@
 </p>
 </br>
 
+## 📷 Screenshots (Light & Dark Color Schemes)
+### Light mode
+<div align="center">
+  <img width="300" alt="finacredito-login" src="/screenshots/login_light_mode.png"> <img width="300" alt="finacredito-home" src="/screenshots/home_light_mode.png"> <img width="300" alt="finacredito-capture-data" src="/screenshots/capture_data_light_mode.png"> <img width="300" alt="finacredito-data-list" src="/screenshots/data_list_light_mode.png"> <img width="300" alt="finacredito-prospect-information" src="/screenshots/prospect_information_light_mode.png">
+</div>
+
+### Dark mode
+<div align="center">
+  <img width="300" alt="finacredito-login-dark" src="/screenshots/login_dark_mode.png"> <img width="300" alt="finacredito-home-dark" src="/screenshots/home_dark_mode.png"> <img width="300" alt="finacredito-capture-data-dark" src="/screenshots/capture_data_dark_mode.png"> <img width="300" alt="finacredito-data-list-dark" src="/screenshots/data_list_dark_mode.png"> <img width="300" alt="finacredito-prospect-information-dark" src="/screenshots/prospect_information_dark_mode.png">
+</div>
+
+### Dynamic Colors - Android 12+
+Dynamic Color enables users to personalize their devices to align tonally with the color scheme of their personal wallpaper or through a selected color in the wallpaper picker. You can read more about Dynamic Colors [here](https://developer.android.com/develop/ui/views/theming/dynamic-colors).
+
+
+## Example of App working
+
+https://github.com/FigueroaGit/ClientesProspectos/assets/37342701/7fb7f250-e618-45b8-9157-eaccfbefb3a7
+
 ## Tech stack & Open-source libraries
 - Minimum SDK level 24
 * [100% Kotlin](https://kotlinlang.org/)
@@ -33,12 +52,35 @@
 - [Retrofit2 & OkHttp3](https://github.com/square/retrofit): Construct the REST APIs and paging network data.
 - [ksp](https://github.com/google/ksp): Kotlin Symbol Processing API.tines Flow.
 
-## 📷 Screenshots (Light & Dark Color Schemes)
+## Get Started
 
-<div align="center">
-  <img width="300" alt="finacredito-login" src="/screenshots/login_light_mode.png"> <img width="300" alt="finacredito-home" src="/screenshots/home_light_mode.png"> <img width="300" alt="finacredito-capture-data" src="/screenshots/capture_data_light_mode.png"> <img width="300" alt="finacredito-data-list" src="/screenshots/data_list_light_mode.png"> <img width="300" alt="finacredito-prospect-information" src="/screenshots/prospect_information_light_mode.png">
-</div>
-<br/>
-<div align="center">
-  <img width="300" alt="finacredito-login-dark" src="/screenshots/login_dark_mode.png"> <img width="300" alt="finacredito-home-dark" src="/screenshots/home_dark_mode.png"> <img width="300" alt="finacredito-capture-data-dark" src="/screenshots/capture_data_dark_mode.png"> <img width="300" alt="finacredito-data-list-dark" src="/screenshots/data_list_dark_mode.png"> <img width="300" alt="finacredito-prospect-information-dark" src="/screenshots/prospect_information_dark_mode.png">
-</div>
+There are a few ways to open this project.
+
+### Android Studio
+
+1. `Android Studio` -> `File` -> `New` -> `From Version control` -> `Git`
+2. Enter `https://github.com/shahzadansari/RickAndMorty.git` into URL field and press `Clone` button
+
+### Command-line And Android Studio
+
+1. Run `git clone https://github.com/shahzadansari/RickAndMorty.git` command to clone the project
+2. Open `Android Studio` and select `File | Open...` from the menu. Select the cloned directory and press `Open` button
+
+## ⏭️ Future Work
+- Add Room database for persistance
+- Enhance UI
+- Modularize 
+
+## 🤝 Want to Contribute?
+All contributions are welcomed. This project is still in development. If you encounter any problems, please create an issue [here](https://github.com/shahzadansari/RickAndMorty/issues) & if you want to contribute to this project, PRs are welcomed! 🙂
+
+## 👨‍💻 Developed By
+
+<a href="https://www.facebook.com/hmfp24/" target="_blank">
+  <img src="https://avatars.githubusercontent.com/u/37342701?v=4" width="70" align="left">
+</a>
+
+**Hector Figueroa**
+
+[![Facebook](https://img.shields.io/badge/-facebook-grey?logo=facebook)](https://www.facebook.com/hmfp24/)
+[![Linkedin](https://img.shields.io/badge/-linkedin-grey?logo=linkedin)](https://www.linkedin.com/in/hmfp24/)
