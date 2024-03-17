@@ -52,6 +52,11 @@ https://github.com/FigueroaGit/ClientesProspectos/assets/37342701/7fb7f250-e618-
 - [Retrofit2 & OkHttp3](https://github.com/square/retrofit): Construct the REST APIs and paging network data.
 - [ksp](https://github.com/google/ksp): Kotlin Symbol Processing API.tines Flow.
 
+## Prospects API
+
+FinaCredito Prospectos using my own API called [prospects](https://github.com/FigueroaGit/prospects)
+Prospects provides a RESTful API interface to manage all data of people and files upload in your own server with SpringBoot + MongoDB
+
 ## Get Started
 
 There are a few ways to open this project.
@@ -59,20 +64,20 @@ There are a few ways to open this project.
 ### Android Studio
 
 1. `Android Studio` -> `File` -> `New` -> `From Version control` -> `Git`
-2. Enter `https://github.com/shahzadansari/RickAndMorty.git` into URL field and press `Clone` button
+2. Enter `https://github.com/FigueroaGit/ClientesProspectos.git` into URL field and press `Clone` button
 
 ### Command-line And Android Studio
 
-1. Run `git clone https://github.com/shahzadansari/RickAndMorty.git` command to clone the project
+1. Run `git clone https://github.com/FigueroaGit/ClientesProspectos.git` command to clone the project
 2. Open `Android Studio` and select `File | Open...` from the menu. Select the cloned directory and press `Open` button
 
 ## ⏭️ Future Work
 - Add Room database for persistance
 - Enhance UI
-- Modularize 
+- Modularize code
 
 ## 🤝 Want to Contribute?
-All contributions are welcomed. This project is still in development. If you encounter any problems, please create an issue [here](https://github.com/shahzadansari/RickAndMorty/issues) & if you want to contribute to this project, PRs are welcomed! 🙂
+All contributions are welcomed. This project is still in development. If you encounter any problems, please create an issue [here](https://github.com/FigueroaGit/ClientesProspectos/issues) & if you want to contribute to this project, PRs are welcomed! 🙂
 
 ## 👨‍💻 Developed By
 
