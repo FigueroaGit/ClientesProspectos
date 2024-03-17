@@ -32,3 +32,13 @@
     - Theme generated via [Material Theme Builder](https://m3.material.io/theme-builder)
 - [Retrofit2 & OkHttp3](https://github.com/square/retrofit): Construct the REST APIs and paging network data.
 - [ksp](https://github.com/google/ksp): Kotlin Symbol Processing API.tines Flow.
+
+## 📷 Screenshots (Light & Dark Color Schemes)
+
+<div align="center">
+  <img width="300" alt="finacredito-login" src="/screenshots/login_light_mode.png"> <img width="300" alt="finacredito-home" src="/screenshots/home_light_mode.png"> <img width="300" alt="finacredito-capture-data" src="/screenshots/capture_data_light_mode.png"> <img width="300" alt="finacredito-data-list" src="/screenshots/data_list_light_mode.png"> <img width="300" alt="finacredito-prospect-information" src="/screenshots/prospect_information_light_mode.png">
+</div>
+<br/>
+<div align="center">
+  <img width="300" alt="finacredito-login-dark" src="/screenshots/login_dark_mode.png"> <img width="300" alt="finacredito-home-dark" src="/screenshots/home_dark_mode.png"> <img width="300" alt="finacredito-capture-data-dark" src="/screenshots/capture_data_dark_mode.png"> <img width="300" alt="finacredito-data-list-dark" src="/screenshots/data_list_dark_mode.png"> <img width="300" alt="finacredito-prospect-information-dark" src="/screenshots/prospect_information_dark_mode.png">
+</div>
